@@ -1,12 +1,13 @@
 import express, { NextFunction, Request, Response } from "express";
-import { TestRoutes } from "../routes/test.routes";
+import { UserRoutes } from "../routes/user.routes";
 
 export const app = express();
 
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(HeaderHandler);
 
-app.use("/test", TestRoutes)
+app.use("/user", UserRoutes);
 
 function HeaderHandler(req: Request, res: Response, next: NextFunction) {
     res.header(
