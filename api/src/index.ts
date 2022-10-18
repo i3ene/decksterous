@@ -1,9 +1,9 @@
-import { ServerConfig } from "./config/server.config";
-import { db } from "./database";
+import { Config } from "./config";
+import { database } from "./database";
 import { Server } from "./server";
 
-db.sync();
+database.sync();
 
-Server.Http.listen(ServerConfig.PORT, () => {
-    console.log(`Server listening on port ${ServerConfig.PORT}`);
+Server.Http.listen(Config.Server.PORT, () => {
+    console.log(`Server listening on port ${Config.Server.PORT}`);
 });

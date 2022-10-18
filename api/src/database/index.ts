@@ -3,4 +3,4 @@ import { SequelizeDatabase } from "./sequelize.database";
 
 SequelizeDatabase.addModels([User]);
 
-export const db = SequelizeDatabase;
+export const database = SequelizeDatabase;

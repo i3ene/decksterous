@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { User } from '../models/data/user.model';
 import * as bcrypt from 'bcryptjs';
 import * as jwt from 'jsonwebtoken';
-import { ServerConfig } from '../config/server.config';
+import { Config } from '../config';
 
 export namespace AuthMiddleware {
   export async function verifyUser(req: Request, res: Response, next: NextFunction): Promise<any> {
@@ -30,7 +30,7 @@ export namespace AuthMiddleware {
     var token = req.headers['x-access-token'] as string;
     if (token == null) return res.status(401).send({ message: 'No token provided!' });
 
-    jwt.verify(token, ServerConfig.SECRET, (err: any, decoded: any) => {
+    jwt.verify(token, Config.Server.SECRET, (err: any, decoded: any) => {
       req.user = decoded;
       if (err == null) return next();
       if (err instanceof jwt.TokenExpiredError) {

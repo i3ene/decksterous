@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import * as jwt from 'jsonwebtoken';
-import { ServerConfig } from '../config/server.config';
+import { Config } from "../config";
 
 
 export namespace AuthController {
@@ -12,7 +12,7 @@ export namespace AuthController {
       name: req.user.name,
       mail: req.user.mail,
     };
-    var token = jwt.sign(payload, ServerConfig.SECRET);
+    var token = jwt.sign(payload, Config.Server.SECRET);
 
     console.log('User', req.user.name, 'logged in.');
     res.status(200).send(token);

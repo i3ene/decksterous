@@ -1,4 +1,4 @@
-import express, { NextFunction, Request, Response } from 'express';
+import express from 'express';
 import { AuthMiddleware } from '../middleware/auth.middleware';
 import { HeaderMiddleware } from '../middleware/header.middleware';
 import { AuthRoutes } from '../routes/auth.routes';

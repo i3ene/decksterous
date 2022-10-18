@@ -1,21 +1,21 @@
 import { Dialect, OperatorsAliases } from 'sequelize';
 import { Sequelize } from 'sequelize-typescript';
-import { DatabaseConfig } from '../config/database.config';
+import { Config } from '../config';
 
 export const SequelizeDatabase = new Sequelize(
-  DatabaseConfig.DB,
-  DatabaseConfig.USER,
-  DatabaseConfig.PASSWORD,
+  Config.Database.DB,
+  Config.Database.USER,
+  Config.Database.PASSWORD,
   {
-    logging: DatabaseConfig.LOGGING,
-    host: DatabaseConfig.HOST,
-    dialect: DatabaseConfig.dialect as Dialect,
+    logging: Config.Database.LOGGING,
+    host: Config.Database.HOST,
+    dialect: Config.Database.dialect as Dialect,
     operatorsAliases: 0 as unknown as OperatorsAliases,
     pool: {
-      max: DatabaseConfig.pool.max,
-      min: DatabaseConfig.pool.min,
-      acquire: DatabaseConfig.pool.acquire,
-      idle: DatabaseConfig.pool.idle,
+      max: Config.Database.pool.max,
+      min: Config.Database.pool.min,
+      acquire: Config.Database.pool.acquire,
+      idle: Config.Database.pool.idle,
     },
   }
 );
