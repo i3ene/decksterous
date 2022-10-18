@@ -1,18 +1,16 @@
-import express, { NextFunction, Request, Response } from "express";
-import { UserRoutes } from "../routes/user.routes";
+import express, { NextFunction, Request, Response } from 'express';
+import { AuthMiddleware } from '../middleware/auth.middleware';
+import { HeaderMiddleware } from '../middleware/header.middleware';
+import { AuthRoutes } from '../routes/auth.routes';
+import { UserRoutes } from '../routes/user.routes';
 
 export const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(HeaderHandler);
+app.use(HeaderMiddleware.handler);
 
-app.use("/user", UserRoutes);
+app.use('/auth', AuthRoutes);
 
-function HeaderHandler(req: Request, res: Response, next: NextFunction) {
-    res.header(
-        'Access-Control-Allow-Headers',
-        'x-access-token, Origin, Content-Type, Accept'
-    );
-    next();
-}
+app.use(AuthMiddleware.verifyToken);
+app.use('/user', UserRoutes);
