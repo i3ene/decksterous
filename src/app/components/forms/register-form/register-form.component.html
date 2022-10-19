@@ -1,0 +1,33 @@
+<app-form-card [title]="'Register'" [navigation]="['/auth/login']">
+  <ng-template #content>
+    <mat-form-field appearance="fill">
+      <mat-label>Name</mat-label>
+      <input matInput required />
+    </mat-form-field>
+    <div class="row">
+      <mat-form-field appearance="fill">
+        <mat-label>Email</mat-label>
+        <input matInput required />
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Password</mat-label>
+        <input #passwordInput matInput type="password" required />
+        <visibility-button matSuffix [element]="passwordInput"></visibility-button>
+      </mat-form-field>
+    </div>
+    <div class="row">
+      <mat-form-field appearance="fill">
+        <mat-label>(Repeat) Email</mat-label>
+        <input matInput />
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>(Repeat) Password</mat-label>
+        <input #passwordRepeatInput matInput type="password" />
+        <visibility-button matSuffix [element]="passwordRepeatInput"></visibility-button>
+      </mat-form-field>
+    </div>
+  </ng-template>
+  <ng-template #footer>
+    <button mat-raised-button>OK</button>
+  </ng-template>
+</app-form-card>
