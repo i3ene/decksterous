@@ -11,13 +11,4 @@ export class LoginFormComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  passwordVisibilityToggle(element: any) {
-    element.type == 'text'
-      ? (element.type = 'password')
-      : (element.type = 'text');
-  }
-
-  getVisibilityIcon(element: any) {
-    return element.type == 'text' ? 'visibility_off' : 'visibility';
-  }
 }

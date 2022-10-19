@@ -1,15 +1,19 @@
-<mat-card class="align_column">
-  <h1>Login</h1>
-  <mat-form-field appearance="fill">
-    <mat-label>Name</mat-label>
-    <input matInput />
-  </mat-form-field>
-  <mat-form-field appearance="fill">
-    <mat-label>Password</mat-label>
-    <input #passwordInput matInput type="password" />
-    <mat-icon matSuffix (click)="passwordVisibilityToggle(passwordInput)">
-      {{ getVisibilityIcon(passwordInput) }}
-    </mat-icon>
-  </mat-form-field>
-  <button mat-raised-button class="align_end">OK</button>
-</mat-card>
+<app-form-card [title]="'Login'">
+  <ng-template #content>
+    <mat-form-field appearance="fill">
+      <mat-label>Name</mat-label>
+      <input matInput />
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Password</mat-label>
+      <input #passwordInput matInput type="password" />
+      <visibility-button matSuffix [element]="passwordInput"></visibility-button>
+    </mat-form-field>
+    <a [routerLink]="['/auth/reset']" class="information">Forgot Password?</a>
+  </ng-template>
+  <ng-template #footer>
+    <a [routerLink]="['/auth/register']">Create Account</a>
+    <span class="spacer"></span>
+    <button mat-raised-button>OK</button>
+  </ng-template>
+</app-form-card>

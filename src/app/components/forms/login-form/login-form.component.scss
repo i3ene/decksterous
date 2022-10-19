@@ -1,8 +1,5 @@
-.align_column {
-    display: flex;
-    flex-direction: column;
-}
-
-.align_end {
-    align-self:flex-end;
+.information {
+    align-self: flex-end;
+    margin-top: -16px !important;
+    z-index: 2;
 }
