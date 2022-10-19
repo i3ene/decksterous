@@ -6,15 +6,23 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { MaterialModule } from './modules/material.module';
-import { LoginComponent } from './pages/login/login.component';
 import { LoginFormComponent } from './components/forms/login-form/login-form.component';
+import { AuthComponent } from './pages/auth/auth.component';
+import { RegisterFormComponent } from './components/forms/register-form/register-form.component';
+import { ResetFormComponent } from './components/forms/reset-form/reset-form.component';
+import { VisibilityButtonComponent } from './components/forms/utils/visibility-button/visibility-button.component';
+import { FormCardComponent } from './templates/form-card/form-card.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     DashboardComponent,
-    LoginComponent,
-    LoginFormComponent
+    AuthComponent,
+    LoginFormComponent,
+    RegisterFormComponent,
+    ResetFormComponent,
+    VisibilityButtonComponent,
+    FormCardComponent
   ],
   imports: [
     BrowserModule,

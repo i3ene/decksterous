@@ -10,3 +10,12 @@
     flex-direction: row;
     justify-content: center;
 }
+
+footer {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    position: absolute;
+    left: 8px;
+    bottom: 8px;
+}
