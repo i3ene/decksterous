@@ -1,0 +1,24 @@
+.align_column {
+    display: flex;
+    flex-direction: column;
+}
+
+.align_start {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.align_end {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: flex-end;
+    margin-top: 16px;
+}
+
+h1 {
+    margin-bottom: 0px !important;
+}
