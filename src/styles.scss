@@ -40,3 +40,19 @@ $decksterous-theme: mat.define-light-theme((
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+a:link {
+  color: mat.get-color-from-palette($decksterous-primary, default);
+}
+
+a:visited {
+  color: mat.get-color-from-palette($decksterous-accent, default);
+}
+
+a:hover {
+  color: mat.get-color-from-palette($decksterous-warn, 100);
+}
+
+a:active {
+  color: mat.get-color-from-palette($decksterous-warn, A100);
+}
