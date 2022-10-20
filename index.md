@@ -1,4 +1,4 @@
 # About Decksterous
 Info
 
-[Software Requirements Specification](md)
+[Software Requirements Specification](srs)
