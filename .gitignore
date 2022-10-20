@@ -1,0 +1,5 @@
+.angular/**
+api/**
+node_modules/**
+src/**
+dist/**
