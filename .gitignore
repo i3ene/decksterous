@@ -3,3 +3,5 @@ api/**
 node_modules/**
 src/**
 dist/**
+package-lock.json
+.idea/**
