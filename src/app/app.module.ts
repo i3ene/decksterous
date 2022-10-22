@@ -16,6 +16,7 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './services/auth/auth.interceptor';
 import { DEFAULT_PATH } from './services/request/path.request';
 import { FormsModule } from '@angular/forms';
+import { AboutComponent } from './pages/about/about.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { FormsModule } from '@angular/forms';
     RegisterFormComponent,
     ResetFormComponent,
     VisibilityButtonComponent,
-    FormCardComponent
+    FormCardComponent,
+    AboutComponent
   ],
   imports: [
     BrowserModule,

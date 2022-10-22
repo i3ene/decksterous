@@ -1,0 +1,30 @@
+<div class="container">
+  <div class="align_start">
+    <button mat-icon-button [routerLink]="['/auth']">
+      <mat-icon> arrow_back </mat-icon>
+    </button>
+    <h1>About</h1>
+  </div>
+
+  <mat-accordion [displayMode]="'flat'">
+    <mat-expansion-panel expanded>
+      <mat-expansion-panel-header>
+        <mat-panel-title>About Decksterous</mat-panel-title>
+      </mat-expansion-panel-header>
+      <p>Text</p>
+    </mat-expansion-panel>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>Tech Stack</mat-panel-title>
+      </mat-expansion-panel-header>
+      <ng-container *ngFor="let item of techstack; let last = last">
+        <div class="align_start list-item-header">
+          <h2>{{item.title}}</h2>
+          <img [src]="item.img" [style.height.px]="item.imgSize"/>
+        </div>
+        <p class="list-item-content">{{item.text}}</p>
+        <mat-divider *ngIf="!last"></mat-divider>
+      </ng-container>
+    </mat-expansion-panel>
+  </mat-accordion>
+</div>

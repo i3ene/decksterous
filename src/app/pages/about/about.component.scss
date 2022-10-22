@@ -1,0 +1,31 @@
+.container {
+  padding: 16px;
+}
+
+.align_start {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+
+  & h1, & h2 {
+    margin-bottom: 0px !important;
+  }
+
+  & img {
+    position: absolute;
+    left: 196px;
+  }
+}
+
+.list-item-header {
+  &:not(:first-child) {
+    margin-top: 8px;
+  }
+}
+
+.list-item-content {
+  &:not(:last-child) {
+    margin-bottom: 16px;
+  }
+}

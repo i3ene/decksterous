@@ -6,6 +6,7 @@ import { LoginFormComponent } from './components/forms/login-form/login-form.com
 import { RegisterFormComponent } from './components/forms/register-form/register-form.component';
 import { ResetFormComponent } from './components/forms/reset-form/reset-form.component';
 import { AuthGuard } from './services/auth/auth.guard';
+import { AboutComponent } from './pages/about/about.component';
 
 const routes: Routes = [
   { path: 'navigation', component: NavigationComponent, canActivate: [AuthGuard] },
@@ -15,7 +16,8 @@ const routes: Routes = [
     { path: 'reset', component: ResetFormComponent },
     { path: '**', redirectTo: 'login' }
   ] },
-  { path: '**', redirectTo: 'auth' }
+  { path: 'about', component: AboutComponent },
+  { path: '**', redirectTo: 'navigation' }
 ];
 
 @NgModule({
