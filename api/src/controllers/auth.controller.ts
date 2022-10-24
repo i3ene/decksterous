@@ -15,6 +15,6 @@ export namespace AuthController {
     var token = jwt.sign(payload, Config.Server.SECRET);
 
     console.log('User', req.user.name, 'logged in.');
-    res.status(200).send(token);
+    res.status(200).send(JSON.stringify(token));
   }
 }
