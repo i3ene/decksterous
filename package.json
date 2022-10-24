@@ -20,6 +20,7 @@
     "@angular/platform-browser": "~13.3.0",
     "@angular/platform-browser-dynamic": "~13.3.0",
     "@angular/router": "~13.3.0",
+    "@auth0/angular-jwt": "^5.1.0",
     "@tsconfig/node16": "^1.0.3",
     "@types/express": "^4.17.14",
     "@types/jsonwebtoken": "^8.5.9",
@@ -31,6 +32,7 @@
     "rxjs": "~7.5.0",
     "sequelize": "^6.25.2",
     "sequelize-typescript": "^2.1.4",
+    "ts-node": "^10.9.1",
     "tslib": "^2.3.0",
     "zone.js": "~0.11.4"
   },
