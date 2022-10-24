@@ -2,11 +2,11 @@
   <ng-template #content>
     <mat-form-field appearance="fill">
       <mat-label>Name</mat-label>
-      <input matInput />
+      <input matInput [(ngModel)]="credentials.name" />
     </mat-form-field>
     <mat-form-field appearance="fill">
       <mat-label>Password</mat-label>
-      <input #passwordInput matInput type="password" />
+      <input #passwordInput matInput type="password" [(ngModel)]="credentials.password" />
       <visibility-button matSuffix [element]="passwordInput"></visibility-button>
     </mat-form-field>
     <a [routerLink]="['/auth/reset']" class="information">Forgot Password?</a>
@@ -14,6 +14,6 @@
   <ng-template #footer>
     <a [routerLink]="['/auth/register']">Create Account</a>
     <span class="spacer"></span>
-    <button mat-raised-button>OK</button>
+    <button mat-raised-button [disabled]="!(credentials.password && credentials.name)" (click)="login()">OK</button>
   </ng-template>
 </app-form-card>
