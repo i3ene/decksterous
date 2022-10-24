@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { isDevMode, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -12,6 +12,10 @@ import { RegisterFormComponent } from './components/forms/register-form/register
 import { ResetFormComponent } from './components/forms/reset-form/reset-form.component';
 import { VisibilityButtonComponent } from './components/forms/utils/visibility-button/visibility-button.component';
 import { FormCardComponent } from './templates/form-card/form-card.component';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AuthInterceptor } from './services/auth/auth.interceptor';
+import { DEFAULT_PATH } from './services/request/path.request';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -28,9 +32,14 @@ import { FormCardComponent } from './templates/form-card/form-card.component';
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    MaterialModule
+    MaterialModule,
+    HttpClientModule,
+    FormsModule
   ],
-  providers: [],
+  providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    { provide: DEFAULT_PATH, useValue: { path: "/api" } }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
