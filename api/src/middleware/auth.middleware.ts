@@ -40,4 +40,26 @@ export namespace AuthMiddleware {
       }
     });
   }
+
+  export async function checkDuplicateName(req: Request, res: Response, next: NextFunction): Promise<any> {
+    const user: User | null = await User.findOne({
+      where: {
+        name: req.body.name,
+      },
+    } as any);
+    if (user != undefined) return res.status(404).send({ message: 'Username already exists!' });
+    
+    next();
+  }
+  
+  export async function checkDuplicateMail(req: Request, res: Response, next: NextFunction): Promise<any> {
+    const user: User | null = await User.findOne({
+      where: {
+        mail: req.body.mail,
+      },
+    } as any);
+    if (user != undefined) return res.status(404).send({ message: 'Mail already exists!' });
+    
+    next();
+  }
 }
