@@ -1,7 +1,7 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
 import { Config } from 'src/app/config/config';
-import { IUser } from 'src/app/models/user.model';
+import { User } from 'src/app/models/user.model';
 import { RequestService } from 'src/app/services/request/request.service';
 
 @Component({
@@ -12,7 +12,7 @@ import { RequestService } from 'src/app/services/request/request.service';
 })
 export class LoginFormComponent {
 
-  credentials: IUser = { name: "", password: "" };
+  credentials: User = new User();
 
   constructor(private request: RequestService, private router: Router) {}
 
