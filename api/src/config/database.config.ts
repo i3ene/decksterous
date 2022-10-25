@@ -1,9 +1,11 @@
+import secret from "./secret.json";
+
 export namespace DatabaseConfig {
   export const LOGGING: any = console.log;
-  export const HOST: string = ***REMOVED***;
-  export const USER: string = ***REMOVED***;
-  export const PASSWORD: string = ***REMOVED***;
-  export const DB: string = ***REMOVED***;
+  export const HOST: string = secret.database.host;
+  export const USER: string = secret.database.user;
+  export const PASSWORD: string = secret.database.password;
+  export const DB: string = secret.database.db;
   export const dialect: string = 'mariadb';
   export const pool: any = {
     max: 5,
