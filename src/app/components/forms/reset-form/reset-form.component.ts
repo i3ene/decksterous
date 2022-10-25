@@ -1,4 +1,7 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Router } from '@angular/router';
+import { User } from 'src/app/models/user.model';
+import { RequestService } from 'src/app/services/request/request.service';
 
 @Component({
   selector: 'app-reset-form',
@@ -6,11 +9,15 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
   styleUrls: ['./reset-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ResetFormComponent implements OnInit {
+export class ResetFormComponent {
 
-  constructor() { }
+  credentials: User = new User();
 
-  ngOnInit(): void {
+  constructor(private request: RequestService, private router: Router) {}
+
+  async reset() {
+    const response = await this.request.post("/auth/passwordreset", this.credentials);
+    this.router.navigate(["/auth"]);
   }
 
 }

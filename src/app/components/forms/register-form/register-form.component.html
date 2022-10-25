@@ -2,16 +2,16 @@
   <ng-template #content>
     <mat-form-field appearance="fill">
       <mat-label>Name</mat-label>
-      <input matInput required />
+      <input matInput required [(ngModel)]="credentials.name" />
     </mat-form-field>
     <div class="row">
       <mat-form-field appearance="fill">
         <mat-label>Email</mat-label>
-        <input matInput required />
+        <input matInput required [(ngModel)]="credentials.mail" />
       </mat-form-field>
       <mat-form-field appearance="fill">
         <mat-label>Password</mat-label>
-        <input #passwordInput matInput type="password" required />
+        <input #passwordInput matInput type="password" required [(ngModel)]="credentials.password" />
         <visibility-button matSuffix [element]="passwordInput"></visibility-button>
       </mat-form-field>
     </div>
@@ -28,6 +28,6 @@
     </div>
   </ng-template>
   <ng-template #footer>
-    <button mat-raised-button>Register</button>
+    <button mat-raised-button [disabled]="!(credentials.password && credentials.name && credentials.mail)" (click)="register()">Register</button>
   </ng-template>
 </app-form-card>
