@@ -15,9 +15,9 @@
     </mat-expansion-panel>
     <mat-expansion-panel>
       <mat-expansion-panel-header>
-        <mat-panel-title>Tech Stack</mat-panel-title>
+        <mat-panel-title>Technologies</mat-panel-title>
       </mat-expansion-panel-header>
-      <ng-container *ngFor="let item of techstack; let last = last">
+      <ng-container *ngFor="let item of technologies; let last = last">
         <div class="align_start list-item-header">
           <h2>{{item.title}}</h2>
           <img [src]="item.img" [style.height.px]="item.imgSize"/>

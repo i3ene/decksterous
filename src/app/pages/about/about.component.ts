@@ -5,7 +5,7 @@ import { Component } from '@angular/core';
   styleUrls: ['./about.component.scss']
 })
 export class AboutComponent {
-  techstack: { title: string; img: string, imgSize: number, text: string }[] = [
+  technologies: { title: string; img: string, imgSize: number, text: string }[] = [
     { title: "Node.js", img: "https://www.svgrepo.com/show/354118/nodejs.svg", imgSize: 64, text: "text" },
     { title: "Angular", img: "https://www.svgrepo.com/show/373427/angular.svg", imgSize: 32, text: "text" },
     { title: "Express.js", img: "https://www.svgrepo.com/show/353724/express.svg", imgSize: 64, text: "text" },
