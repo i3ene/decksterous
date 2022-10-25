@@ -14,9 +14,11 @@ import { VisibilityButtonComponent } from './components/forms/utils/visibility-b
 import { FormCardComponent } from './templates/form-card/form-card.component';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './services/auth/auth.interceptor';
-import { DEFAULT_PATH } from './services/request/path.request';
+import { REQUEST_CONFIG } from './config/request.config';
 import { FormsModule } from '@angular/forms';
 import { AboutComponent } from './pages/about/about.component';
+import { SocketIoModule } from 'ngx-socket-io';
+import { SocketConnection } from './services/request/socket.connection';
 
 @NgModule({
   declarations: [
@@ -36,11 +38,13 @@ import { AboutComponent } from './pages/about/about.component';
     BrowserAnimationsModule,
     MaterialModule,
     HttpClientModule,
-    FormsModule
+    FormsModule,
+    SocketIoModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
-    { provide: DEFAULT_PATH, useValue: { path: "/api" } }
+    { provide: REQUEST_CONFIG, useValue: { url: "/api" } },
+    SocketConnection
   ],
   bootstrap: [AppComponent]
 })
