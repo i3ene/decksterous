@@ -5,4 +5,4 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 ## Checkout
 
-Run `npm install`
+See our Wiki entry [Checkout](https://github.com/i3ene/decksterous/wiki/Checkout) for detailed information.
