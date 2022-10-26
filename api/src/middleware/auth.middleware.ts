@@ -27,10 +27,10 @@ export namespace AuthMiddleware {
   }
 
   export async function verifyToken(req: Request, res: Response, next: NextFunction): Promise<any> {
-    var token = req.headers['x-access-token'] as string;
+    var token = req.headers[Config.Auth.HEADER] as string;
     if (token == null) return res.status(401).send({ message: 'No token provided!' });
 
-    jwt.verify(token, Config.Server.SECRET, (err: any, decoded: any) => {
+    jwt.verify(token, Config.Auth.SECRET, (err: any, decoded: any) => {
       req.user = decoded;
       if (err == null) return next();
       if (err instanceof jwt.TokenExpiredError) {
@@ -48,10 +48,10 @@ export namespace AuthMiddleware {
       },
     } as any);
     if (user != undefined) return res.status(404).send({ message: 'Username already exists!' });
-    
+
     next();
   }
-  
+
   export async function checkDuplicateMail(req: Request, res: Response, next: NextFunction): Promise<any> {
     const user: User | null = await User.findOne({
       where: {
@@ -59,7 +59,7 @@ export namespace AuthMiddleware {
       },
     } as any);
     if (user != undefined) return res.status(404).send({ message: 'Mail already exists!' });
-    
+
     next();
   }
 }
