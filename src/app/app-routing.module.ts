@@ -7,16 +7,18 @@ import { RegisterFormComponent } from './components/forms/register-form/register
 import { ResetFormComponent } from './components/forms/reset-form/reset-form.component';
 import { AuthGuard } from './services/auth/auth.guard';
 import { AboutComponent } from './pages/about/about.component';
+import { DevComponent } from './pages/dev/dev.component';
 
 const routes: Routes = [
-  { path: 'navigation', component: NavigationComponent, canActivate: [AuthGuard] },
+  { path: 'dev', component: DevComponent },
+  { path: 'about', component: AboutComponent },
   { path: 'auth', component: AuthComponent, children: [
     { path: 'login', component: LoginFormComponent },
     { path: 'register', component: RegisterFormComponent },
     { path: 'reset', component: ResetFormComponent },
     { path: '**', redirectTo: 'login' }
   ] },
-  { path: 'about', component: AboutComponent },
+  { path: 'navigation', component: NavigationComponent, canActivate: [AuthGuard] },
   { path: '**', redirectTo: 'navigation' }
 ];
 
