@@ -11,7 +11,7 @@ export namespace UserController {
   }
 
   export async function get(req: Request, res: Response): Promise<any> {
-    const user: User | null = await User.scope({ method: ['query', req.query, Op.and] }).findOne();
+    const user: User | null = await User.scope(['inventory', { method: ['query', req.query, Op.and] }]).findOne();
     res.status(200).send(user);
   }
 

@@ -6,7 +6,13 @@ import { Item } from './item.model';
 import { InventoryItem } from './inventory_item.model';
 
 @Scopes(() => ({
-  query: QueryUtil.query(['id', 'userId'])
+  query: QueryUtil.query(['id', 'userId']),
+  items: {
+    include: [Item]
+  },
+  user: {
+    include: [User]
+  }
 }))
 @Table
 export class Inventory extends Model<Inventory> {
