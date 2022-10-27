@@ -1,0 +1,42 @@
+<div class="row">
+  <div>
+    <h2>Rooms</h2>
+    <mat-form-field>
+      <mat-label>Room Name</mat-label>
+      <input matInput #roomNameInput />
+    </mat-form-field>
+    <br />
+    <button mat-stroked-button (click)="joinRoom(roomNameInput.value)">Join</button>
+    <button mat-stroked-button (click)="leaveRoom(roomNameInput.value)">Leave</button>
+  </div>
+
+  <mat-divider vertical></mat-divider>
+
+  <div>
+    <h2>Events</h2>
+    <mat-form-field>
+      <mat-label>Event Name</mat-label>
+      <input matInput #eventName />
+    </mat-form-field>
+    <br />
+    <mat-form-field>
+      <mat-label>Event Data</mat-label>
+      <textarea matInput #eventData [placeholder]="'{\n\t&quot;key&quot;: &quot;value&quot;\n}'"></textarea>
+    </mat-form-field>
+    <br />
+    <button mat-stroked-button (click)="emitEvent(eventName.value, eventData.value)">Emit</button>
+  </div>
+
+  <mat-divider vertical></mat-divider>
+
+  <div>
+    <h2>Message</h2>
+    <p>{{ message ?? "-No Message Available-" }}</p>
+    <h2>Rooms</h2>
+    <p>{{ rooms?.length ? rooms : "-No Rooms Available-" }}</p>
+    <h2>Joined Rooms</h2>
+    <pre><code>{{ joinedRooms ?? "-No Data Available-" | json }}</code></pre>
+    <h2>Data</h2>
+    <pre><code>{{ data ?? "-No Data Available-" | json }}</code></pre>
+  </div>
+</div>

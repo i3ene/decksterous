@@ -19,6 +19,8 @@ import { FormsModule } from '@angular/forms';
 import { AboutComponent } from './pages/about/about.component';
 import { SocketIoModule } from 'ngx-socket-io';
 import { SocketConnection } from './services/request/socket.connection';
+import { DevComponent } from './pages/dev/dev.component';
+import { SocketComponent } from './components/dev/socket/socket.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +32,9 @@ import { SocketConnection } from './services/request/socket.connection';
     ResetFormComponent,
     VisibilityButtonComponent,
     FormCardComponent,
-    AboutComponent
+    AboutComponent,
+    DevComponent,
+    SocketComponent
   ],
   imports: [
     BrowserModule,
