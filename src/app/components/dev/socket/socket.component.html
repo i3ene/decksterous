@@ -29,14 +29,32 @@
 
   <mat-divider vertical></mat-divider>
 
-  <div>
-    <h2>Message</h2>
-    <p>{{ message ?? "-No Message Available-" }}</p>
-    <h2>Rooms</h2>
-    <p>{{ rooms?.length ? rooms : "-No Rooms Available-" }}</p>
-    <h2>Joined Rooms</h2>
-    <pre><code>{{ joinedRooms ?? "-No Data Available-" | json }}</code></pre>
-    <h2>Data</h2>
-    <pre><code>{{ data ?? "-No Data Available-" | json }}</code></pre>
-  </div>
+  <mat-tab-group>
+    <mat-tab label="Messages">
+      <div class="tab-content">
+        <ng-container *ngFor="let item of messages">
+          <div>{{ item.timestamp | date: 'HH:mm:ss' }}</div>
+          <pre><code>{{ item.message | json }}</code></pre>
+        </ng-container>
+      </div>
+    </mat-tab>
+    <mat-tab label="Available Rooms">
+      <div class="tab-content">
+        <pre><code>{{ availableRooms | json }}</code></pre>
+      </div>
+    </mat-tab>
+    <mat-tab label="Joined Rooms">
+      <div class="tab-content">
+        <pre><code>{{ joinedRooms | json }}</code></pre>
+      </div>
+    </mat-tab>
+    <mat-tab label="Events">
+      <div class="tab-content">
+        <ng-container *ngFor="let item of events">
+          <div>{{ item.room }} - {{ item.timestamp | date: 'HH:mm:ss' }}</div>
+          <pre><code>{{ item.event | json }}</code></pre>
+        </ng-container>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
 </div>
