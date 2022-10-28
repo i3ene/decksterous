@@ -6,8 +6,8 @@
       <input matInput #roomNameInput />
     </mat-form-field>
     <br />
-    <button mat-stroked-button (click)="joinRoom(roomNameInput.value)">Join</button>
-    <button mat-stroked-button (click)="leaveRoom(roomNameInput.value)">Leave</button>
+    <button mat-stroked-button (click)="socket.joinRoom(roomNameInput.value)">Join</button>
+    <button mat-stroked-button (click)="socket.leaveRoom(roomNameInput.value)">Leave</button>
   </div>
 
   <mat-divider vertical></mat-divider>
@@ -24,37 +24,46 @@
       <textarea matInput #eventData [placeholder]="'{\n\t&quot;key&quot;: &quot;value&quot;\n}'"></textarea>
     </mat-form-field>
     <br />
-    <button mat-stroked-button (click)="emitEvent(eventName.value, eventData.value)">Emit</button>
+    <button mat-stroked-button (click)="socket.emitEvent(eventName.value, eventData.value)">Emit</button>
   </div>
 
   <mat-divider vertical></mat-divider>
 
   <mat-tab-group>
     <mat-tab label="Messages">
-      <div class="tab-content">
-        <ng-container *ngFor="let item of messages">
-          <div>{{ item.timestamp | date: 'HH:mm:ss' }}</div>
-          <pre><code>{{ item.message | json }}</code></pre>
-        </ng-container>
-      </div>
+      <table class="tab-content">
+        <tr *ngFor="let item of socket.messages">
+          <td>{{ item.timestamp | date: 'HH:mm:ss' }}</td>
+          <td>
+            <pre><code>{{ item.message | json }}</code></pre>
+          </td>
+        </tr>
+      </table>
     </mat-tab>
     <mat-tab label="Available Rooms">
       <div class="tab-content">
-        <pre><code>{{ availableRooms | json }}</code></pre>
+        <pre><code>{{ socket.availableRooms | json }}</code></pre>
       </div>
     </mat-tab>
     <mat-tab label="Joined Rooms">
-      <div class="tab-content">
-        <pre><code>{{ joinedRooms | json }}</code></pre>
-      </div>
+      <table class="tab-content">
+        <tr *ngFor="let room of socket.joinedRooms | keyvalue">
+          <td>{{ room.key }}</td>
+          <td>
+            <pre><code>{{ room.value | json }}</code></pre>
+          </td>
+        </tr>
+      </table>
     </mat-tab>
     <mat-tab label="Events">
-      <div class="tab-content">
-        <ng-container *ngFor="let item of events">
-          <div>{{ item.room }} - {{ item.timestamp | date: 'HH:mm:ss' }}</div>
-          <pre><code>{{ item.event | json }}</code></pre>
-        </ng-container>
-      </div>
+      <table class="tab-content">
+        <tr *ngFor="let item of socket.events">
+          <td>{{ item.room }} - {{ item.timestamp | date: 'HH:mm:ss' }}</td>
+          <td>
+            <pre><code>{{ item.event | json }}</code></pre>
+          </td>
+        </tr>
+      </table>
     </mat-tab>
   </mat-tab-group>
 </div>
