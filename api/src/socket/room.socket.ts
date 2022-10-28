@@ -1,35 +1,24 @@
 import { Server, Socket } from 'socket.io';
+import { RoomController } from '../controllers/room.controller';
 
 export namespace RoomSocket {
+
+  /**
+   * Register function for room functionality
+   * @param io Socket server
+   * @param socket Socket connection
+   */
   export async function register(io: Server, socket: Socket) {
-    // Retrieve all current rooms
     socket.emit('room_list', await getRooms(io));
 
-    // Join room
-    socket.on('room_join', async (room) => {
-      socket.join(room);
-      io.to(room).emit('room_socket_join', { socket: socket.id, room: room, action: "joined" });
-      var list = await await getSockets(io, room);
-      io.to(room).emit('room_socket_list', { [room]: list });
-
-      // Listen to specific room events
-      socket.on("room_event_" + room, async (event) => {
-        io.to(room).emit("room_socket_event_" + room, event);
-      });
-    });
-
-    // Leave room
-    socket.on('room_leave', async (room) => {
-      io.to(room).emit('room_socket_leave', { socket: socket.id, room: room, action: "left" });
-      socket.leave(room);
-      var list = await getSockets(io, room);
-      io.to(room).emit('room_socket_list', { [room]: list });
-
-      // Remove room events
-      socket.removeAllListeners("room_event_" + room);
-    });
+    socket.on('room_join', (room) => RoomController.join(io, socket, room));
+    socket.on('room_leave', (room) => RoomController.leave(io, socket, room));
   }
 
+  /**
+   * Listener functions for room events
+   * @param io Socket server
+   */
   export function listener(io: Server) {
     io.sockets.adapter.on('create-room', async (room) => {
       io.emit('room_list', await getRooms(io));
@@ -50,11 +39,22 @@ export namespace RoomSocket {
     });
   }
 
+  /**
+   * Retrieve all current available rooms. (Rooms from socket connections are excluded)
+   * @param io Socket server
+   * @returns Promise Array of room strings
+   */
   export async function getRooms(io: Server) {
     var list = await getSockets(io);
     return [...io.sockets.adapter.rooms].map(([entry, set]) => entry).filter((x) => !list.includes(x));
   }
 
+  /**
+   * Retrieve all socket IDs from server (or room)
+   * @param io Socket server
+   * @param room Room name
+   * @returns Promise Array of socket IDs
+   */
   export async function getSockets(io: Server, room?: string) {
     if (room) return (await io.in(room).fetchSockets()).map((x) => x.id);
     else return (await io.fetchSockets()).map((x) => x.id);
