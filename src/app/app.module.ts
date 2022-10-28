@@ -21,6 +21,7 @@ import { SocketIoModule } from 'ngx-socket-io';
 import { SocketConnection } from './services/request/socket.connection';
 import { DevComponent } from './pages/dev/dev.component';
 import { SocketComponent } from './components/dev/socket/socket.component';
+import { GameComponent } from './pages/game/game.component';
 
 @NgModule({
   declarations: [
@@ -34,7 +35,8 @@ import { SocketComponent } from './components/dev/socket/socket.component';
     FormCardComponent,
     AboutComponent,
     DevComponent,
-    SocketComponent
+    SocketComponent,
+    GameComponent
   ],
   imports: [
     BrowserModule,

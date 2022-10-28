@@ -8,6 +8,7 @@ import { ResetFormComponent } from './components/forms/reset-form/reset-form.com
 import { AuthGuard } from './services/auth/auth.guard';
 import { AboutComponent } from './pages/about/about.component';
 import { DevComponent } from './pages/dev/dev.component';
+import { GameComponent } from './pages/game/game.component';
 
 const routes: Routes = [
   { path: 'dev', component: DevComponent },
@@ -19,6 +20,7 @@ const routes: Routes = [
     { path: '**', redirectTo: 'login' }
   ] },
   { path: 'navigation', component: NavigationComponent, canActivate: [AuthGuard] },
+  { path: 'game', component: GameComponent, canActivate: [AuthGuard] },
   { path: '**', redirectTo: 'navigation' }
 ];
 
