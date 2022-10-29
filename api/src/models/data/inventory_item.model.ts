@@ -1,7 +1,6 @@
-import { AutoIncrement, Column, DataType, Model, PrimaryKey, Table, Scopes, ForeignKey, BelongsTo } from 'sequelize-typescript';
-import { Op } from 'sequelize';
-import { Item } from './item.model';
-import { Inventory } from './inventory.model';
+import {Column, DataType, ForeignKey, Model, Table} from 'sequelize-typescript';
+import {Item} from './item.model';
+import {Inventory} from './inventory.model';
 
 @Table
 export class InventoryItem extends Model<InventoryItem> {

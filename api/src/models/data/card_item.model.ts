@@ -3,7 +3,7 @@ import {Item} from './item.model';
 import {Card} from "./card.model";
 
 @Table
-export class InventoryItem extends Model<InventoryItem> {
+export class CardItem extends Model<CardItem> {
   @ForeignKey(() => Card)
   @Column(DataType.INTEGER)
   cardId!: number;
