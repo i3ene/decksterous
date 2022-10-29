@@ -1,4 +1,5 @@
 import { ElementRef } from "@angular/core";
+import { IScene } from "src/app/models/scene.model";
 import { Color, PerspectiveCamera, Scene, TextureLoader, WebGLRenderer } from "three";
 
 export class ThreeLogic {
@@ -52,6 +53,7 @@ export class ThreeLogic {
       this.farClippingPlane
     )
     this.camera.position.z = this.cameraZ;
+    this.camera.castShadow = true;
   }
 
   private getAspectRatio() {
@@ -72,6 +74,12 @@ export class ThreeLogic {
       component.renderList.forEach(fn => fn());
       component.renderer.render(component.scene, component.camera);
     }());
+  }
+
+  public registerScene(scene: IScene) {
+    this.createScene();
+    this.startRenderingLoop();
+    scene.bind(this);
   }
   
 }
