@@ -12,12 +12,13 @@
   <mat-sidenav-container class="sidenav">
     <mat-sidenav [mode]="'side'" opened #drawer>
       <mat-nav-list>
-        <ng-container *ngFor="let category of menuCategories">
+        <ng-container *ngFor="let category of menuCategories; let last = last">
           <h2 matSubheader>{{ category.name }}</h2>
           <mat-list-item *ngFor="let item of category.items" [routerLink]="item.link" [routerLinkActive]="['is-active']">
             <mat-icon matListIcon>{{ item.icon }}</mat-icon>
             {{ item.name }}
           </mat-list-item>
+          <mat-divider *ngIf="!last"></mat-divider>
         </ng-container>
       </mat-nav-list>
     </mat-sidenav>
