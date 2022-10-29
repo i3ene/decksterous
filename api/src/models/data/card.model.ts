@@ -33,6 +33,12 @@ export class Card extends Model<Card> {
   atk!: number;
 
   @Column(DataType.BLOB)
-  img!: BlobDataType;
+  get img(): any {
+    const data = this.getDataValue('img');
+    return data ? data.toString('utf8') : '';
+  }
+  set img(value: any) {
+    this.setDataValue('img', value);
+  }
 
 }
