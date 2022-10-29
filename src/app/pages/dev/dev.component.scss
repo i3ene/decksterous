@@ -1,3 +1,15 @@
 .container {
-    padding: 16px;
+  padding: 16px;
+}
+
+.align_start {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+h1 {
+    margin-bottom: 0px !important;
 }

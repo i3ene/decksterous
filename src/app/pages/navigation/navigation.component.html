@@ -1,15 +1,28 @@
-<mat-toolbar color="primary">
-    <button mat-icon-button>
+<div class="container">
+  <mat-toolbar color="primary">
+    <button mat-icon-button (click)="drawer.toggle()">
       <mat-icon>menu</mat-icon>
     </button>
     <span>:Title:</span>
     <span class="spacer"></span>
     <button mat-icon-button>
-      <mat-icon>
-        more_vert
-      </mat-icon>
+      <mat-icon> more_vert </mat-icon>
     </button>
   </mat-toolbar>
-  :Navigation:
-  <router-outlet></router-outlet>
-  :Footer:
+  <mat-sidenav-container class="sidenav">
+    <mat-sidenav [mode]="'side'" opened #drawer>
+      <mat-nav-list>
+        <ng-container *ngFor="let category of menuCategories">
+          <h2 matSubheader>{{ category.name }}</h2>
+          <mat-list-item *ngFor="let item of category.items" [routerLink]="item.link" [routerLinkActive]="['is-active']">
+            <mat-icon matListIcon>{{ item.icon }}</mat-icon>
+            {{ item.name }}
+          </mat-list-item>
+        </ng-container>
+      </mat-nav-list>
+    </mat-sidenav>
+    <mat-sidenav-content>
+      <router-outlet></router-outlet>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</div>
