@@ -14,6 +14,6 @@ export class GameComponent implements AfterViewInit {
   ngAfterViewInit(): void {
     this.threeLogic = new ThreeLogic(this.canvasRef);
     this.threeLogic.registerScene(new TestScene());
-    
   }
+  
 }
