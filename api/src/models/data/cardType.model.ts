@@ -1,15 +1,11 @@
-import {AutoIncrement, Column, DataType, Model, PrimaryKey, Scopes, Table} from "sequelize-typescript";
+import {AutoIncrement, BelongsToMany, Column, DataType, HasMany, Model, PrimaryKey, Scopes, Table} from "sequelize-typescript";
 import {QueryUtil} from "../../utils/query.util";
-import {Item} from "./item.model";
-import {User} from "./user.model";
+import { Card } from "./card.model";
 
 @Scopes(() => ({
   query: QueryUtil.query(['id', 'userId']),
-  items: {
-    include: [Item]
-  },
-  user: {
-    include: [User]
+  cards: {
+    include: [Card]
   }
 }))
 @Table
@@ -21,4 +17,7 @@ export class CardType extends Model<CardType> {
 
   @Column(DataType.STRING(64))
   type!: string;
+
+  @HasMany(() => Card)
+  cards?: Card[];
 }

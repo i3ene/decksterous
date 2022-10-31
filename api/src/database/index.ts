@@ -5,8 +5,7 @@ import {User} from "../models/data/user.model";
 import {SequelizeDatabase} from "./sequelize.database";
 import {Card} from "../models/data/card.model";
 import {CardType} from "../models/data/cardType.model";
-import {CardItem} from "../models/data/card_item.model"
 
-SequelizeDatabase.addModels([User, Inventory, Item, InventoryItem, Card, CardType, CardItem]);
+SequelizeDatabase.addModels([User, Inventory, Item, InventoryItem, Card, CardType]);
 
 export const database = SequelizeDatabase;

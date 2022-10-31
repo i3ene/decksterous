@@ -11,7 +11,7 @@ export namespace CardController {
   }
 
   export async function get(req: Request, res: Response): Promise<any> {
-    const card: Card | null = await Card.scope(['inventory', {method: ['query', req.query, Op.and]}]).findOne();
+    const card: Card | null = await Card.scope(['item', {method: ['query', req.query, Op.and]}]).findOne();
     res.status(200).send(card);
   }
 

@@ -54,12 +54,13 @@ export class TestScene implements IScene {
   cubeRotation(threeLogic: ThreeLogic) {
     this.cube.rotation.x += 0.003;
     this.cube.rotation.y += 0.007;
+    this.cube.rotation.z += 0.001;
   }
 
   cubeCircle(threeLogic: ThreeLogic) {
     this.cube.position.x = Math.sin(threeLogic.time.current * 0.002) * 2;
     this.cube.position.y = Math.sin(threeLogic.time.current * 0.001) * 1 + 2;
-    this.cube.position.z = Math.cos(threeLogic.time.current * 0.002) * 2;
+    this.cube.position.z = Math.cos(threeLogic.time.current * 0.001) * 2;
   }
 
   cubeMove(threeLogic: ThreeLogic) {

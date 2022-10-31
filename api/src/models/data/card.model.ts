@@ -1,17 +1,12 @@
-import {AutoIncrement, Column, DataType, ForeignKey, Model, PrimaryKey, Scopes, Table} from "sequelize-typescript";
+import {AllowNull, AutoIncrement, BelongsTo, Column, DataType, ForeignKey, Model, PrimaryKey, Scopes, Table} from "sequelize-typescript";
 import {QueryUtil} from "../../utils/query.util";
-import {Item} from "./item.model";
-import {User} from "./user.model";
 import {CardType} from "./cardType.model";
-import {BlobDataType} from "sequelize";
+import { Item } from "./item.model";
 
 @Scopes(() => ({
   query: QueryUtil.query(['id', 'userId']),
-  items: {
+  item: {
     include: [Item]
-  },
-  user: {
-    include: [User]
   }
 }))
 @Table
@@ -24,7 +19,6 @@ export class Card extends Model<Card> {
   @ForeignKey(() => CardType)
   @Column(DataType.INTEGER)
   typeId!: number;
-
 
   @Column(DataType.INTEGER)
   hp!: number;
@@ -41,4 +35,10 @@ export class Card extends Model<Card> {
     this.setDataValue('img', value);
   }
 
+  @ForeignKey(() => Item)
+  @Column(DataType.INTEGER)
+  itemId!: number;
+
+  @BelongsTo(() => Item)
+  item?: Item;
 }
