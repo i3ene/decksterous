@@ -1,8 +1,9 @@
-import { ElementRef } from '@angular/core';
+import { ElementRef, isDevMode } from '@angular/core';
 import { IScene } from 'src/app/models/scene.model';
 import { Color, Mesh, Path, PerspectiveCamera, Scene, TextureLoader, Vector3, WebGLRenderer } from 'three';
 import * as TWEEN from '@tweenjs/tween.js';
 import { Tween } from '@tweenjs/tween.js';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 
 export class ThreeLogic {
   private canvasRef!: ElementRef;
@@ -16,6 +17,8 @@ export class ThreeLogic {
   public nearClippingPlane: number = 0.1;
 
   public farClippingPlane: number = 1000;
+
+  public controls: OrbitControls | undefined;
 
   /** Helper Properties **/
 
@@ -60,10 +63,12 @@ export class ThreeLogic {
   /** Render Setup **/
 
   public startRenderingLoop() {
-    this.renderer = new WebGLRenderer({ canvas: this.canvas });
+    this.renderer = new WebGLRenderer({ canvas: this.canvas, antialias: false });
     this.renderer.shadowMap.enabled = true;
     this.renderer.setPixelRatio(devicePixelRatio);
     this.renderer.setSize(this.canvas.clientWidth, this.canvas.clientHeight);
+
+    if (isDevMode()) this.controls = new OrbitControls(this.camera, this.renderer.domElement);
 
     let component: ThreeLogic = this;
     (function render(time: number) {
