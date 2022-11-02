@@ -2,8 +2,9 @@
   position: absolute;
   right: 1px;
   bottom: 0;
-  opacity: 0.5;
   font-size: 12px;
   height: 16px;
   overflow: hidden;
+  z-index: 3;
+  filter: invert(75%);
 }

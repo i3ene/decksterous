@@ -4,6 +4,7 @@ import { Color, Mesh, Path, PerspectiveCamera, Scene, TextureLoader, Vector3, We
 import * as TWEEN from '@tweenjs/tween.js';
 import { Tween } from '@tweenjs/tween.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
+import * as Stats from 'stats.js';
 
 export class ThreeLogic {
   private canvasRef!: ElementRef;
@@ -24,6 +25,8 @@ export class ThreeLogic {
 
   public time: { delta: number; current: number, previous: number } = { delta: 0, current: 0, previous: 0 };
 
+  public stats!: Stats;
+
   public camera!: PerspectiveCamera;
 
   private get canvas(): HTMLCanvasElement {
@@ -42,6 +45,15 @@ export class ThreeLogic {
 
   constructor(canvasRef: ElementRef) {
     this.canvasRef = canvasRef;
+    if (isDevMode()) this.statsPanel();
+  }
+
+  private statsPanel() {
+    this.stats = new Stats();
+    this.stats.showPanel(0);
+    this.stats.dom.style.left = 'unset';
+    this.stats.dom.style.right = '0px';
+    this.canvas.parentElement?.appendChild(this.stats.dom);
   }
 
   /** Scene Setup **/
@@ -63,7 +75,7 @@ export class ThreeLogic {
   /** Render Setup **/
 
   public startRenderingLoop() {
-    this.renderer = new WebGLRenderer({ canvas: this.canvas, antialias: false });
+    this.renderer = new WebGLRenderer({ canvas: this.canvas, antialias: true });
     this.renderer.shadowMap.enabled = true;
     this.renderer.setPixelRatio(devicePixelRatio);
     this.renderer.setSize(this.canvas.clientWidth, this.canvas.clientHeight);
@@ -72,14 +84,17 @@ export class ThreeLogic {
 
     let component: ThreeLogic = this;
     (function render(time: number) {
+      component.stats.begin();
       component.time.current = time;
       component.time.delta = time - component.time.previous;
       component.time.previous = time;
 
-      requestAnimationFrame(render);
-      TWEEN.update(time * 0.1);
       component.loopFunctions.forEach((fn) => fn(component));
       component.renderer.render(component.scene, component.camera);
+
+      component.stats.end();
+      TWEEN.update(time * 0.1);
+      requestAnimationFrame(render);
     })(component.time.previous);
   }
 
