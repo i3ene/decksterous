@@ -7,7 +7,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import * as Stats from 'stats.js';
 
 export class ThreeLogic {
-  private canvasRef!: ElementRef;
+  private canvas!: HTMLCanvasElement;
 
   /** Stage Properties **/
 
@@ -29,10 +29,6 @@ export class ThreeLogic {
 
   public camera!: PerspectiveCamera;
 
-  private get canvas(): HTMLCanvasElement {
-    return this.canvasRef.nativeElement;
-  }
-
   private loader = new TextureLoader();
 
   private renderer!: WebGLRenderer;
@@ -43,8 +39,8 @@ export class ThreeLogic {
 
   /** Constructor **/
 
-  constructor(canvasRef: ElementRef) {
-    this.canvasRef = canvasRef;
+  constructor(canvas: ElementRef | HTMLCanvasElement) {
+    this.canvas = canvas instanceof ElementRef ? canvas.nativeElement : canvas;
     if (isDevMode()) this.statsPanel();
   }
 
@@ -75,7 +71,7 @@ export class ThreeLogic {
   /** Render Setup **/
 
   public startRenderingLoop() {
-    this.renderer = new WebGLRenderer({ canvas: this.canvas, antialias: true });
+    this.renderer = new WebGLRenderer({ canvas: this.canvas, antialias: false });
     this.renderer.shadowMap.enabled = true;
     this.renderer.setPixelRatio(devicePixelRatio);
     this.renderer.setSize(this.canvas.clientWidth, this.canvas.clientHeight);

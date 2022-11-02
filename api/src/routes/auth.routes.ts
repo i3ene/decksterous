@@ -9,4 +9,4 @@ AuthRoutes.post("/signin", [middleware.verifyUser, middleware.verifyPassword], c
 
 AuthRoutes.post("/signup", [middleware.checkDuplicateName, middleware.checkDuplicateMail], UserController.add);
 
-AuthRoutes.post("/passwordreset", [middleware.verifyUser], controller.resetPassword)
+AuthRoutes.post("/passwordreset", [middleware.verifyUser], controller.resetPassword);

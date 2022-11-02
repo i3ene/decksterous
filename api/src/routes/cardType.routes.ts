@@ -1,5 +1,6 @@
 import {Router} from "express";
 import {CardTypeController as controller} from "../controllers/cardType.controller";
+import { AuthMiddleware as auth } from "../middleware/auth.middleware";
 
 export const CardTypeRoutes = Router();
 
@@ -7,8 +8,8 @@ CardTypeRoutes.get("/all", controller.getAll);
 
 CardTypeRoutes.get("/", controller.get);
 
-CardTypeRoutes.post("/", controller.add);
+CardTypeRoutes.post("/", [auth.isAdmin], controller.add);
 
-CardTypeRoutes.put("/", controller.edit);
+CardTypeRoutes.put("/", [auth.isAdmin], controller.edit);
 
-CardTypeRoutes.delete("/", controller.remove);
+CardTypeRoutes.delete("/", [auth.isAdmin], controller.remove);

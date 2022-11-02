@@ -62,4 +62,11 @@ export namespace AuthMiddleware {
 
     next();
   }
+
+  export async function isAdmin(req: Request, res: Response, next: NextFunction): Promise<any> {
+    if (req.user == null) return res.status(500).send({message: 'User object is null!'});
+    if (req.user.id != Config.Auth.ADMIN_ID) return res.status(401).send({message: 'Restricted to Admin!'});
+
+    next();
+  }
 }
