@@ -5,9 +5,6 @@ import { User } from '../models/data/user.model';
 import { QueryUtil } from '../utils/query.util';
 
 export namespace UserController {
-  export const Friend = UserFriendController;
-  export const Inventory = UserInventoryController;
-
   export async function getAll(req: Request, res: Response): Promise<any> {
     const users: User[] = await User.scope({ method: ['query', req.query, Op.or] }).findAll();
     if (users.length == 0) return res.status(404).send({ message: 'No Users found!' });
@@ -43,6 +40,7 @@ export namespace UserController {
 export namespace UserFriendController {
   export async function get(req: Request, res: Response): Promise<any> {
     const id = req.user ? req.user.id : req.query.id;
+    if (id == undefined) return res.status(400).send({ message: 'No ID provided!' });
 
     const user: User | null = await User.scope(['friend']).findByPk(id as any);
     if (user == undefined) return res.status(404).send({ message: 'No User found!' });
@@ -82,6 +80,7 @@ export namespace UserFriendController {
 export namespace UserInventoryController {
   export async function get(req: Request, res: Response): Promise<any> {
     const id = req.user ? req.user.id : req.query.id;
+    if (id == undefined) return res.status(400).send({ message: 'No ID provided!' });
 
     const user: User | null = await User.scope(['inventory']).findByPk(id as any);
     if (user == undefined) return res.status(404).send({ message: 'No User found!' });
@@ -112,4 +111,9 @@ export namespace UserInventoryController {
     await user.$remove('inventory', inventory);
     res.status(200).send({ message: "Inventory successfully removed!"});
   }
+}
+
+export namespace UserController {
+  export const Friend = UserFriendController;
+  export const Inventory = UserInventoryController;
 }
