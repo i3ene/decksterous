@@ -8,9 +8,9 @@ describe('workspace-project App', () => {
     page = new AppPage();
   });
 
-  it('should have Decksterous as a title', () => {
+  it('should have Decksterous as a title', async () => {
     page.navigateTo();
-    expect(browser.getTitle()).toEqual('Decksterous');
+    expect(await browser.getTitle()).toEqual('Decksterous');
   });
 
   afterEach(async () => {
