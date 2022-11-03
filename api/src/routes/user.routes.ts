@@ -13,3 +13,7 @@ UserRoutes.post("/", [auth.isAdmin], controller.add);
 UserRoutes.put("/", [auth.isAdmin], controller.edit);
 
 UserRoutes.delete("/", [auth.isAdmin], controller.remove);
+
+UserRoutes.post("/friend", [auth.isAdmin], controller.friendAdd);
+
+UserRoutes.delete("/friend", [auth.isAdmin], controller.friendRemove);
