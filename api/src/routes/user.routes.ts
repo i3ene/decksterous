@@ -14,8 +14,14 @@ UserRoutes.put("/", [auth.isAdmin], controller.edit);
 
 UserRoutes.delete("/", [auth.isAdmin], controller.remove);
 
-UserRoutes.get("/friend", [auth.isAdmin], controller.Friend.get);
+UserRoutes.get("/friend", controller.Friend.get);
 
 UserRoutes.post("/friend", [auth.isAdmin], controller.Friend.add);
 
 UserRoutes.delete("/friend", [auth.isAdmin], controller.Friend.remove);
+
+UserRoutes.get("/inventory", controller.Inventory.get);
+
+UserRoutes.post("/inventory", [auth.isAdmin], controller.Inventory.set);
+
+UserRoutes.delete("/inventory", [auth.isAdmin], controller.Inventory.remove);

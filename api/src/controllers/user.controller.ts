@@ -1,10 +1,12 @@
 import { Request, Response } from 'express';
 import { Op } from 'sequelize';
+import { Inventory } from '../models/data/inventory.model';
 import { User } from '../models/data/user.model';
 import { QueryUtil } from '../utils/query.util';
 
 export namespace UserController {
-  export const Friend = FriendController;
+  export const Friend = UserFriendController;
+  export const Inventory = UserInventoryController;
 
   export async function getAll(req: Request, res: Response): Promise<any> {
     const users: User[] = await User.scope({ method: ['query', req.query, Op.or] }).findAll();
@@ -38,10 +40,11 @@ export namespace UserController {
   }
 }
 
-export namespace FriendController {
-
+export namespace UserFriendController {
   export async function get(req: Request, res: Response): Promise<any> {
-    const user: User | null = await User.scope(['friend']).findByPk(req.query.id as any);
+    const id = req.user ? req.user.id : req.query.id;
+
+    const user: User | null = await User.scope(['friend']).findByPk(id as any);
     if (user == undefined) return res.status(404).send({ message: 'No User found!' });
 
     const friends: User[] = await user.$get('friends');
@@ -73,5 +76,40 @@ export namespace FriendController {
 
     await user.$remove('friends', friend);
     res.status(200).send({ message: "Friend successfully removed!"});
+  }
+}
+
+export namespace UserInventoryController {
+  export async function get(req: Request, res: Response): Promise<any> {
+    const id = req.user ? req.user.id : req.query.id;
+
+    const user: User | null = await User.scope(['inventory']).findByPk(id as any);
+    if (user == undefined) return res.status(404).send({ message: 'No User found!' });
+
+    const inventory: Inventory | null = await user.$get('inventory');
+
+    res.status(200).send(inventory);
+  }
+
+  export async function set(req: Request, res: Response): Promise<any> {
+    const user: User | null = await User.findByPk(req.body.id);
+    if (user == undefined) return res.status(404).send({ message: 'No User found!' });
+
+    const inventory: Inventory | null = await Inventory.findByPk(req.body.inventory.id);
+    if (inventory == undefined) return res.status(404).send({ message: 'No Inventory found!' });
+
+    await user.$set('inventory', inventory);
+    res.status(200).send({ message: "Inventory successfully set!"});
+  }
+
+  export async function remove(req: Request, res: Response): Promise<any> {
+    const user: User | null = await User.findByPk(req.body.id);
+    if (user == undefined) return res.status(404).send({ message: 'No User found!' });
+
+    const inventory: Inventory | null = await Inventory.findByPk(req.body.inventory.id);
+    if (inventory == undefined) return res.status(404).send({ message: 'No Inventory found!' });
+
+    await user.$remove('inventory', inventory);
+    res.status(200).send({ message: "Inventory successfully removed!"});
   }
 }
