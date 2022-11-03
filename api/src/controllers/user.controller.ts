@@ -11,7 +11,7 @@ export namespace UserController {
   }
 
   export async function get(req: Request, res: Response): Promise<any> {
-    const user: User | null = await User.scope(['inventory', { method: ['query', req.query, Op.and] }]).findOne();
+    const user: User | null = await User.scope(['inventory', 'friend', { method: ['query', req.query, Op.and] }]).findOne();
     res.status(200).send(user);
   }
 
@@ -33,5 +33,31 @@ export namespace UserController {
     if (user == undefined) return res.status(404).send({ message: 'No User found!' });
     await user.destroy();
     res.status(200).send({ message: "User successfully deleted!"});
+  }
+
+  export async function friendAdd(req: Request, res: Response): Promise<any> {
+    const user: User | null = await User.findByPk(req.body.id);
+    if (user == undefined) return res.status(404).send({ message: 'No User found!' });
+
+    if (req.body.id == req.body.friend.id) return res.status(400).send({ message: 'Cannot add yourself!' });
+
+    const friend: User | null = await User.findByPk(req.body.friend.id);
+    if (friend == undefined) return res.status(404).send({ message: 'No Friend found!' });
+
+    await user.$add('friends', friend);
+    res.status(200).send({ message: "Friend successfully added!"});
+  }
+
+  export async function friendRemove(req: Request, res: Response): Promise<any> {
+    const user: User | null = await User.findByPk(req.body.id);
+    if (user == undefined) return res.status(404).send({ message: 'No User found!' });
+
+    if (req.body.id == req.body.friend.id) return res.status(400).send({ message: 'Cannot remove yourself!' });
+
+    const friend: User | null = await User.findByPk(req.body.friend.id);
+    if (friend == undefined) return res.status(404).send({ message: 'No Friend found!' });
+
+    await user.$remove('friends', friend);
+    res.status(200).send({ message: "Friend successfully removed!"});
   }
 }
