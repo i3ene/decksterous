@@ -4,6 +4,7 @@ import { QueryUtil } from "../../utils/query.util";
 import { Inventory } from "./inventory.model";
 import { InventoryItem } from "./inventory_item.model";
 import { Card } from "./card.model";
+import { CardDeck } from "./cardDeck.model";
 
 @Scopes(() => ({
   query: QueryUtil.query(['id', 'name', 'description']),
@@ -12,6 +13,9 @@ import { Card } from "./card.model";
   },
   card: {
     include: [Card]
+  },
+  cardDeck: {
+    include: [CardDeck]
   }
 }))
 @Table
@@ -32,4 +36,7 @@ export class Item extends Model<Item> {
 
   @HasOne(() => Card)
   card?: Card;
+
+  @HasOne(() => CardDeck)
+  cardDeck?: CardDeck;
 }

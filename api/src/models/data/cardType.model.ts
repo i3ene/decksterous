@@ -3,7 +3,7 @@ import {QueryUtil} from "../../utils/query.util";
 import { Card } from "./card.model";
 
 @Scopes(() => ({
-  query: QueryUtil.query(['id', 'userId']),
+  query: QueryUtil.query(['id', 'type']),
   cards: {
     include: [Card]
   }
