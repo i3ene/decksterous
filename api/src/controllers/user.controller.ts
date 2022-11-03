@@ -4,6 +4,8 @@ import { User } from '../models/data/user.model';
 import { QueryUtil } from '../utils/query.util';
 
 export namespace UserController {
+  export const Friend = FriendController;
+
   export async function getAll(req: Request, res: Response): Promise<any> {
     const users: User[] = await User.scope({ method: ['query', req.query, Op.or] }).findAll();
     if (users.length == 0) return res.status(404).send({ message: 'No Users found!' });
@@ -34,8 +36,20 @@ export namespace UserController {
     await user.destroy();
     res.status(200).send({ message: "User successfully deleted!"});
   }
+}
 
-  export async function friendAdd(req: Request, res: Response): Promise<any> {
+export namespace FriendController {
+
+  export async function get(req: Request, res: Response): Promise<any> {
+    const user: User | null = await User.scope(['friend']).findByPk(req.query.id as any);
+    if (user == undefined) return res.status(404).send({ message: 'No User found!' });
+
+    const friends: User[] = await user.$get('friends');
+
+    res.status(200).send(friends);
+  }
+
+  export async function add(req: Request, res: Response): Promise<any> {
     const user: User | null = await User.findByPk(req.body.id);
     if (user == undefined) return res.status(404).send({ message: 'No User found!' });
 
@@ -48,7 +62,7 @@ export namespace UserController {
     res.status(200).send({ message: "Friend successfully added!"});
   }
 
-  export async function friendRemove(req: Request, res: Response): Promise<any> {
+  export async function remove(req: Request, res: Response): Promise<any> {
     const user: User | null = await User.findByPk(req.body.id);
     if (user == undefined) return res.status(404).send({ message: 'No User found!' });
 
