@@ -1,13 +1,17 @@
-import { AutoIncrement, Column, DataType, Model, PrimaryKey, Table, Scopes, HasOne } from "sequelize-typescript";
+import { AutoIncrement, Column, DataType, Model, PrimaryKey, Table, Scopes, HasOne, BelongsToMany } from "sequelize-typescript";
 import * as bcrypt from 'bcryptjs';
 import { Op } from "sequelize";
 import { QueryUtil } from "../../utils/query.util";
 import { Inventory } from "./inventory.model";
+import { Friend } from "./friend.model";
 
 @Scopes(() => ({
     query: QueryUtil.query(['id', 'name', 'mail']),
     inventory: {
         include: [Inventory]
+    },
+    friend: {
+        include: [User]
     }
 }))
 @Table
@@ -33,4 +37,7 @@ export class User extends Model<User> {
 
     @HasOne(() => Inventory)
     inventory?: Inventory;
+
+    @BelongsToMany(() => User, () => Friend)
+    friends?: User[];
 }
