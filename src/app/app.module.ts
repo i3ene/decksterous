@@ -6,11 +6,11 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NavigationComponent } from './pages/navigation/navigation.component';
 import { MaterialModule } from './modules/material.module';
-import { LoginFormComponent } from './components/forms/login-form/login-form.component';
+import { LoginFormComponent } from './pages/auth/forms/login-form/login-form.component';
 import { AuthComponent } from './pages/auth/auth.component';
-import { RegisterFormComponent } from './components/forms/register-form/register-form.component';
-import { ResetFormComponent } from './components/forms/reset-form/reset-form.component';
-import { VisibilityButtonComponent } from './components/forms/utils/visibility-button/visibility-button.component';
+import { RegisterFormComponent } from './pages/auth/forms/register-form/register-form.component';
+import { ResetFormComponent } from './pages/auth/forms/reset-form/reset-form.component';
+import { VisibilityButtonComponent } from './components/visibility-button/visibility-button.component';
 import { FormCardComponent } from './templates/form-card/form-card.component';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './services/auth/auth.interceptor';
@@ -20,7 +20,7 @@ import { AboutComponent } from './pages/about/about.component';
 import { SocketIoModule } from 'ngx-socket-io';
 import { SocketConnection } from './services/request/socket.connection';
 import { DevComponent } from './pages/dev/dev.component';
-import { SocketComponent } from './components/dev/socket/socket.component';
+import { SocketComponent } from './pages/dev/socket/socket.component';
 import { GameComponent } from './pages/game/game.component';
 
 @NgModule({

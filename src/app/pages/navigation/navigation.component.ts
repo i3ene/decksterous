@@ -1,5 +1,5 @@
 import { Component, isDevMode } from '@angular/core';
-import { MenuCategory } from 'src/app/models/menu.model';
+import { MenuCategory } from 'src/app/models/object/menu.model';
 
 @Component({
   templateUrl: './navigation.component.html',

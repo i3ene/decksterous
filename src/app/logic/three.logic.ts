@@ -1,5 +1,5 @@
 import { ElementRef, isDevMode } from '@angular/core';
-import { IScene } from 'src/app/models/scene.model';
+import { IScene } from 'src/app/models/object/scene.model';
 import { Color, Mesh, Path, PerspectiveCamera, Scene, TextureLoader, Vector3, WebGLRenderer } from 'three';
 import * as TWEEN from '@tweenjs/tween.js';
 import { Tween } from '@tweenjs/tween.js';

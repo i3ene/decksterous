@@ -1,6 +1,6 @@
-import { CubeThree } from 'src/app/models/cube.three';
-import { PlaneThree } from 'src/app/models/plane.three';
-import { IScene } from 'src/app/models/scene.model';
+import { CubeThree } from 'src/app/models/three/cube.three';
+import { PlaneThree } from 'src/app/models/three/plane.three';
+import { IScene } from 'src/app/models/object/scene.model';
 import * as THREE from 'three';
 import { Camera, DirectionalLight, HemisphereLight, Mesh, Vector3 } from 'three';
 import { ThreeLogic } from '../three.logic';
