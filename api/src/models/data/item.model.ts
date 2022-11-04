@@ -1,4 +1,4 @@
-import { AutoIncrement, Column, DataType, Model, PrimaryKey, Table, Scopes, HasMany, BelongsToMany, HasOne, ForeignKey } from "sequelize-typescript";
+import { AutoIncrement, Column, DataType, Model, PrimaryKey, Table, Scopes, HasMany, BelongsToMany, HasOne, ForeignKey, AllowNull } from "sequelize-typescript";
 import { Op } from "sequelize";
 import { QueryUtil } from "../../utils/query.util";
 import { Inventory } from "./inventory.model";
@@ -31,6 +31,7 @@ export class Item extends Model<Item> {
   @Column(DataType.STRING(255))
   description?: string;
 
+  @AllowNull
   @Column(DataType.BLOB)
   get image(): any {
     const data = this.getDataValue('image');
