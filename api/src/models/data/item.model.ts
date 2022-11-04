@@ -31,6 +31,15 @@ export class Item extends Model<Item> {
   @Column(DataType.STRING(255))
   description?: string;
 
+  @Column(DataType.BLOB)
+  get image(): any {
+    const data = this.getDataValue('image');
+    return data ? data.toString('utf8') : '';
+  }
+  set image(value: any) {
+    this.setDataValue('image', value);
+  }
+
   @BelongsToMany(() => Inventory, () => InventoryItem)
   inventories?: Inventory[];
 

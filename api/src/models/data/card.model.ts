@@ -34,15 +34,6 @@ export class Card extends Model<Card> {
   @Column(DataType.INTEGER)
   cost!: number;
 
-  @Column(DataType.BLOB)
-  get img(): any {
-    const data = this.getDataValue('img');
-    return data ? data.toString('utf8') : '';
-  }
-  set img(value: any) {
-    this.setDataValue('img', value);
-  }
-
   @ForeignKey(() => Item)
   @Column(DataType.INTEGER)
   itemId!: number;
