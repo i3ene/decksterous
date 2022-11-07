@@ -4,10 +4,10 @@ import { SocketConnection } from 'src/app/services/request/socket.connection';
 import { SocketService } from 'src/app/services/request/socket.service';
 
 @Component({
-  selector: 'app-socket',
+  selector: 'dev-socket',
   templateUrl: './socket.component.html',
   styleUrls: ['./socket.component.scss'],
 })
-export class SocketComponent {
+export class DevSocketComponent {
   constructor(public socket: SocketService) { }
 }

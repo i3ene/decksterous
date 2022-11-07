@@ -20,9 +20,12 @@ import { AboutComponent } from './pages/about/about.component';
 import { SocketIoModule } from 'ngx-socket-io';
 import { SocketConnection } from './services/request/socket.connection';
 import { DevComponent } from './pages/dev/dev.component';
-import { SocketComponent } from './pages/dev/socket/socket.component';
+import { DevSocketComponent } from './pages/dev/socket/socket.component';
 import { GameComponent } from './pages/game/game.component';
 import { InventoryComponent } from './components/inventory/inventory.component';
+import { DevUserComponent } from './pages/dev/user/user.component';
+import { DevInventoryComponent } from './pages/dev/inventory/inventory.component';
+import { FormTableComponent } from './templates/form-table/form-table.component';
 
 @NgModule({
   declarations: [
@@ -36,9 +39,12 @@ import { InventoryComponent } from './components/inventory/inventory.component';
     FormCardComponent,
     AboutComponent,
     DevComponent,
-    SocketComponent,
+    DevSocketComponent,
     GameComponent,
-    InventoryComponent
+    InventoryComponent,
+    DevUserComponent,
+    DevInventoryComponent,
+    FormTableComponent
   ],
   imports: [
     BrowserModule,
