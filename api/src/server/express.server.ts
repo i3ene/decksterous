@@ -4,6 +4,8 @@ import {HeaderMiddleware} from '../middleware/header.middleware';
 import {AuthRoutes} from '../routes/auth.routes';
 import {UserRoutes} from '../routes/user.routes';
 import {CardRoutes} from "../routes/card.routes";
+import { CardTypeRoutes } from '../routes/cardType.routes';
+import { InventoryRoutes } from '../routes/inventory.routes';
 
 export const app = express();
 
@@ -15,5 +17,6 @@ app.use('/auth', AuthRoutes);
 
 app.use(AuthMiddleware.verifyToken);
 app.use('/user', UserRoutes);
-
 app.use('/card', CardRoutes);
+app.use('/cardType', CardTypeRoutes);
+app.use('/inventory', InventoryRoutes);
