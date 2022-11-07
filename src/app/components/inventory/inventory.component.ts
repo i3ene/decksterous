@@ -9,7 +9,7 @@ import { RequestService } from 'src/app/services/request/request.service';
 })
 export class InventoryComponent implements OnInit {
 
-  items: any[] = [];
+  items: any[] = new Array(14).fill({ name: "Item", description: "Description", image: "Image" });
 
   constructor(private request: RequestService) { }
 

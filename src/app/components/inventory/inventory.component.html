@@ -1,11 +1,14 @@
 <div class="container">
   <div class="header">
     <div>Items selected: 0</div>
-    <button mat-flat-button color="primary">
-      Create Deck
-    </button>
+    <button mat-flat-button color="primary">Create Deck</button>
   </div>
-  <mat-card>
-    CONTENT
+  <mat-card class="content">
+    <span *ngIf="!items.length">No Items in Inventory...</span>
+    <div *ngFor="let item of items" class="item">
+      <h2>{{ item.name }}</h2>
+      <img [src]="item.image" [alt]="item.image" />
+      <p>{{ item.description }}</p>
+    </div>
   </mat-card>
 </div>
