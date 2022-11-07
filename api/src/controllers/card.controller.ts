@@ -2,6 +2,7 @@ import {Request, Response} from 'express';
 import {Op} from 'sequelize';
 import {QueryUtil} from '../utils/query.util';
 import {Card} from "../models/data/card.model";
+import { Item } from '../models/data/item.model';
 
 export namespace CardController {
   export async function getAll(req: Request, res: Response): Promise<any> {
@@ -16,6 +17,13 @@ export namespace CardController {
   }
 
   export async function add(req: Request, res: Response): Promise<any> {
+    if (req.body.itemId || req.body.item) {
+      req.body.itemId = req.body.item ? req.body.item.id : req.body.itemId;
+    } else {
+      const item: Item = await Item.create(QueryUtil.attributes(req.body, Item));
+      req.body.itemId = item.id;
+    }
+
     const card: Card = await Card.create(QueryUtil.attributes(req.body, Card));
     if (card) return res.status(200).send({message: 'Card successfully added!'});
     res.status(500).send({message: 'Something went wrong'});
