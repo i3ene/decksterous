@@ -9,6 +9,7 @@ import { AuthGuard } from './services/auth/auth.guard';
 import { AboutComponent } from './pages/about/about.component';
 import { DevComponent } from './pages/dev/dev.component';
 import { GameComponent } from './pages/game/game.component';
+import { InventoryComponent } from './components/inventory/inventory.component';
 
 const routes: Routes = [
   { path: 'dev', component: DevComponent },
@@ -19,7 +20,10 @@ const routes: Routes = [
     { path: 'reset', component: ResetFormComponent },
     { path: '**', redirectTo: 'login' }
   ] },
-  { path: 'navigation', component: NavigationComponent, canActivate: [AuthGuard] },
+  { path: 'navigation', component: NavigationComponent, canActivateChild: [AuthGuard], children: [
+    { path: 'inventory', component: InventoryComponent },
+    { path: '**', redirectTo: 'inventory' }
+  ]},
   { path: 'game', component: GameComponent, canActivate: [AuthGuard] },
   { path: '**', redirectTo: 'navigation' }
 ];

@@ -22,6 +22,7 @@ import { SocketConnection } from './services/request/socket.connection';
 import { DevComponent } from './pages/dev/dev.component';
 import { SocketComponent } from './pages/dev/socket/socket.component';
 import { GameComponent } from './pages/game/game.component';
+import { InventoryComponent } from './components/inventory/inventory.component';
 
 @NgModule({
   declarations: [
@@ -36,7 +37,8 @@ import { GameComponent } from './pages/game/game.component';
     AboutComponent,
     DevComponent,
     SocketComponent,
-    GameComponent
+    GameComponent,
+    InventoryComponent
   ],
   imports: [
     BrowserModule,
