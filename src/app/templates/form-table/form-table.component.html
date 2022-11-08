@@ -1,1 +1,19 @@
-<p>form-table works!</p>
+<table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+  <ng-container *ngFor="let column of columns" [matColumnDef]="column.key">
+    <th mat-header-cell *matHeaderCellDef>{{column.name}}</th>
+    <td mat-cell *matCellDef="let element">
+      <ng-container *ngIf="!(selected || column.edit) else editColumn">
+        {{element.position}}
+      </ng-container>  
+      <ng-template #editColumn>
+        <!-- TODO: Edit Column Actions -->
+        {{ column.edit }}
+      </ng-template>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
+

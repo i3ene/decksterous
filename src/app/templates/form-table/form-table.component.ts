@@ -1,15 +1,34 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTable, MatTableDataSource } from '@angular/material/table';
+import { IColumn } from 'src/app/models/object/table.model';
 
 @Component({
   selector: 'app-form-table',
   templateUrl: './form-table.component.html',
   styleUrls: ['./form-table.component.scss']
 })
-export class FormTableComponent implements OnInit {
+export class FormTableComponent {
 
-  constructor() { }
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild('table') table!: MatTable<any>;
+  @ViewChild(MatSort) sort!: MatSort;
 
-  ngOnInit(): void {
+  @Input() columns!: IColumn[];
+  get displayedColumns(): string[] {
+    return this.columns.map(x => x.key);
   }
+
+  dataSource!: MatTableDataSource<any>;
+  _data: any;
+  @Input() set data(value: IColumn[]) {
+    this.dataSource = new MatTableDataSource<any>(value);
+    this._data = value;
+  }
+  get data(): IColumn[] {
+    return this._data;
+  }
+  selected: any;
 
 }
