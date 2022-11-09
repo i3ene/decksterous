@@ -13,10 +13,10 @@ export class DevUserComponent implements OnInit {
   data!: User[];
   columns: IColumn[] = [
     { key: 'id', name: 'ID', edit: 'number' },
+    { key: 'avatar', name: 'Avatar', edit: 'image' },
     { key: 'name', name: 'Name', edit: 'text' },
     { key: 'mail', name: 'Mail', edit: 'text' },
     { key: 'xp', name: 'XP', edit: 'number' },
-    { key: 'avatar', name: 'Avatar', edit: 'image' },
   ];
 
   constructor(private request: RequestService) {}

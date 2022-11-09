@@ -1,7 +1,8 @@
 export interface IColumn {
   key: string;
   name: string;
-  edit?: 'text' | 'number' | 'image' | IColumnSelect;
+  edit?: 'text' | 'number' | 'image' | 'select';
+  select?: IColumnSelect;
 }
 
 export interface IColumnSelect {

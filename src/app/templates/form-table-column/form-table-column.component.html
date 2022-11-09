@@ -1,0 +1,37 @@
+<ng-container [ngSwitch]="column.edit">
+  <ng-container *ngSwitchCase="'text'">
+    <ng-container *ngIf="isEditing else edit">
+      TEXT
+    </ng-container>
+    <ng-template #edit>
+      {{ row[column.key] }}
+    </ng-template>
+  </ng-container>
+  <ng-container *ngSwitchCase="'number'">
+    <ng-container *ngIf="isEditing else edit">
+      NUMBER
+    </ng-container>
+    <ng-template #edit>
+      {{ row[column.key] }}
+    </ng-template>
+  </ng-container>
+  <ng-container *ngSwitchCase="'image'">
+    <ng-container *ngIf="isEditing else edit">
+      IMAGE
+    </ng-container>
+    <ng-template #edit>
+      <img [src]="row[column.key]" />
+    </ng-template>
+  </ng-container>
+  <ng-container *ngSwitchCase="'select'">
+    <ng-container *ngIf="isEditing else edit">
+      SELECT
+    </ng-container>
+    <ng-template #edit>
+      {{ row[column.key] }}
+    </ng-template>
+  </ng-container>
+  <ng-container *ngSwitchDefault>
+    {{ row[column.key] }}
+  </ng-container>
+</ng-container>
