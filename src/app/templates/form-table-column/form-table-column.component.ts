@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter } from '@angular/core';
 import { IColumn } from 'src/app/models/object/table.model';
 
 @Component({
@@ -9,8 +9,10 @@ import { IColumn } from 'src/app/models/object/table.model';
 })
 export class FormTableColumnComponent {
 
-  @Input() isEditing: boolean = false;
+  @Input() editing: any;
   @Input() column!: IColumn;
   @Input() row!: any;
+
+  @Output() actionEvent: EventEmitter<any> = new EventEmitter<any>();
 
 }

@@ -1,34 +1,44 @@
-<ng-container [ngSwitch]="column.edit">
+<ng-container [ngSwitch]="column.type">
   <ng-container *ngSwitchCase="'text'">
-    <ng-container *ngIf="isEditing else edit">
+    <ng-container *ngIf="row == editing else display">
       TEXT
     </ng-container>
-    <ng-template #edit>
+    <ng-template #display>
       {{ row[column.key] }}
     </ng-template>
   </ng-container>
   <ng-container *ngSwitchCase="'number'">
-    <ng-container *ngIf="isEditing else edit">
+    <ng-container *ngIf="row == editing else display">
       NUMBER
     </ng-container>
-    <ng-template #edit>
+    <ng-template #display>
       {{ row[column.key] }}
     </ng-template>
   </ng-container>
   <ng-container *ngSwitchCase="'image'">
-    <ng-container *ngIf="isEditing else edit">
+    <ng-container *ngIf="row == editing else display">
       IMAGE
     </ng-container>
-    <ng-template #edit>
+    <ng-template #display>
       <img [src]="row[column.key]" />
     </ng-template>
   </ng-container>
   <ng-container *ngSwitchCase="'select'">
-    <ng-container *ngIf="isEditing else edit">
+    <ng-container *ngIf="row == editing else display">
       SELECT
     </ng-container>
-    <ng-template #edit>
+    <ng-template #display>
       {{ row[column.key] }}
+    </ng-template>
+  </ng-container>
+  <ng-container *ngSwitchCase="'action'">
+    <ng-container *ngIf="!column.actions else display">
+      ACTION
+    </ng-container>
+    <ng-template #display>
+      <button mat-icon-button *ngFor="let action of $any(column).getActions(row == editing)" (click)="actionEvent.emit({action: action.name, row: row})">
+        <mat-icon>{{action.icon}}</mat-icon>
+      </button>
     </ng-template>
   </ng-container>
   <ng-container *ngSwitchDefault>

@@ -26,9 +26,19 @@ export class FormTableComponent {
   @Input() paginatorSizeOptions: number[] = [5,10,25,50];
   @Output() paginatorChange: EventEmitter<PageEvent> = new EventEmitter<PageEvent>();
 
+  @Output() actionEvent: EventEmitter<any> = new EventEmitter<any>();
+
   dataSource!: MatTableDataSource<any>;
-  selected: any;
+  _selected: any;
   _data!: any[];
+
+  set selected(value: any) {
+    this._selected = value;
+  }
+
+  get selected(): any {
+    return this._selected;
+  }
 
   get displayedColumns(): string[] {
     return this.columns.map(x => x.key);

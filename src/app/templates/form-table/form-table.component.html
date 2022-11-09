@@ -3,7 +3,7 @@
     <ng-container *ngFor="let column of columns" [matColumnDef]="column.key">
       <th mat-header-cell *matHeaderCellDef>{{ column.name }}</th>
       <td mat-cell *matCellDef="let row">
-        <app-form-table-column [column]="column" [row]="row" [isEditing]="!!selected"></app-form-table-column>
+        <app-form-table-column [column]="column" [row]="row" [editing]="selected" (actionEvent)="actionEvent.emit($event)"></app-form-table-column>
       </td>
     </ng-container>
 
