@@ -18,8 +18,12 @@ export namespace UserController {
 
   export async function add(req: Request, res: Response): Promise<any> {
     const user: User = await User.create(QueryUtil.attributes(req.body, User));
-    if (user) return res.status(200).send({ message: 'User successfully added!' });
-    res.status(500).send({ message: 'Something went wrong' });
+    if (!user) return res.status(500).send({ message: 'Something went wrong' });
+
+    const inventory: Inventory = await Inventory.create();
+    await user.$set('inventory', inventory);
+
+    res.status(200).send({ message: 'User successfully added!' });
   }
 
   export async function edit(req: Request, res: Response): Promise<any> {
@@ -114,6 +118,6 @@ export namespace UserInventoryController {
 }
 
 export namespace UserController {
-  export const Friend = UserFriendController;
-  export const Inventory = UserInventoryController;
+  export const FriendController = UserFriendController;
+  export const InventoryController = UserInventoryController;
 }

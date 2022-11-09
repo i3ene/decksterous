@@ -38,9 +38,9 @@ export namespace QueryUtil {
    */
   export function query(attributes: string[]) {
     return (data: any, operator: typeof Op & any = Op.or) => ({
-      where: {
-        [operator as unknown as symbol]: attributes.map((x) => attribute(data, x)),
-      },
+      where: Object.keys(data).length ? {
+        [operator as unknown as symbol]: attributes.map((x) => attribute(data, x)).filter((x) => Object.keys(x).length),
+      } : {}
     });
   }
 

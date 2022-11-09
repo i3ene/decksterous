@@ -14,14 +14,14 @@ UserRoutes.put("/", [auth.isAdmin], controller.edit);
 
 UserRoutes.delete("/", [auth.isAdmin], controller.remove);
 
-UserRoutes.get("/friend", controller.Friend.get);
+UserRoutes.get("/friend", controller.FriendController.get);
 
-UserRoutes.post("/friend", [auth.isAdmin], controller.Friend.add);
+UserRoutes.post("/friend", [auth.isAdmin], controller.FriendController.add);
 
-UserRoutes.delete("/friend", [auth.isAdmin], controller.Friend.remove);
+UserRoutes.delete("/friend", [auth.isAdmin], controller.FriendController.remove);
 
-UserRoutes.get("/inventory", controller.Inventory.get);
+UserRoutes.get("/inventory", controller.InventoryController.get);
 
-UserRoutes.post("/inventory", [auth.isAdmin], controller.Inventory.set);
+UserRoutes.post("/inventory", [auth.isAdmin], controller.InventoryController.set);
 
-UserRoutes.delete("/inventory", [auth.isAdmin], controller.Inventory.remove);
+UserRoutes.delete("/inventory", [auth.isAdmin], controller.InventoryController.remove);
