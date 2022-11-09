@@ -21,12 +21,12 @@ export class FormTableComponent {
   }
 
   dataSource!: MatTableDataSource<any>;
-  _data: any;
-  @Input() set data(value: IColumn[]) {
+  _data!: any[];
+  @Input() set data(value: any[]) {
     this.dataSource = new MatTableDataSource<any>(value);
     this._data = value;
   }
-  get data(): IColumn[] {
+  get data(): any[] {
     return this._data;
   }
   selected: any;
