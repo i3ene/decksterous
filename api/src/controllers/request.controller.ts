@@ -1,9 +1,17 @@
 import { Request, Response } from 'express';
 
 export namespace RequestController {
-  export function result(key?: string) {
+  export function result(key?: string | any) {
     return (req: Request, res: Response) => {
-      res.status(200).send(key ? req.data[key] : req.data);
+      let data = req.data;
+      if (key) {
+        if (typeof key == 'string') {
+          data = req.data[key];
+        } else {
+          data = req.data[key as string];
+        }
+      }
+      res.status(200).send(data);
     };
   }
 

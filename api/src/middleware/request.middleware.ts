@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
+import { Op } from 'sequelize';
 import { Config } from '../config';
 import { QueryUtil } from '../utils/query.util';
 
@@ -13,12 +14,46 @@ export namespace RequestMiddleware {
     next();
   }
 
+  export function find(model: { new (...args: any[]): any } & any) {
+    return async (req: Request, res: Response, next: NextFunction) => {
+      const key = model as string;
+      const data = await model.scope([{ method: ['query', req.query, Op.and] }]).findOne();
+      if (data == null) req.data.messages.push('No ' + key + ' found!');
+      req.data[key] = data;
+
+      next();
+    };
+  }
+
+  export function findAll(model: { new (...args: any[]): any } & any) {
+    return async (req: Request, res: Response, next: NextFunction) => {
+      const key = model as string;
+      const data = await model.scope([{ method: ['query', req.query, Op.or] }]).findAll();
+      if (data == null) req.data.messages.push('No ' + key + ' found!');
+      req.data[key] = data;
+
+      next();
+    };
+  }
+
+  export function get(model: { new (...args: any[]): any } & any) {
+    return async (req: Request, res: Response, next: NextFunction) => {
+      const key = model as string;
+      const data = await model.findByPk(req.body.id ? req.body.id : req.query.id);
+      if (data == null) req.data.messages.push('No ' + key + ' found!');
+      req.data[key] = data;
+
+      next();
+    };
+  }
+
   export function add(model: { new (...args: any[]): any } & any) {
     return async (req: Request, res: Response, next: NextFunction) => {
-      const inventory: typeof model = await model.create(QueryUtil.attributes(req.body, typeof model));
-      if (!inventory) req.data.messages.push('Something went wrong');
-      else req.data.messages.push(typeof model + ' successfully added!');
-      req.data.inventory = inventory;
+      const key = model as string;
+      const data = await model.create(QueryUtil.attributes(req.body, model));
+      if (!data) req.data.messages.push('Something went wrong');
+      else req.data.messages.push(key + ' successfully added!');
+      req.data[key] = data;
 
       next();
     };
