@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
@@ -18,6 +18,8 @@ export class FormTableComponent {
   @Input() columns!: IColumn[];
   @Input() set data(value: any[]) {
     this.dataSource = new MatTableDataSource<any>(value);
+    if (this.paginator) this.dataSource.paginator = this.paginator;
+    if (this.sort) this.dataSource.sort = this.sort;
     this._data = value;
   }
 

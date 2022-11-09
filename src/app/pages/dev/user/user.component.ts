@@ -23,8 +23,8 @@ export class DevUserComponent implements OnInit {
     new ColumnAction("Action", [
       { name: 'edit', icon: 'edit' },
       { name: 'delete', icon: 'delete' },
-      { name: 'cancel', icon: 'cancel', onEdit: true },
-      { name: 'save', icon: 'save', onEdit: true },
+      { name: 'cancel', icon: 'close', onEdit: true },
+      { name: 'save', icon: 'check', onEdit: true },
     ])
   ];
 
