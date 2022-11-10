@@ -1,27 +1,21 @@
 import { Router } from "express";
-import { UserController as controller } from "../controllers/user.controller";
+import { RequestController as controller } from "../controllers/request.controller";
 import { AuthMiddleware as auth } from "../middleware/auth.middleware";
+import { RequestMiddleware as middleware } from "../middleware/request.middleware";
+import { User } from "../models/data/user.model";
 
 export const UserRoutes = Router();
 
-UserRoutes.get("/all", controller.getAll);
+UserRoutes.get("/all", [middleware.findAll(User)], controller.result(User));
 
-UserRoutes.get("/", controller.get);
+UserRoutes.get("/", [middleware.find(User)], controller.result(User));
 
-UserRoutes.post("/", [auth.isAdmin], controller.add);
+UserRoutes.post("/", [auth.isAdmin, middleware.add(User)], controller.message("last"));
 
-UserRoutes.put("/", [auth.isAdmin], controller.edit);
+UserRoutes.put("/", [auth.isAdmin, middleware.get(User), middleware.edit(User)], controller.message("last"));
 
-UserRoutes.delete("/", [auth.isAdmin], controller.remove);
+UserRoutes.delete("/", [auth.isAdmin, middleware.get(User), middleware.remove(User)], controller.message("last"));
 
-UserRoutes.get("/friend", controller.FriendController.get);
+UserRoutes.get("/friend", [middleware.get(User), middleware.getAssociation(User, 'friends')], controller.result([User, 'friends']));
 
-UserRoutes.post("/friend", [auth.isAdmin], controller.FriendController.add);
-
-UserRoutes.delete("/friend", [auth.isAdmin], controller.FriendController.remove);
-
-UserRoutes.get("/inventory", controller.InventoryController.get);
-
-UserRoutes.post("/inventory", [auth.isAdmin], controller.InventoryController.set);
-
-UserRoutes.delete("/inventory", [auth.isAdmin], controller.InventoryController.remove);
+UserRoutes.post("/friend", [auth.isAdmin, middleware.get(User), middleware.get(User, [], 'friend', 'friendId'), middleware.addAssociation(User, 'friends', 'friend')], controller.message("last"));

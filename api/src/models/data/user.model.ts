@@ -50,6 +50,6 @@ export class User extends Model<User> {
   @HasOne(() => Inventory)
   inventory?: Inventory;
 
-  @BelongsToMany(() => User, () => Friend)
+  @BelongsToMany(() => User, () => Friend, 'userId', 'friendsId')
   friends?: User[];
 }

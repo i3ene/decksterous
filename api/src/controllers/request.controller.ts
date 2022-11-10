@@ -1,12 +1,17 @@
 import { Request, Response } from 'express';
 
 export namespace RequestController {
-  export function result(key?: string | any) {
+  export function result(key?: string | any[] | any) {
     return (req: Request, res: Response) => {
       let data = req.data;
       if (key) {
         if (typeof key == 'string') {
           data = req.data[key];
+        } else if (Array.isArray(key)) {
+          data = req.data;
+          for (const attr of key) {
+            data = data[attr];
+          }
         } else {
           data = req.data[key as string];
         }

@@ -16,7 +16,7 @@ app.use(RequestMiddleware.handler);
 
 app.use('/auth', AuthRoutes);
 
-app.use(AuthMiddleware.verifyToken);
+//app.use(AuthMiddleware.verifyToken);
 app.use('/user', UserRoutes);
 app.use('/card', CardRoutes);
 app.use('/cardType', CardTypeRoutes);
