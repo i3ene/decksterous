@@ -10,10 +10,14 @@ export namespace RequestController {
         } else if (Array.isArray(key)) {
           data = req.data;
           for (const attr of key) {
-            data = data[attr];
+            if (typeof key == 'string') {
+              data = data[attr];
+            } else {
+              data = data[attr.name];
+            }
           }
         } else {
-          data = req.data[key as string];
+          data = req.data[key.name];
         }
       }
       res.status(200).send(data);
