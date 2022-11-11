@@ -142,16 +142,12 @@ export namespace RequestMiddleware {
     };
   }
 
-  export function difference(key1: any[] | any, key2: any[] | any, alias: string, on?: any[] | any) {
+  export function difference(type: 'left' | 'right' | 'intersection' | 'symmetric' , key1: any[] | any, key2: any[] | any, alias: string, on?: any[] | any) {
     return (req: Request, res: Response, next: NextFunction) => {
       let data1 = RequestUtils.byAttribute(req.data, key1);
       let data2 = RequestUtils.byAttribute(req.data, key2);
       if (Array.isArray(data1) && Array.isArray(data2)) {
-        // TODO: Multiple difference options
-        //? https://stackoverflow.com/questions/1187518/how-to-get-the-difference-between-two-arrays-in-javascript
-        let diff = data1.filter(x => !data2.map((y: any) => RequestUtils.byAttribute(y, on)).includes(RequestUtils.byAttribute(x, on)));
-
-        req.data[alias] = diff;
+        req.data[alias] = RequestUtils.difference(type, data1, data2, on);
       } else {
         req.data.messages.push("Difference only between arrays possible!");
       }

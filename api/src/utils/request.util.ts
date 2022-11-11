@@ -18,4 +18,17 @@ export namespace RequestUtils {
     }
     return data;
   }
+
+  export function difference(type: 'left' | 'right' | 'intersection' | 'symmetric', arr1: any[], arr2: any[], on?: any | any[]) {
+    switch(type) {
+      case 'intersection':
+        return arr1.filter(x => arr2.map((y: any) => RequestUtils.byAttribute(y, on)).includes(RequestUtils.byAttribute(x, on)));
+      case 'left':
+        return arr1.filter(x => !arr2.map((y: any) => RequestUtils.byAttribute(y, on)).includes(RequestUtils.byAttribute(x, on)));
+      case 'right':
+        return arr2.filter(x => !arr1.map((y: any) => RequestUtils.byAttribute(y, on)).includes(RequestUtils.byAttribute(x, on)));
+      case 'symmetric':
+        return arr1.filter(x => !arr2.map((y: any) => RequestUtils.byAttribute(y, on)).includes(RequestUtils.byAttribute(x, on))).concat(arr2.filter(x => !arr1.map((y: any) => RequestUtils.byAttribute(y, on)).includes(RequestUtils.byAttribute(x, on))));
+    }
+  }
 }
