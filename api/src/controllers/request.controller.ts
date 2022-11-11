@@ -10,7 +10,7 @@ export namespace RequestController {
         } else if (Array.isArray(key)) {
           data = req.data;
           for (const attr of key) {
-            if (typeof key == 'string') {
+            if (typeof attr == 'string') {
               data = data[attr];
             } else {
               data = data[attr.name];

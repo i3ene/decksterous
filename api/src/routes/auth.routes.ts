@@ -3,7 +3,6 @@ import { AuthController as auth } from "../controllers/auth.controller";
 import { RequestController as controller } from "../controllers/request.controller";
 import { AuthMiddleware as middleware } from "../middleware/auth.middleware";
 import { RequestMiddleware as request } from "../middleware/request.middleware";
-import { Inventory } from "../models/data/inventory.model";
 import { User } from "../models/data/user.model";
 
 export const AuthRoutes = Router();

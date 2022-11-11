@@ -104,7 +104,7 @@ export namespace RequestMiddleware {
       if (req.data[key] == undefined) return res.status(500).send('No ' + key + ' data available!');
       await req.data[key].$set(association,  req.data[data]);
       req.data.messages.push(association + ' successfully set for ' + key + '!');
-      
+
       next();
     };
   }
@@ -115,6 +115,27 @@ export namespace RequestMiddleware {
       if (req.data[key] == undefined) return res.status(500).send('No ' + key + ' data available!');
       await req.data[key].$add(association,  req.data[data]);
       req.data.messages.push(association + ' successfully added for ' + key + '!');
+
+      next();
+    };
+  }
+
+  export function removeAssociation(model: { new (...args: any[]): any } & any, association: string, data: string, alias?: string) {
+    return async (req: Request, res: Response, next: NextFunction) => {
+      const key = alias ? alias : model.name;
+      if (req.data[key] == undefined) return res.status(500).send('No ' + key + ' data available!');
+      await req.data[key].$remove(association,  req.data[data]);
+      req.data.messages.push(association + ' successfully removed for ' + key + '!');
+
+      next();
+    };
+  }
+
+  export function hasAssociation(model: { new (...args: any[]): any } & any, association: string, data: string, alias?: string) {
+    return async (req: Request, res: Response, next: NextFunction) => {
+      const key = alias ? alias : model.name;
+      if (req.data[key] == undefined) return res.status(500).send('No ' + key + ' data available!');
+      req.data[key][association] = await req.data[key].$has(association,  req.data[data]);
 
       next();
     };
