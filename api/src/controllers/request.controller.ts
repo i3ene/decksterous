@@ -1,25 +1,10 @@
 import { Request, Response } from 'express';
+import { RequestUtils } from '../utils/request.util';
 
 export namespace RequestController {
   export function result(key?: string | any[] | any) {
     return (req: Request, res: Response) => {
-      let data = req.data;
-      if (key) {
-        if (typeof key == 'string') {
-          data = req.data[key];
-        } else if (Array.isArray(key)) {
-          data = req.data;
-          for (const attr of key) {
-            if (typeof attr == 'string') {
-              data = data[attr];
-            } else {
-              data = data[attr.name];
-            }
-          }
-        } else {
-          data = req.data[key.name];
-        }
-      }
+      let data = RequestUtils.byAttribute(req.data, key);
       res.status(200).send(data);
     };
   }

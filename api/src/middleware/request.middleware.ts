@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { Op } from 'sequelize';
 import { Config } from '../config';
 import { QueryUtil } from '../utils/query.util';
+import { RequestUtils } from '../utils/request.util';
 
 export namespace RequestMiddleware {
   export function handler(req: Request, res: Response, next: NextFunction) {
@@ -136,6 +137,24 @@ export namespace RequestMiddleware {
       const key = alias ? alias : model.name;
       if (req.data[key] == undefined) return res.status(500).send('No ' + key + ' data available!');
       req.data[key][association] = await req.data[key].$has(association,  req.data[data]);
+
+      next();
+    };
+  }
+
+  export function difference(key1: any[] | any, key2: any[] | any, alias: string, on?: any[] | any) {
+    return (req: Request, res: Response, next: NextFunction) => {
+      let data1 = RequestUtils.byAttribute(req.data, key1);
+      let data2 = RequestUtils.byAttribute(req.data, key2);
+      if (Array.isArray(data1) && Array.isArray(data2)) {
+        // TODO: Multiple difference options
+        //? https://stackoverflow.com/questions/1187518/how-to-get-the-difference-between-two-arrays-in-javascript
+        let diff = data1.filter(x => !data2.map((y: any) => RequestUtils.byAttribute(y, on)).includes(RequestUtils.byAttribute(x, on)));
+
+        req.data[alias] = diff;
+      } else {
+        req.data.messages.push("Difference only between arrays possible!");
+      }
 
       next();
     };

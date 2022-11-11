@@ -18,8 +18,10 @@ UserRoutes.delete("/", [auth.isAdmin, middleware.get(User), middleware.remove(Us
 
 UserRoutes.get("/friend", [middleware.get(User), middleware.getAssociation(User, 'friends')], controller.result([User, 'friends']));
 
-UserRoutes.post("/friend", [auth.isAdmin, middleware.get(User), middleware.get(User, [], 'friend', 'friendId'), middleware.addAssociation(User, 'friends', 'friend')], controller.message("last"));
+UserRoutes.post("/friend", [ middleware.get(User), middleware.get(User, [], 'friend', 'friendId'), middleware.addAssociation(User, 'friends', 'friend')], controller.message("last"));
 
-UserRoutes.delete("/friend", [auth.isAdmin, middleware.get(User), middleware.get(User, [], 'friend', 'friendId'), middleware.removeAssociation(User, 'friends', 'friend')], controller.message('last'));
+UserRoutes.delete("/friend", [ middleware.get(User), middleware.get(User, [], 'friend', 'friendId'), middleware.removeAssociation(User, 'friends', 'friend')], controller.message('last'));
 
 UserRoutes.get("/friend/check", [ middleware.get(User), middleware.get(User, [], 'friend', 'friendId'), middleware.hasAssociation(User, 'friends', 'friend')], controller.result([User, 'friends']));
+
+UserRoutes.get("/friend/requests", [middleware.get(User), middleware.getAssociation(User, 'friends'), middleware.getAssociation(User, 'requests'), middleware.difference([User, 'requests'], [User, 'friends'], 'difference', 'id')], controller.result('difference'));

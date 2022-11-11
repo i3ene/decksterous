@@ -11,8 +11,11 @@ import { Friend } from './friend.model';
     include: [Inventory],
   },
   friend: {
-    include: [User],
+    include: [{model:User, as: 'friends'}],
   },
+  request: {
+    include: [{model:User, as: 'requests'}],
+  }
 }))
 @Table
 export class User extends Model<User> {
@@ -52,4 +55,7 @@ export class User extends Model<User> {
 
   @BelongsToMany(() => User, () => Friend, 'userId', 'friendsId')
   friends?: User[];
+
+  @BelongsToMany(() => User, () => Friend, 'friendsId', 'userId')
+  requests?: User[];
 }
