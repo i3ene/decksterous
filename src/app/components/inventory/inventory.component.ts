@@ -27,7 +27,6 @@ export class InventoryComponent {
 
   async loadItems(id: number, user?: boolean) {
     const payload = await this.request.get(`/inventory?${user ? 'userId' : 'id'}=${id}`);
-    console.log(!payload || !payload.items);
     if (!payload || !payload.items) this.items = [];
     else this.items = payload.items.map((x: any) => new Item(x)); // => new Object(x)
   }
