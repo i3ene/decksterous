@@ -29,6 +29,7 @@ import { FormTableComponent } from './templates/form-table/form-table.component'
 import { FormTableColumnComponent } from './templates/form-table-column/form-table-column.component';
 import { UserInventoryComponent } from './pages/navigation/inventory/inventory.component';
 import { ProfileComponent } from './components/profile/profile.component';
+import { ItemComponent } from './components/item/item.component';
 
 @NgModule({
   declarations: [
@@ -50,7 +51,8 @@ import { ProfileComponent } from './components/profile/profile.component';
     FormTableComponent,
     FormTableColumnComponent,
     UserInventoryComponent,
-    ProfileComponent
+    ProfileComponent,
+    ItemComponent
   ],
   imports: [
     BrowserModule,

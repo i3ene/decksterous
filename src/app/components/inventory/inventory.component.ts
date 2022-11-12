@@ -19,6 +19,8 @@ export class InventoryComponent {
     this.loadItems(value, true);
   }
 
+  @Input() selectable: boolean = false;
+
   items: Item[] = new Array(14).fill({ name: "Item", description: "Description", image: "Image" });
 
   constructor(private request: RequestService) { }

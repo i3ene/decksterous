@@ -1,0 +1,17 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid gray;
+  border-radius: 4px;
+  padding: 8px;
+}
+
+.container img {
+  align-self: center;
+}
+
+.header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}

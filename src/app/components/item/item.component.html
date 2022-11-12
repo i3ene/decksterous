@@ -1,0 +1,8 @@
+<div class="container">
+  <span class="header">
+    <h2>{{ item.name }}</h2>
+    <mat-checkbox *ngIf="selectable" [(ngModel)]="selected"></mat-checkbox>
+  </span>
+  <img [src]="item.image" [alt]="item.image" />
+  <p>{{ item.description }}</p>
+</div>
