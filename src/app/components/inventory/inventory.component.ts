@@ -5,8 +5,7 @@ import { RequestService } from 'src/app/services/request/request.service';
 @Component({
   selector: 'app-inventory',
   templateUrl: './inventory.component.html',
-  styleUrls: ['./inventory.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  styleUrls: ['./inventory.component.scss']
 })
 export class InventoryComponent {
 
