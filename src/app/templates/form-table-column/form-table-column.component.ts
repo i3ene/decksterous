@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter } from '@angular/core';
-import { IColumn } from 'src/app/models/object/table.model';
+import { IColumn, ITableActionEvent } from 'src/app/models/object/table.model';
 
 @Component({
   selector: 'app-form-table-column',
@@ -13,6 +13,6 @@ export class FormTableColumnComponent {
   @Input() column!: IColumn;
   @Input() row!: any;
 
-  @Output() actionEvent: EventEmitter<any> = new EventEmitter<any>();
+  @Output() actionEvent: EventEmitter<ITableActionEvent> = new EventEmitter<ITableActionEvent>();
 
 }

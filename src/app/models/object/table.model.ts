@@ -38,3 +38,8 @@ export class ColumnAction implements IColumn {
       return this.actions.filter(x => !!x.onEdit == !!onEdit);
   }
 }
+
+export interface ITableActionEvent {
+  action: string;
+  row: any;
+}

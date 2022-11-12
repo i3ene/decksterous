@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
-import { IColumn } from 'src/app/models/object/table.model';
+import { IColumn, ITableActionEvent } from 'src/app/models/object/table.model';
 
 @Component({
   selector: 'app-form-table',
@@ -28,7 +28,7 @@ export class FormTableComponent {
   @Input() paginatorSizeOptions: number[] = [5,10,25,50];
   @Output() paginatorChange: EventEmitter<PageEvent> = new EventEmitter<PageEvent>();
 
-  @Output() actionEvent: EventEmitter<any> = new EventEmitter<any>();
+  @Output() actionEvent: EventEmitter<ITableActionEvent> = new EventEmitter<ITableActionEvent>();
 
   dataSource!: MatTableDataSource<any>;
   _selected: any;
