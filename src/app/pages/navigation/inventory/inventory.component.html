@@ -1,6 +1,6 @@
 <div class="container">
   <div class="header">
-    <div>Items selected: 0</div>
+    <div>Items selected: {{inventory?.selectedItems?.length}}</div>
     <button mat-flat-button color="primary">Create Deck</button>
   </div>
   <app-inventory [selectable]="true"></app-inventory>

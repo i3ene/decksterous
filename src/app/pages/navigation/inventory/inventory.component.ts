@@ -1,14 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
+import { InventoryComponent } from 'src/app/components/inventory/inventory.component';
 
 @Component({
   templateUrl: './inventory.component.html',
   styleUrls: ['./inventory.component.scss']
 })
-export class UserInventoryComponent implements OnInit {
+export class UserInventoryComponent {
 
-  constructor() { }
-
-  ngOnInit(): void {
-  }
+  @ViewChild(InventoryComponent, { static: true }) inventory!: InventoryComponent;
 
 }
