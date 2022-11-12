@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { RequestService } from 'src/app/services/request/request.service';
 
 @Component({
@@ -7,18 +7,18 @@ import { RequestService } from 'src/app/services/request/request.service';
   styleUrls: ['./inventory.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class InventoryComponent implements OnInit {
+export class InventoryComponent {
+
+  @Input() set userId(value: number) {
+    this.loadItems(value);
+  }
 
   items: any[] = new Array(14).fill({ name: "Item", description: "Description", image: "Image" });
 
   constructor(private request: RequestService) { }
 
-  ngOnInit(): void {
-    this.loadItems();
-  }
-
-  async loadItems() {
-    const payload = await this.request.get("/ITEMS");
+  async loadItems(id: number) {
+    const payload = await this.request.get(`/ITEMS?id=${id}`);
     this.items = payload.map((x: any) => x); // => new Object(x)
   }
 
