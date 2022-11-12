@@ -7,5 +7,6 @@
   </span>
   <dev-socket></dev-socket>
   <dev-user (selectedEvent)="inventory.userId = $event.id"></dev-user>
-  <dev-inventory #inventory></dev-inventory>
+  <dev-inventory (selectedEvent)="inventory.inventoryId = $event.id"></dev-inventory>
+  <app-inventory #inventory></app-inventory>
 </div>
