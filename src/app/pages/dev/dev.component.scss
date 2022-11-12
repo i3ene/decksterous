@@ -11,5 +11,17 @@
 }
 
 h1 {
-    margin-bottom: 0px !important;
+  margin-bottom: 0px !important;
+}
+
+.tables {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 12px 0px;
+}
+
+.tables > * {
+  flex-grow: 1;
 }
