@@ -1,4 +1,6 @@
 import { Component, isDevMode } from '@angular/core';
+import { Router } from '@angular/router';
+import { Config } from 'src/app/config/config';
 import { MenuCategory } from 'src/app/models/object/menu.model';
 
 @Component({
@@ -31,10 +33,15 @@ export class NavigationComponent {
     },
   ];
 
-  constructor() {
+  constructor(private router: Router) {
     if (isDevMode()) this.menuCategories.push({
       name: 'Development',
       items: [{ name: 'Test', icon: 'bug_report', link: ['/dev'] }],
     });
+  }
+
+  logout() {
+    delete localStorage[Config.AuthToken];
+    this.router.navigate(["/auth"]);
   }
 }
