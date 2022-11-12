@@ -9,17 +9,24 @@ import { RequestService } from 'src/app/services/request/request.service';
 })
 export class InventoryComponent {
 
+  @Input() set inventoryId(value: number) {
+    if (!value) return;
+    this.loadItems(value, false);
+  }
+
   @Input() set userId(value: number) {
-    this.loadItems(value);
+    if (!value) return;
+    this.loadItems(value, true);
   }
 
   items: any[] = new Array(14).fill({ name: "Item", description: "Description", image: "Image" });
 
   constructor(private request: RequestService) { }
 
-  async loadItems(id: number) {
-    const payload = await this.request.get(`/ITEMS?id=${id}`);
-    this.items = payload.map((x: any) => x); // => new Object(x)
+  async loadItems(id: number, user?: boolean) {
+    const payload = await this.request.get(`/inventory?${user ? 'userId' : 'id'}=${id}`);
+    if (!payload || !payload.items) this.items = [];
+    else this.items = payload.items.map((x: any) => x); // => new Object(x)
   }
 
 }
