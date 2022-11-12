@@ -27,6 +27,8 @@ import { DevUserComponent } from './pages/dev/user/user.component';
 import { DevInventoryComponent } from './pages/dev/inventory/inventory.component';
 import { FormTableComponent } from './templates/form-table/form-table.component';
 import { FormTableColumnComponent } from './templates/form-table-column/form-table-column.component';
+import { UserInventoryComponent } from './pages/navigation/inventory/inventory.component';
+import { ProfileComponent } from './components/profile/profile.component';
 
 @NgModule({
   declarations: [
@@ -46,7 +48,9 @@ import { FormTableColumnComponent } from './templates/form-table-column/form-tab
     DevUserComponent,
     DevInventoryComponent,
     FormTableComponent,
-    FormTableColumnComponent
+    FormTableColumnComponent,
+    UserInventoryComponent,
+    ProfileComponent
   ],
   imports: [
     BrowserModule,

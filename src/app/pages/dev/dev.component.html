@@ -6,6 +6,6 @@
     <h1>Dev Test</h1>
   </span>
   <dev-socket></dev-socket>
-  <dev-user></dev-user>
-  <dev-inventory></dev-inventory>
+  <dev-user (selectedEvent)="inventory.userId = $event.id"></dev-user>
+  <dev-inventory #inventory></dev-inventory>
 </div>
