@@ -1,0 +1,28 @@
+.image-actions {
+  display: flex;
+  flex-direction: row;
+
+  & mat-icon {
+    cursor: pointer;
+  }
+}
+
+#imageupload, #imagedownload {
+  display: block;
+  visibility: hidden;
+  height: 0px !important;
+  width: 0px !important;
+}
+
+img {
+  margin: 2px 0px;
+  display: flex;
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+  border: 1px solid #aaa !important;
+}
+
+img[src] {
+  background-color: #ccc;
+}

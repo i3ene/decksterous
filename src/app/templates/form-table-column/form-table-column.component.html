@@ -1,6 +1,6 @@
 <ng-container [ngSwitch]="column.type">
   <ng-container *ngSwitchCase="'text'">
-    <ng-container *ngIf="row == editing else display">
+    <ng-container *ngIf="row == selected else display">
       TEXT
     </ng-container>
     <ng-template #display>
@@ -8,7 +8,7 @@
     </ng-template>
   </ng-container>
   <ng-container *ngSwitchCase="'number'">
-    <ng-container *ngIf="row == editing else display">
+    <ng-container *ngIf="row == selected else display">
       NUMBER
     </ng-container>
     <ng-template #display>
@@ -16,15 +16,27 @@
     </ng-template>
   </ng-container>
   <ng-container *ngSwitchCase="'image'">
-    <ng-container *ngIf="row == editing else display">
-      IMAGE
+    <ng-container *ngIf="row == selected else display">
+      <div>
+        <img [src]="row[column.key]" />
+        <input type="file" id="imageupload" (change)="dataService.uploadInput($event, { name: column.key, row: row })" />
+        <a #imagedownload id="imagedownload" [href]="row[column.key]" download="image">Download</a>
+        <div class="image-actions">
+          <label for="imageupload">
+            <mat-icon>upload</mat-icon>
+          </label>
+          <label (click)="imagedownload.click()">
+            <mat-icon>download</mat-icon>
+          </label>
+        </div>
+      </div>
     </ng-container>
     <ng-template #display>
       <img [src]="row[column.key]" />
     </ng-template>
   </ng-container>
   <ng-container *ngSwitchCase="'select'">
-    <ng-container *ngIf="row == editing else display">
+    <ng-container *ngIf="row == selected else display">
       SELECT
     </ng-container>
     <ng-template #display>
@@ -36,7 +48,7 @@
       ACTION
     </ng-container>
     <ng-template #display>
-      <button mat-icon-button *ngFor="let action of $any(column).getActions(row == editing)" (click)="actionEvent.emit({action: action.name, row: row})">
+      <button mat-icon-button *ngFor="let action of $any(column).getActions(row == selected)" (click)="actionEvent.emit({action: action.name, row: row})">
         <mat-icon>{{action.icon}}</mat-icon>
       </button>
     </ng-template>

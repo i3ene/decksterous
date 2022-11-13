@@ -17,7 +17,7 @@ export interface IColumnSelect {
 export interface IColumnAction {
   name: string;
   icon: string;
-  onEdit?: boolean;
+  onSelect?: boolean;
 }
 
 export class ColumnAction implements IColumn {
@@ -33,9 +33,9 @@ export class ColumnAction implements IColumn {
     if (actions) this.actions = actions;
   }
 
-  getActions(onEdit?: boolean): IColumnAction[] {
-      if (!this.actions) return [];
-      return this.actions.filter(x => !!x.onEdit == !!onEdit);
+  getActions(onSelect?: boolean): IColumnAction[] {
+    if (!this.actions) return [];
+    return this.actions.filter((x) => !!x.onSelect == !!onSelect);
   }
 }
 

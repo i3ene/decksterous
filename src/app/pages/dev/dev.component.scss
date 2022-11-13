@@ -14,14 +14,19 @@ h1 {
   margin-bottom: 0px !important;
 }
 
-.tables {
+.table-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.table-columns {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   gap: 12px;
-  margin: 12px 0px;
 }
 
-.tables > * {
+.table-columns > * {
   flex-grow: 1;
 }

@@ -21,8 +21,8 @@ export class DevInventoryComponent {
       { name: 'edit', icon: 'edit' },
       { name: 'delete', icon: 'delete' },
       { name: 'select', icon: 'radio_button_unchecked' },
-      { name: 'cancel', icon: 'close', onEdit: true },
-      { name: 'save', icon: 'check', onEdit: true },
+      { name: 'cancel', icon: 'close', onSelect: true },
+      { name: 'save', icon: 'check', onSelect: true },
     ])
   ];
 
