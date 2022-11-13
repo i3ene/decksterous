@@ -10,26 +10,37 @@ import { AboutComponent } from './pages/about/about.component';
 import { DevComponent } from './pages/dev/dev.component';
 import { GameComponent } from './pages/game/game.component';
 import { UserInventoryComponent } from './pages/navigation/inventory/inventory.component';
+import { ProfileComponent } from './components/profile/profile.component';
 
 const routes: Routes = [
   { path: 'dev', component: DevComponent },
   { path: 'about', component: AboutComponent },
-  { path: 'auth', component: AuthComponent, children: [
-    { path: 'login', component: LoginFormComponent },
-    { path: 'register', component: RegisterFormComponent },
-    { path: 'reset', component: ResetFormComponent },
-    { path: '**', redirectTo: 'login' }
-  ] },
-  { path: 'navigation', component: NavigationComponent, canActivateChild: [AuthGuard], children: [
-    { path: 'inventory', component: UserInventoryComponent },
-    { path: '**', redirectTo: 'inventory' }
-  ]},
+  {
+    path: 'auth',
+    component: AuthComponent,
+    children: [
+      { path: 'login', component: LoginFormComponent },
+      { path: 'register', component: RegisterFormComponent },
+      { path: 'reset', component: ResetFormComponent },
+      { path: '**', redirectTo: 'login' },
+    ],
+  },
+  {
+    path: 'navigation',
+    component: NavigationComponent,
+    canActivateChild: [AuthGuard],
+    children: [
+      { path: 'inventory', component: UserInventoryComponent },
+      { path: '**', redirectTo: 'inventory' },
+    ],
+  },
   { path: 'game', component: GameComponent, canActivate: [AuthGuard] },
-  { path: '**', redirectTo: 'navigation' }
+  { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard] },
+  { path: '**', redirectTo: 'navigation' },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

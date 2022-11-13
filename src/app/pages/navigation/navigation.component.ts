@@ -34,14 +34,19 @@ export class NavigationComponent {
   ];
 
   constructor(private router: Router) {
-    if (isDevMode()) this.menuCategories.push({
-      name: 'Development',
-      items: [{ name: 'Test', icon: 'bug_report', link: ['/dev'] }],
-    });
+    if (isDevMode())
+      this.menuCategories.push({
+        name: 'Development',
+        items: [{ name: 'Test', icon: 'bug_report', link: ['/dev'] }],
+      });
   }
 
   logout() {
     delete localStorage[Config.AuthToken];
-    this.router.navigate(["/auth"]);
+    this.router.navigate(['/auth']);
+  }
+
+  profile() {
+    this.router.navigate(['/profile']);
   }
 }
