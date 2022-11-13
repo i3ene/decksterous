@@ -9,7 +9,7 @@ export const CardRoutes = Router();
 
 CardRoutes.get('/all', [middleware.findAll(Card)], controller.result(Card));
 
-CardRoutes.get('/', [middleware.find(Card, ['items'])], controller.result(Card));
+CardRoutes.get('/', [middleware.find(Card, ['item', 'ability'])], controller.result(Card));
 
 CardRoutes.post('/', [auth.isAdmin, middleware.add(Card)], controller.message('last'));
 
