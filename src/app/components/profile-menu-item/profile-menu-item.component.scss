@@ -4,17 +4,6 @@
   padding-bottom: 8px;
 }
 
-img {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background-color: gainsboro;
-}
-
-img[src=""] {
-  display: none;
-}
-
 .header, .content {
   display: flex;
   flex-direction: row;

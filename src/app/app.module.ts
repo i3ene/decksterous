@@ -35,6 +35,7 @@ import { DevCardTypeComponent } from './pages/dev/card-type/card-type.component'
 import { DevCardAbilityComponent } from './pages/dev/card-ability/card-ability.component';
 import { DevItemComponent } from './pages/dev/item/item.component';
 import { ProfileMenuItemComponent } from './components/profile-menu-item/profile-menu-item.component';
+import { ProfileAvatarComponent } from './components/profile-avatar/profile-avatar.component';
 
 @NgModule({
   declarations: [
@@ -63,6 +64,7 @@ import { ProfileMenuItemComponent } from './components/profile-menu-item/profile
     DevCardTypeComponent,
     DevCardAbilityComponent,
     ProfileMenuItemComponent,
+    ProfileAvatarComponent,
   ],
   imports: [
     BrowserModule,

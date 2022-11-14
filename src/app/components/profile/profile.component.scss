@@ -1,11 +1,5 @@
 .container {
-  padding: 8px;
-}
-
-.avatar {
-  width: 64px;
-  height: 64px;
-  border-radius: 50%;
+  padding: 16px;
 }
 
 h1 {
@@ -19,6 +13,11 @@ h1 {
   gap: 8px;
 }
 
+.content {
+  margin-top: 16px;
+  padding: 16px;
+}
+
 .level {
   text-align: center;
   padding: 8px;
@@ -26,4 +25,9 @@ h1 {
   font-size: 22px;
   border-radius: 50%;
   border: 2px solid gainsboro;
+}
+
+.mat-list-icon {
+  margin-top: -10px !important;
+  margin-left: -10px !important;
 }
