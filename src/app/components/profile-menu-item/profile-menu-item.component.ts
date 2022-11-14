@@ -22,7 +22,6 @@ export class ProfileMenuItemComponent implements OnInit {
   async loadUser(id: number) {
     const payload = await this.request.get(`/user?id=${id}`);
     this.user = new User(payload);
-    this.user.xp = 40000;
   }
 
 }

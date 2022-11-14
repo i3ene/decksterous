@@ -1,1 +1,12 @@
-<p>profile works!</p>
+<div>
+  <img [src]="user.avatar" />
+  <div>Name: {{user.name}}</div>
+  <div>XP: {{user.xp}}</div>
+  <div>Level: {{stats.user(user.xp).level}}</div>
+  <div>
+    Friends:
+    <div *ngFor="let friend of friends">
+      Name: {{friend.name}}
+    </div>
+  </div>
+</div>
