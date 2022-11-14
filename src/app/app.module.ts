@@ -30,6 +30,10 @@ import { FormTableColumnComponent } from './templates/form-table-column/form-tab
 import { UserInventoryComponent } from './pages/navigation/inventory/inventory.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { ItemComponent } from './components/item/item.component';
+import { DevCardComponent } from './pages/dev/card/card.component';
+import { DevCardTypeComponent } from './pages/dev/card-type/card-type.component';
+import { DevCardAbilityComponent } from './pages/dev/card-ability/card-ability.component';
+import { DevItemComponent } from './pages/dev/item/item.component';
 
 @NgModule({
   declarations: [
@@ -52,7 +56,11 @@ import { ItemComponent } from './components/item/item.component';
     FormTableColumnComponent,
     UserInventoryComponent,
     ProfileComponent,
-    ItemComponent
+    ItemComponent,
+    DevItemComponent,
+    DevCardComponent,
+    DevCardTypeComponent,
+    DevCardAbilityComponent,
   ],
   imports: [
     BrowserModule,
