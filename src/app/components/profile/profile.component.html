@@ -4,8 +4,9 @@
     <h1>{{ user.name }}</h1>
     <span class="level">{{ stats.user(user.xp).level }}</span>
   </div>
-  <div class="row">
-    <span>{{ user.xp }}/{{ stats.user(user.xp).next }} XP</span>
+  <div class="progress">
+    <mat-progress-bar [value]="stats.user(user.xp).progress * 100" class="bar"></mat-progress-bar>
+    <div class="xp">{{ user.xp }}/{{ stats.user(user.xp).next }} XP</div>
   </div>
   <div class="content">
     <p>Description...</p>
