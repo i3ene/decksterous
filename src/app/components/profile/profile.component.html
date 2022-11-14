@@ -1,12 +1,20 @@
-<div>
-  <img [src]="user.avatar" />
-  <div>Name: {{user.name}}</div>
-  <div>XP: {{user.xp}}</div>
-  <div>Level: {{stats.user(user.xp).level}}</div>
-  <div>
-    Friends:
-    <div *ngFor="let friend of friends">
-      Name: {{friend.name}}
-    </div>
+<div class="container">
+  <div class="row">
+    <img [src]="user.avatar" class="avatar"/>
+    <h1>{{ user.name }}</h1>
+    <span class="level">{{ stats.user(user.xp).level }}</span>
   </div>
+  <div class="row">
+    <span>{{ user.xp }}/{{ stats.user(user.xp).next }} XP</span>
+  </div>
+  <div>CONTENT</div>
+  <mat-divider></mat-divider>
+  <mat-list>
+    <h3 mat-subheader>Friends</h3>
+    <mat-list-item *ngFor="let friend of friends">
+      <mat-icon mat-list-icon>account_circle</mat-icon>
+      <div mat-line>{{ friend.name }}</div>
+      <div mat-line>Level: {{ stats.user(friend.xp).level }}</div>
+    </mat-list-item>
+  </mat-list>
 </div>

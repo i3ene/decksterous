@@ -10,8 +10,8 @@ import { StatsService } from 'src/app/services/stats.service';
   styleUrls: ['./profile.component.scss'],
 })
 export class ProfileComponent implements OnInit {
-  user: User = new User({ name: 'Name' });
-  friends: User[] = new Array(14).fill({ name: 'User', avatar: 'Avatar' });
+  user: User = new User({ name: 'Loading...' });
+  friends: User[] = new Array(14).fill({ name: 'Loading...' });
 
   constructor(private token: TokenService, private request: RequestService, public stats: StatsService) {}
 
