@@ -31,11 +31,11 @@ const routes: Routes = [
     canActivateChild: [AuthGuard],
     children: [
       { path: 'inventory', component: UserInventoryComponent },
+      { path: 'profile', component: ProfileComponent },
       { path: '**', redirectTo: 'inventory' },
     ],
   },
   { path: 'game', component: GameComponent, canActivate: [AuthGuard] },
-  { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard] },
   { path: '**', redirectTo: 'navigation' },
 ];
 

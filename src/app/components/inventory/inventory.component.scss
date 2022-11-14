@@ -7,5 +7,6 @@
 }
 
 .item {
-  flex-basis: calc((100% / 4) - 6px);
+  --elements: 5;
+  flex-basis: calc((100% / var(--elements)) - (2px * var(--elements)));
 }

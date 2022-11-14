@@ -27,7 +27,7 @@ export class NavigationComponent {
       name: 'Profile',
       items: [
         { name: 'Stats', icon: 'query_stats', link: [] },
-        { name: 'Inventory', icon: 'inventory_2', link: [] },
+        { name: 'Inventory', icon: 'inventory_2', link: ['/navigation/inventory'] },
         { name: 'Settings', icon: 'settings', link: [] },
       ],
     },
@@ -47,6 +47,6 @@ export class NavigationComponent {
   }
 
   profile() {
-    this.router.navigate(['/profile']);
+    this.router.navigate(['/navigation/profile']);
   }
 }

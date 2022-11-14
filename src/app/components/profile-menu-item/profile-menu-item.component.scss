@@ -1,0 +1,29 @@
+.container {
+  width: 240px;
+  height: 100%;
+  padding-bottom: 8px;
+}
+
+img {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: gainsboro;
+}
+
+img[src=""] {
+  display: none;
+}
+
+.header, .content {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+}
+
+.content {
+  margin: -8px 0px;
+  justify-content: space-between;
+  font-size: 12px;
+}

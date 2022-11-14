@@ -1,0 +1,11 @@
+<div mat-menu-item class="container">
+  <div class="header">
+    <img [src]="user.avatar" />
+    <span>{{user.name}}</span>
+  </div>
+  <mat-progress-bar [value]="stats.user(user.xp).progress * 100"></mat-progress-bar>
+  <div class="content">
+    <span>Level: {{stats.user(user.xp).level}}</span>
+    <span>{{user.xp}}/{{stats.user(user.xp).next}} xp</span>
+  </div>
+</div>
