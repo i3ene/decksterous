@@ -7,7 +7,8 @@
   }
 }
 
-#imageupload, #imagedownload {
+#imageupload,
+#imagedownload {
   display: block;
   visibility: hidden;
   height: 0px !important;
@@ -20,9 +21,8 @@ img {
   height: 40px;
   width: 40px;
   border-radius: 50%;
-  border: 1px solid #aaa !important;
 }
 
-img[src] {
-  background-color: #ccc;
+img[src=""] {
+  display: none;
 }

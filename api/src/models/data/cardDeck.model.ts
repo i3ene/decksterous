@@ -6,7 +6,7 @@ import { Item } from "./item.model";
 
 @Scopes(() => ({
   query: QueryUtil.query(['id', 'name', 'description']),
-  card: {
+  cards: {
     include: [Card]
   }
 }))

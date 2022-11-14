@@ -5,7 +5,7 @@ import { CardCardAbility } from "./card_cardAbility.model";
 
 @Scopes(() => ({
   query: QueryUtil.query(['id', 'name', 'description']),
-  card: {
+  cards: {
     include: [Card]
   }
 }))
