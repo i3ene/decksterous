@@ -11,7 +11,6 @@ import { StatsService } from 'src/app/services/stats.service';
 })
 export class ProfileComponent implements OnInit {
   user: User = new User({ name: 'Loading...' });
-  friends: User[] = new Array(14).fill({ name: 'Loading...' });
 
   constructor(private token: TokenService, private request: RequestService, public stats: StatsService) {}
 
@@ -23,12 +22,5 @@ export class ProfileComponent implements OnInit {
   async loadUser(id: number) {
     const payload = await this.request.get(`/user?id=${id}`);
     this.user = new User(payload);
-    this.loadFriends(id);
-  }
-
-  async loadFriends(id: number) {
-    const payload = await this.request.get(`/user/friend?id=${id}`);
-    if (!payload) this.friends = [];
-    else this.friends = payload.map((x: any) => new User(x));
   }
 }

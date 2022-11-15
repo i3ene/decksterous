@@ -1,25 +1,34 @@
 <div class="container">
-  <div class="row">
-    <app-profile-avatar [src]="user.avatar" [size]="64"></app-profile-avatar>
-    <h1>{{ user.name }}</h1>
-    <span class="level">{{ stats.user(user.xp).level }}</span>
+  <div class="header">
+    <div class="row">
+      <app-profile-avatar [src]="user.avatar" [size]="64"></app-profile-avatar>
+      <h1>{{ user.name }}</h1>
+      <span class="level">{{ stats.user(user.xp).level }}</span>
+    </div>
+    <div class="progress">
+      <mat-progress-bar [value]="stats.user(user.xp).progress * 100" class="bar"></mat-progress-bar>
+      <div class="xp">{{ user.xp }}/{{ stats.user(user.xp).next }} XP</div>
+    </div>
   </div>
-  <div class="progress">
-    <mat-progress-bar [value]="stats.user(user.xp).progress * 100" class="bar"></mat-progress-bar>
-    <div class="xp">{{ user.xp }}/{{ stats.user(user.xp).next }} XP</div>
-  </div>
-  <div class="content">
-    <p>Description...</p>
-    <p>More...</p>
-    <p>Achievements...</p>
-  </div>
+
   <mat-divider></mat-divider>
-  <mat-list>
-    <h3 mat-subheader>Friends</h3>
-    <mat-list-item *ngFor="let friend of friends">
-      <app-profile-avatar mat-list-icon></app-profile-avatar>
-      <div mat-line>{{ friend.name }}</div>
-      <div mat-line>Level: {{ stats.user(friend.xp).level }}</div>
-    </mat-list-item>
-  </mat-list>
+
+  <mat-sidenav-container class="sidenav">
+    <mat-sidenav position="end" mode="side" opened>
+      <mat-list>
+        <h3 mat-subheader>Achievements</h3>
+        <mat-list-item>...</mat-list-item>
+        <mat-divider></mat-divider>
+        <h3 mat-subheader>Friends</h3>
+        <app-friend-list [userId]="user.id"></app-friend-list>
+      </mat-list>
+    </mat-sidenav>
+    <mat-sidenav-content>
+      <div class="content">
+        <p>Description...</p>
+        <mat-divider></mat-divider>
+        <p>More...</p>
+      </div>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
 </div>

@@ -1,0 +1,5 @@
+<mat-list-item *ngFor="let friend of friends">
+  <app-profile-avatar mat-list-icon></app-profile-avatar>
+  <div mat-line>{{ friend.name }}</div>
+  <div mat-line>Level: {{ stats.user(friend.xp).level }}</div>
+</mat-list-item>
