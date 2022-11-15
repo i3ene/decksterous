@@ -1,7 +1,10 @@
 <ng-container [ngSwitch]="column.type">
   <ng-container *ngSwitchCase="'text'">
     <ng-container *ngIf="row == selected else display">
-      TEXT
+      <mat-form-field>
+        <mat-label>{{column.name}}</mat-label>
+        <input matInput type="text" [(ngModel)]="row[column.key]" />
+      </mat-form-field>
     </ng-container>
     <ng-template #display>
       {{ row[column.key] }}
@@ -9,7 +12,10 @@
   </ng-container>
   <ng-container *ngSwitchCase="'number'">
     <ng-container *ngIf="row == selected else display">
-      NUMBER
+      <mat-form-field>
+        <mat-label>{{column.name}}</mat-label>
+        <input #number matInput type="number" [(ngModel)]="row[column.key]" (keydown)="numberInput(number, $event)"  />
+      </mat-form-field>
     </ng-container>
     <ng-template #display>
       {{ row[column.key] }}
@@ -37,7 +43,14 @@
   </ng-container>
   <ng-container *ngSwitchCase="'select'">
     <ng-container *ngIf="row == selected else display">
-      SELECT
+      <mat-form-field>
+        <mat-label>{{column.name}}</mat-label>
+        <mat-select [(ngModel)]="row[column.key]">
+          <mat-option *ngFor="let option of column.select?.options" [value]="option[$any(column.select?.valueKey)]">
+            {{ option[$any(column.select?.displayKey)] }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
     </ng-container>
     <ng-template #display>
       {{ row[column.key] }}

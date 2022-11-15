@@ -20,4 +20,8 @@ export class FormTableColumnComponent {
     dataService.uploadEvent.subscribe((obj: InputServiceEvent) => {if (this.row == obj.source.row) this.row[obj.source.name] = obj.data});
   }
 
+  numberInput(obj: any, event: any) {
+    // TODO: Check
+    console.log(event);
+  }
 }
