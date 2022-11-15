@@ -3,16 +3,3 @@
   height: 100%;
   padding-bottom: 8px;
 }
-
-.header, .content {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 8px;
-}
-
-.content {
-  margin: -8px 0px;
-  justify-content: space-between;
-  font-size: 12px;
-}

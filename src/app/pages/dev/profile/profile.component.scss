@@ -1,0 +1,7 @@
+.container {
+  line-height: 48px;
+}
+
+.container ::ng-deep.mat-progress-bar {
+  height: 8px !important;
+}
