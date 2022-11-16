@@ -43,10 +43,10 @@ export class DevItemComponent implements OnInit {
   actionEvent(event: ITableActionEvent): void {
     switch(event.action) {
       case 'edit':
-        this.table.selected = event.row;
+        this.table.startSelect(event.row);
         break;
       case 'cancel':
-        this.table.selected = undefined;
+        this.table.cancelSelect();
         break;
       case 'select':
         this.selectedEvent.emit(event.row);

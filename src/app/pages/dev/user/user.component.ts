@@ -41,13 +41,22 @@ export class DevUserComponent implements OnInit {
     this.data = payload.map((x: any) => new User(x));
   }
 
-  actionEvent(event: ITableActionEvent): void {
+  async actionEvent(event: ITableActionEvent): Promise<void> {
     switch(event.action) {
       case 'edit':
-        this.table.selected = event.row;
+        this.table.startSelect(event.row);
         break;
       case 'cancel':
-        this.table.selected = undefined;
+        this.table.cancelSelect();
+        break;
+      case 'save':
+        var payload = this.table.saveSelect();
+        await this.request.put("/user", payload);
+        break;
+      case 'delete':
+        var payload = event.row;
+        await this.request.delete("/user", payload);
+        this.table.deleteSelect(payload);
         break;
       case 'select':
         this.selectedEvent.emit(event.row);
