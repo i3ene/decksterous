@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { Op } from 'sequelize';
 import { Config } from '../config';
+import { User } from '../models/data/user.model';
 import { QueryUtil } from '../utils/query.util';
 import { RequestUtils } from '../utils/request.util';
 

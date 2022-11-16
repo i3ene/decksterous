@@ -15,7 +15,7 @@ export class DevInventoryComponent {
   @Output() selectedEvent: EventEmitter<any> = new EventEmitter<any>();
 
   data!: Inventory[];
-  users: User[] = [];
+  users: User[] = [new User({name: '- None -'})];
   columns: IColumn[] = [
     { key: 'id', name: 'ID' },
     { key: 'userId', name: 'User ID', type: 'select', select: {
@@ -50,13 +50,22 @@ export class DevInventoryComponent {
     this.data = payload.map((x: any) => new Inventory(x));
   }
 
-  actionEvent(event: ITableActionEvent): void {
+  async actionEvent(event: ITableActionEvent): Promise<void> {
     switch(event.action) {
       case 'edit':
         this.table.startSelect(event.row);
         break;
       case 'cancel':
         this.table.cancelSelect();
+        break;
+      case 'save':
+        var payload = this.table.saveSelect();
+        await this.request.put("/inventory", payload);
+        break;
+      case 'delete':
+        var payload = event.row;
+        await this.request.delete("/inventory", payload);
+        this.table.deleteSelect(payload);
         break;
       case 'select':
         this.selectedEvent.emit(event.row);
