@@ -54,6 +54,7 @@ export class FormTableComponent {
     } else {
       this.dataSource.data.push(row);
       this.dataSource._updateChangeSubscription();
+      this.paginator.lastPage();
     }
     this._selected = row;
   }
