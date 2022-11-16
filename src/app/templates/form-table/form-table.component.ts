@@ -33,6 +33,7 @@ export class FormTableComponent {
   _selected: any;
   _selectedClone: any;
   _data!: any[];
+  _placeholder: any = {};
 
   get selected(): any {
     return this._selected;
@@ -47,12 +48,19 @@ export class FormTableComponent {
   }
 
   startSelect(row: any): void {
-    this._selectedClone = Object.assign({}, row);
+    let index = this.dataSource.data.indexOf(row);
+    if (index != -1) {
+      this._selectedClone = Object.assign({}, row);
+    } else {
+      this.dataSource.data.push(row);
+      this.dataSource._updateChangeSubscription();
+    }
     this._selected = row;
   }
 
   cancelSelect(): void {
     if (!this._selected) return;
+    if (!this._selectedClone) return this.deleteSelect(this._selected);
     for (let [index, item] of this.dataSource.data.entries()) {
       if (item == this._selected) {
         this.dataSource.data[index] = this._selectedClone;
@@ -78,5 +86,9 @@ export class FormTableComponent {
     }
     this._selected = undefined;
     this._selectedClone = undefined;
+  }
+
+  addEntry(): void {
+    this.startSelect({});
   }
 }
