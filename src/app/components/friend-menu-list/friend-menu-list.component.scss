@@ -20,6 +20,14 @@
   overflow-y: auto;
 }
 
+.container mat-list {
+  padding: 0px 16px !important;
+}
+
 .container mat-list ::ng-deep* {
   font-size: 14px !important;
+}
+
+.container mat-list ::ng-deep.mat-list-item > .mat-list-item-content {
+  padding: 0px !important;
 }
