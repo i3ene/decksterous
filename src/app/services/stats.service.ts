@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { stat } from 'fs';
 import { UserLevelStats } from '../models/object/stats.model';
 
 @Injectable({
@@ -8,7 +7,7 @@ import { UserLevelStats } from '../models/object/stats.model';
 export class StatsService {
 
   firstLevelXp: number = 100;
-  levelXpScale: number = 1.25;
+  levelXpScale: number = 10;
 
   user(xp: number): UserLevelStats {
     const stats: UserLevelStats = {
@@ -19,8 +18,9 @@ export class StatsService {
     };
     while(xp >= stats.next) {
       stats.level++;
+      let last = stats.next - stats.current;
       stats.current = stats.next;
-      stats.next *= this.levelXpScale;
+      stats.next += last + (this.firstLevelXp / this.levelXpScale);
       stats.next = Number(stats.next.toFixed(0));
     }
     stats.progress = (xp - stats.current) / (stats.next - stats.current);

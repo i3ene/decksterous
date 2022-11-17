@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { User } from 'src/app/models/data/user.model';
 import { TokenService } from 'src/app/services/auth/token.service';
 
 @Component({
@@ -8,8 +7,6 @@ import { TokenService } from 'src/app/services/auth/token.service';
   styleUrls: ['./profile-menu-item.component.scss'],
 })
 export class ProfileMenuItemComponent implements OnInit {
-  user: User = new User({ name: 'Name' });
-
   id!: number;
 
   constructor(private token: TokenService) {}

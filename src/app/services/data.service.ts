@@ -51,18 +51,12 @@ export class DataService {
     let width: number = img.width;
     let height: number = img.height;
 
-    if (width > height) {
-      if (width > this.maxImgWidth) {
-        //height *= max_width / width;
+    if ((width > height) && (width > this.maxImgWidth)) {
         height = Math.round((height *= this.maxImgWidth / width));
         width = this.maxImgWidth;
-      }
-    } else {
-      if (height > this.maxImgHeight) {
-        //width *= max_height / height;
+    } else if (height > this.maxImgHeight) {
         width = Math.round((width *= this.maxImgHeight / height));
         height = this.maxImgHeight;
-      }
     }
 
     canvas.width = width;
