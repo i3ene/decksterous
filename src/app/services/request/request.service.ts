@@ -34,8 +34,8 @@ export class RequestService {
     return firstValueFrom(this.http.delete(this.config.url + url, options)).then(res => { this.display(res); return res });
   }
 
-  display(response: any) {
-    if (!response.message) return;
+  display(response?: any) {
+    if (!response || !response.message) return;
     this.dialog.open(response.message, "Ok", {
       duration: 2500
     });
