@@ -14,6 +14,8 @@ export namespace RequestController {
       let result = req.data.messages;
       if (index && req.data.messages.length) {
         if (typeof index == 'number') {
+          if (index < 0) index = (req.data.messages.length + index) as number;
+          if (index < 0) index = 0;
           result = req.data.messages[index];
         } else {
           result = req.data.messages[req.data.messages.length - 1];

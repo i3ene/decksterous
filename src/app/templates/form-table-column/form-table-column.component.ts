@@ -31,12 +31,9 @@ export class FormTableColumnComponent {
     return arr.map(x => key ? x[key] : x);
   }
 
-  optionsValue(element: MatSelect, value: any, options: any[]) {
-    console.log(element);
-    if (element.value) return;
-    if (!Array.isArray(value)) return;
-    const arr = value.filter((x => options.some(y => JSON.stringify(x) === JSON.stringify(y))));
-    
-    element.writeValue(arr);
+  combine(options: any[], value: any) {
+    if (!Array.isArray(value)) return options;
+    const arr = options.map(x => value.find(y => JSON.stringify(x) === JSON.stringify(y)) ?? x);
+    return arr;
   }
 }

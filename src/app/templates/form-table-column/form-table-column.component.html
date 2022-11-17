@@ -46,7 +46,7 @@
       <mat-form-field>
         <mat-label>{{column.name}}</mat-label>
         <mat-select #select [(ngModel)]="row[column.key]" [multiple]="column.select?.multiple">
-          <mat-option *ngFor="let option of column.select?.options" [value]="column.select?.valueKey ? option[$any(column.select?.valueKey)] : option">
+          <mat-option *ngFor="let option of combine($any(column.select?.options), row[column.key])" [value]="column.select?.valueKey ? option[$any(column.select?.valueKey)] : option">
             {{ option[$any(column.select?.displayKey)] }}
           </mat-option>
         </mat-select>

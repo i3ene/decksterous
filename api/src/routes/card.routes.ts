@@ -16,9 +16,9 @@ CardRoutes.get('/all', [middleware.findAll(Card, ['item', 'abilities'])], contro
 
 CardRoutes.get('/', [middleware.find(Card, ['item', 'abilities'])], controller.result(Card));
 
-CardRoutes.post('/', [auth.isAdmin, middleware.add(Card)], controller.message('last'));
+CardRoutes.post('/', [auth.isAdmin, middleware.add(Card), middleware.getAll(CardAbility, [], 'abilities', undefined, 'id'), middleware.setAssociation(Card, "abilities", CardAbility)], controller.message(-2));
 
-CardRoutes.put('/', [auth.isAdmin, middleware.get(Card), middleware.edit(Card), middleware.getAll(CardAbility, [], 'abilities', undefined, 'id'), middleware.setAssociation(Card, "abilities", CardAbility)], controller.message('last'));
+CardRoutes.put('/', [auth.isAdmin, middleware.get(Card), middleware.edit(Card), middleware.getAll(CardAbility, [], 'abilities', undefined, 'id'), middleware.setAssociation(Card, "abilities", CardAbility)], controller.message(-2));
 
 CardRoutes.delete('/', [auth.isAdmin, middleware.get(Card), middleware.remove(Card)], controller.message('last'));
 
