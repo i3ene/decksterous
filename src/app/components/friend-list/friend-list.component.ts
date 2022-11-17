@@ -15,6 +15,8 @@ export class FriendListComponent {
     //this.loadFriends(value);
   }
   @Input() onlyFriends: boolean = true;
+  @Input() search: boolean = false;
+  searchField: boolean = false;
 
   requests: User[] = new Array(2).fill({ name: 'Loading...' });
   friends: User[] = new Array(14).fill({ name: 'Loading...' });

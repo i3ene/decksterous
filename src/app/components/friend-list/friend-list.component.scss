@@ -1,3 +1,29 @@
+.search {
+  position: sticky;
+  top: 0;
+  right: 0;
+  width: 100%;
+  z-index: 3;
+}
+
+.search-button {
+  position: sticky;
+  top: 0;
+  height: 0;
+  margin-right: -8px;
+  text-align: right;
+  z-index: 3;
+}
+
+.search-button button {
+  height: 32px;
+  width: 32px;
+}
+
+.search-button ::ng-deep.mat-icon {
+  margin-right: 0px !important;
+}
+
 .mat-list-icon {
   margin-top: -10px !important;
   margin-left: -2px !important;

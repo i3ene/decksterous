@@ -1,3 +1,18 @@
+<div class="search-button" *ngIf="search && !searchField">
+  <button mat-mini-fab (click)="searchField = true">
+    <mat-icon>search</mat-icon>
+  </button>
+</div>
+<mat-form-field *ngIf="searchField" class="search card-background">
+  <mat-label>Search...</mat-label>
+  <input matInput type="text" />
+  <button mat-icon-button matSuffix>
+    <mat-icon>search</mat-icon>
+  </button>
+  <button mat-icon-button matSuffix (click)="searchField = false">
+    <mat-icon>close</mat-icon>
+  </button>
+</mat-form-field>
 <ng-container *ngIf="!onlyFriends">
   <mat-list-item *ngFor="let request of requests">
     <app-profile-avatar mat-list-icon [src]="request.avatar"></app-profile-avatar>
