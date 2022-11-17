@@ -20,7 +20,7 @@ export namespace RequestMiddleware {
   export function find(model: { new (...args: any[]): any } & any, scopes: any[] = [], alias?: string) {
     return async (req: Request, res: Response, next: NextFunction) => {
       const key = alias ? alias : model.name;
-      const query = req.body ?? req.query;
+      const query = Object.keys(req.body).length ? req.body : req.query;
       const data = await model.scope([{ method: ['query', query, Op.and] }].concat(scopes)).findOne();
       if (data == null) req.data.addMessage('No ' + key + ' found!', 404);
       req.data[key] = data;
@@ -32,7 +32,7 @@ export namespace RequestMiddleware {
   export function findAll(model: { new (...args: any[]): any } & any, scopes: any[] = [], alias?: string) {
     return async (req: Request, res: Response, next: NextFunction) => {
       const key = alias ? alias : model.name;
-      const query = req.body ?? req.query;
+      const query = Object.keys(req.body).length ? req.body : req.query;
       const data = await model.scope([{ method: ['query', query, Op.or] }].concat(scopes)).findAll();
       if (data == null) req.data.addMessage('No ' + key + ' found!', 404);
       req.data[key] = data;
