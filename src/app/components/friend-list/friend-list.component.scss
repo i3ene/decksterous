@@ -1,4 +1,12 @@
 .mat-list-icon {
   margin-top: -10px !important;
-  margin-left: -10px !important;
+  margin-left: -2px !important;
+}
+
+.actions > * {
+  margin-right: 4px;
+}
+
+.translucent {
+  opacity: 0.65;
 }

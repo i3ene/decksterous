@@ -51,4 +51,14 @@ h1 {
 
 .sidenav {
   height: 100%;
+  overflow-x: hidden;
+}
+
+.sidenav ::ng-deep.mat-drawer-inner-container {
+  overflow-x: hidden;
+}
+
+app-friend-list {
+  display: block;
+  min-width: 200px;
 }

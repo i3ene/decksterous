@@ -17,5 +17,9 @@
 .container ::ng-deep.mat-expansion-panel-body {
   max-height: 300px !important;
   padding: 0px !important;
-  overflow-y: scroll;
+  overflow-y: auto;
+}
+
+.container mat-list ::ng-deep* {
+  font-size: 14px !important;
 }

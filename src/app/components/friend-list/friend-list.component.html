@@ -1,5 +1,25 @@
+<ng-container *ngIf="!onlyFriends">
+  <mat-list-item *ngFor="let request of requests">
+    <app-profile-avatar mat-list-icon [src]="request.avatar"></app-profile-avatar>
+    <div mat-line>{{ request.name }}</div>
+    <div mat-line class="actions">
+      <button mat-stroked-button color="primary">Accept</button>
+      <button mat-stroked-button color="warn">Decline</button>
+    </div>
+  </mat-list-item>
+  <mat-divider *ngIf="requests.length != 0"></mat-divider>
+</ng-container>
 <mat-list-item *ngFor="let friend of friends">
   <app-profile-avatar mat-list-icon [src]="friend.avatar"></app-profile-avatar>
   <div mat-line>{{ friend.name }}</div>
   <div mat-line>Level: {{ stats.user(friend.xp).level }}</div>
 </mat-list-item>
+<ng-container *ngIf="!onlyFriends">
+  <mat-divider *ngIf="invites.length != 0"></mat-divider>
+  <mat-list-item *ngFor="let request of requests" class="translucent">
+    <app-profile-avatar mat-list-icon [src]="request.avatar"></app-profile-avatar>
+    <div mat-line>{{ request.name }}</div>
+    <div mat-line>Invited</div>
+  </mat-list-item>
+</ng-container>
+<mat-list-item *ngIf="friends.length == 0 && requests.length == 0 && invites.length == 0"> No friends... </mat-list-item>

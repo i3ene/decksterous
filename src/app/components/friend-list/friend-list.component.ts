@@ -12,10 +12,13 @@ export class FriendListComponent {
 
   @Input() set userId(value: number | undefined) {
     if (!value) return;
-    this.loadFriends(value);
+    //this.loadFriends(value);
   }
+  @Input() onlyFriends: boolean = true;
 
+  requests: User[] = new Array(2).fill({ name: 'Loading...' });
   friends: User[] = new Array(14).fill({ name: 'Loading...' });
+  invites: User[] = new Array(2).fill({ name: 'Loading...' });
 
   constructor(private request: RequestService, public stats: StatsService) { }
 
