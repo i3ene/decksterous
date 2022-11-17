@@ -40,13 +40,23 @@ export class DevItemComponent implements OnInit {
     this.data = payload.map((x: any) => new Item(x));
   }
 
-  actionEvent(event: ITableActionEvent): void {
+  async actionEvent(event: ITableActionEvent): Promise<void> {
     switch(event.action) {
       case 'edit':
         this.table.startSelect(event.row);
         break;
       case 'cancel':
         this.table.cancelSelect();
+        break;
+      case 'save':
+        var payload = this.table.saveSelect();
+        var response = payload.id ? await this.request.put("/item", payload) : await this.request.post("/item", payload);
+        if (response.payload) Object.assign(payload, response.payload);
+        break;
+      case 'delete':
+        var payload = event.row;
+        await this.request.delete("/item", payload);
+        this.table.deleteSelect(payload);
         break;
       case 'select':
         this.selectedEvent.emit(event.row);

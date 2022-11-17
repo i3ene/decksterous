@@ -1,4 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
+import { Card } from 'src/app/models/data/card.model';
+import { Item } from 'src/app/models/data/item.model';
+import { ColumnAction, IColumn, ITableActionEvent } from 'src/app/models/object/table.model';
+import { RequestService } from 'src/app/services/request/request.service';
+import { FormTableComponent } from 'src/app/templates/form-table/form-table.component';
 
 @Component({
   selector: 'dev-card',
@@ -6,10 +11,69 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./card.component.scss']
 })
 export class DevCardComponent implements OnInit {
+  @ViewChild('formTable') table!: FormTableComponent;
+  @Output() selectedEvent: EventEmitter<any> = new EventEmitter<any>();
 
-  constructor() { }
+  data!: Card[];
+  items: Item[] = [new Item({name: '- None -'})];
+  columns: IColumn[] = [
+    { key: 'id', name: 'ID' },
+    { key: 'health', name: 'Health', type: 'number' },
+    { key: 'damage', name: 'Damage', type: 'number' },
+    { key: 'cost', name: 'Cost', type: 'number' },
+    { key: 'itemId', name: 'Item ID', type: 'select', select: {
+      multiple: false,
+      options: this.items,
+      displayKey: 'name',
+      valueKey: 'id'
+    }},
+    new ColumnAction("Action", [
+      { name: 'edit', icon: 'edit' },
+      { name: 'delete', icon: 'delete' },
+      { name: 'select', icon: 'radio_button_unchecked' },
+      { name: 'cancel', icon: 'close', onSelect: true },
+      { name: 'save', icon: 'check', onSelect: true },
+    ])
+  ];
+
+  constructor(private request: RequestService) {}
 
   ngOnInit(): void {
+    this.loadCards();
+    this.loadItems();
+  }
+
+  async loadItems(): Promise<void> {
+    const payload = await this.request.get("/item/all");
+    this.items.push(...payload.map((x: any) => new Item(x)));
+  }
+
+  async loadCards(): Promise<void> {
+    const payload = await this.request.get("/item/card/all");
+    this.data = payload.map((x: any) => new Card(x));
+  }
+
+  async actionEvent(event: ITableActionEvent): Promise<void> {
+    switch(event.action) {
+      case 'edit':
+        this.table.startSelect(event.row);
+        break;
+      case 'cancel':
+        this.table.cancelSelect();
+        break;
+      case 'save':
+        var payload = this.table.saveSelect();
+        var response = payload.id ? await this.request.put("/item/card", payload) : await this.request.post("/item/card", payload);
+        if (response.payload) Object.assign(payload, response.payload);
+        break;
+      case 'delete':
+        var payload = event.row;
+        await this.request.delete("/item/card", payload);
+        this.table.deleteSelect(payload);
+        break;
+      case 'select':
+        this.selectedEvent.emit(event.row);
+    }
   }
 
 }

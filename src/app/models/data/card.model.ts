@@ -2,6 +2,7 @@ import { Item } from "./item.model";
 
 export class Card {
   id?: number;
+  itemId?: number;
   typeId?: number;
   health: number;
   damage: number;
@@ -14,6 +15,7 @@ export class Card {
     this.damage = obj?.damage ?? 0;
     this.cost = obj?.cost ?? 0;
     if (obj?.id) this.id = Number(obj.id);
+    if (obj?.itemId) this.id = Number(obj.itemId);
     if (obj?.typeId) this.typeId = Number(obj.typeId);
     if (obj?.item) this.item = new Item(obj.item);
     if (obj?.type) this.type = new CardType(obj.type);
