@@ -4,7 +4,7 @@ export class User {
   xp: number;
   password?: string;
   mail?: string;
-  avatar?: string;
+  avatar?: any;
 
   constructor(obj?: any) {
     this.name = obj?.name ?? '';

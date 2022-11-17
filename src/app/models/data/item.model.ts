@@ -2,7 +2,7 @@ export class Item {
   id?: number;
   name: string;
   description: string;
-  image?: string | any;
+  image?: any;
 
   constructor(obj: any) {
     this.name = obj?.name ?? '';

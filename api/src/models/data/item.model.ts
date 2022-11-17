@@ -32,7 +32,7 @@ export class Item extends Model<Item> {
   description?: string;
 
   @AllowNull
-  @Column(DataType.BLOB)
+  @Column(DataType.BLOB('long'))
   get image(): any {
     const data = this.getDataValue('image');
     return data ? data.toString('utf8') : '';

@@ -41,13 +41,13 @@ export class User extends Model<User> {
   @Column(DataType.INTEGER)
   xp!: number;
 
-  @Column(DataType.BLOB)
+  @Column(DataType.BLOB('long'))
   get avatar(): any {
     const data = this.getDataValue('avatar');
     return data ? data.toString('utf8') : '';
   }
   set avatar(value: any) {
-    this.setDataValue('avatar', value);
+    this.setDataValue('avatar', Buffer.from(value));
   }
 
   @HasOne(() => Inventory)
