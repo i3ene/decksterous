@@ -1,6 +1,6 @@
 import { Column, DataType, ForeignKey, Model, Table } from 'sequelize-typescript';
-import { Card } from './card.model';
-import { CardAbility } from './cardAbility.model';
+import { Card } from '../card.model';
+import { CardAbility } from '../cardAbility.model';
 
 @Table
 export class CardCardAbility extends Model<CardCardAbility> {

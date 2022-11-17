@@ -1,5 +1,6 @@
 import * as express from 'express';
 import { User } from '../models/data/user.model';
+import { Data } from '../models/object/data.express';
 
 declare module 'express' {
   interface Request {
@@ -11,6 +12,6 @@ declare module 'express' {
     /**
      * General data for processing
      */
-    data?: { messages: string[] } & any;
+    data?: Data & any;
   }
 }

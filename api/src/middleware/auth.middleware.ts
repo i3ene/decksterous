@@ -28,6 +28,7 @@ export namespace AuthMiddleware {
 
   export async function verifyToken(req: Request, res: Response, next: NextFunction): Promise<any> {
     var token = req.headers[Config.Auth.HEADER] as string;
+    console.log(token);
     if (token == null) return res.status(401).send({ message: 'No token provided!' });
 
     jwt.verify(token, Config.Auth.SECRET, (err: any, decoded: any) => {

@@ -60,7 +60,8 @@ export class DevInventoryComponent {
         break;
       case 'save':
         var payload = this.table.saveSelect();
-        await this.request.put("/inventory", payload);
+        var response = payload.id ? await this.request.put("/inventory", payload) : await this.request.post("/inventory", payload);
+        if (response.payload) Object.assign(payload, response.payload);
         break;
       case 'delete':
         var payload = event.row;

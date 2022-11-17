@@ -51,8 +51,8 @@ export class DevUserComponent implements OnInit {
         break;
       case 'save':
         var payload = this.table.saveSelect();
-        if (payload.id) await this.request.put("/user", payload);
-        else await this.request.post("/user", payload);
+        var response = payload.id ? await this.request.put("/user", payload) : await this.request.post("/user", payload);
+        if (response.payload) Object.assign(payload, response.payload);
         break;
       case 'delete':
         var payload = event.row;

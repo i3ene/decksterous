@@ -1,7 +1,7 @@
 import {AllowNull, AutoIncrement, BelongsTo, BelongsToMany, Column, DataType, ForeignKey, HasMany, Model, PrimaryKey, Scopes, Table} from "sequelize-typescript";
 import {QueryUtil} from "../../utils/query.util";
 import { Card } from "./card.model";
-import { CardCardDeck } from "./card_cardDeck.model";
+import { CardCardDeck } from "./relations/card_cardDeck.model";
 import { Item } from "./item.model";
 
 @Scopes(() => ({

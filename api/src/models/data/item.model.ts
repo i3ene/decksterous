@@ -2,7 +2,7 @@ import { AutoIncrement, Column, DataType, Model, PrimaryKey, Table, Scopes, HasM
 import { Op } from "sequelize";
 import { QueryUtil } from "../../utils/query.util";
 import { Inventory } from "./inventory.model";
-import { InventoryItem } from "./inventory_item.model";
+import { InventoryItem } from "./relations/inventory_item.model";
 import { Card } from "./card.model";
 import { CardDeck } from "./cardDeck.model";
 

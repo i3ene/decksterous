@@ -2,12 +2,13 @@ import { NextFunction, Request, Response } from 'express';
 import { Op } from 'sequelize';
 import { Config } from '../config';
 import { User } from '../models/data/user.model';
+import { Data } from '../models/object/data.express';
 import { QueryUtil } from '../utils/query.util';
 import { RequestUtils } from '../utils/request.util';
 
 export namespace RequestMiddleware {
   export function handler(req: Request, res: Response, next: NextFunction) {
-    req.data = { messages: [] };
+    req.data = new Data();
     next();
   }
 
@@ -20,7 +21,7 @@ export namespace RequestMiddleware {
     return async (req: Request, res: Response, next: NextFunction) => {
       const key = alias ? alias : model.name;
       const data = await model.scope([{ method: ['query', req.query, Op.and] }].concat(scopes)).findOne();
-      if (data == null) req.data.messages.push('No ' + key + ' found!');
+      if (data == null) req.data.addMessage('No ' + key + ' found!', 404);
       req.data[key] = data;
 
       next();
@@ -31,7 +32,7 @@ export namespace RequestMiddleware {
     return async (req: Request, res: Response, next: NextFunction) => {
       const key = alias ? alias : model.name;
       const data = await model.scope([{ method: ['query', req.query, Op.or] }].concat(scopes)).findAll();
-      if (data == null) req.data.messages.push('No ' + key + ' found!');
+      if (data == null) req.data.addMessage('No ' + key + ' found!', 404);
       req.data[key] = data;
 
       next();
@@ -45,7 +46,7 @@ export namespace RequestMiddleware {
       if (idKey) id = req.body[idKey] ? req.body[idKey] : req.query[idKey];
       else id = req.body.id ? req.body.id : req.query.id;
       const data = await model.scope(scopes).findByPk(id);
-      if (data == null) req.data.messages.push('No ' + key + ' found!');
+      if (data == null) req.data.addMessage('No ' + key + ' found!', 404);
       req.data[key] = data;
 
       next();
@@ -58,7 +59,7 @@ export namespace RequestMiddleware {
       const payload = payloadKey ? req.body[payloadKey] : req.body;
       const data = await model.create(QueryUtil.attributes(payload, model));
       if (data == undefined) return res.status(500).send('Something went wrong');
-      else req.data.messages.push(key + ' successfully added!');
+      else req.data.addMessage(key + ' successfully added!', 200, data);
       req.data[key] = data;
 
       next();
@@ -70,8 +71,8 @@ export namespace RequestMiddleware {
       const key = alias ? alias : model.name;
       const payload = payloadKey ? req.body[payloadKey] : req.body;
       if (req.data[key] == undefined) return res.status(500).send('No ' + key + ' data available!');
-      req.data[key].update(QueryUtil.attributes(payload, model));
-      req.data.messages.push(key + ' successfully edited!');
+      const data = await req.data[key].update(QueryUtil.attributes(payload, model));
+      req.data.addMessage(key + ' successfully edited!', 200, data);
 
       next();
     };
@@ -82,7 +83,7 @@ export namespace RequestMiddleware {
       const key = alias ? alias : model.name;
       if (req.data[key] == undefined) return res.status(500).send('No ' + key + ' data available!');
       await req.data[key].destroy();
-      req.data.messages.push(key + ' successfully deleted!');
+      req.data.addMessage(key + ' successfully deleted!', 200);
 
       next();
     };
@@ -105,7 +106,7 @@ export namespace RequestMiddleware {
       const key = alias ? alias : model.name;
       if (req.data[key] == undefined) return res.status(500).send('No ' + key + ' data available!');
       await req.data[key].$set(association,  RequestUtils.byAttribute(req.data, data));
-      req.data.messages.push(association + ' successfully set for ' + key + '!');
+      req.data.addMessage(association + ' successfully set for ' + key + '!', 200);
 
       next();
     };
@@ -116,7 +117,7 @@ export namespace RequestMiddleware {
       const key = alias ? alias : model.name;
       if (req.data[key] == undefined) return res.status(500).send('No ' + key + ' data available!');
       await req.data[key].$add(association,  RequestUtils.byAttribute(req.data, data));
-      req.data.messages.push(association + ' successfully added for ' + key + '!');
+      req.data.addMessage(association + ' successfully added for ' + key + '!', 200);
 
       next();
     };
@@ -127,7 +128,7 @@ export namespace RequestMiddleware {
       const key = alias ? alias : model.name;
       if (req.data[key] == undefined) return res.status(500).send('No ' + key + ' data available!');
       await req.data[key].$remove(association,  RequestUtils.byAttribute(req.data, data));
-      req.data.messages.push(association + ' successfully removed for ' + key + '!');
+      req.data.addMessage(association + ' successfully removed for ' + key + '!', 200);
 
       next();
     };
@@ -150,7 +151,7 @@ export namespace RequestMiddleware {
       if (Array.isArray(data1) && Array.isArray(data2)) {
         req.data[alias] = RequestUtils.difference(type, data1, data2, on);
       } else {
-        req.data.messages.push("Difference only between arrays possible!");
+        req.data.addMessage("Difference only between arrays possible!", 400);
       }
 
       next();

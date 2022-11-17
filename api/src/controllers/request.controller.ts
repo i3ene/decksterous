@@ -20,7 +20,7 @@ export namespace RequestController {
         }
       }
 
-      res.status(200).send({ message: result });
+      res.status(200).send(result);
     };
   }
 }

@@ -1,10 +1,10 @@
 import {AllowNull, AutoIncrement, BelongsTo, BelongsToMany, Column, DataType, ForeignKey, Model, PrimaryKey, Scopes, Table} from "sequelize-typescript";
 import {QueryUtil} from "../../utils/query.util";
 import { Card } from "./card.model";
-import { CardCardAbility } from "./card_cardAbility.model";
+import { CardCardAbility } from "./relations/card_cardAbility.model";
 
 @Scopes(() => ({
-  query: QueryUtil.query(['id', 'name', 'description']),
+  query: QueryUtil.query(['key', 'name', 'description']),
   cards: {
     include: [Card]
   }
@@ -12,9 +12,8 @@ import { CardCardAbility } from "./card_cardAbility.model";
 @Table
 export class CardAbility extends Model<CardAbility> {
   @PrimaryKey
-  @AutoIncrement
-  @Column(DataType.INTEGER)
-  id!: number;
+  @Column(DataType.STRING(64))
+  key!: string;
 
   @Column(DataType.STRING(64))
   name!: string;

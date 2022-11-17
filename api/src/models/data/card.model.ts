@@ -2,7 +2,7 @@ import {AllowNull, AutoIncrement, BelongsTo, BelongsToMany, Column, DataType, Fo
 import {QueryUtil} from "../../utils/query.util";
 import { CardAbility } from "./cardAbility.model";
 import {CardType} from "./cardType.model";
-import { CardCardAbility } from "./card_cardAbility.model";
+import { CardCardAbility } from "./relations/card_cardAbility.model";
 import { Item } from "./item.model";
 
 @Scopes(() => ({

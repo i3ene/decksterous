@@ -3,7 +3,7 @@ import { Op } from 'sequelize';
 import { QueryUtil } from '../../utils/query.util';
 import { User } from './user.model';
 import { Item } from './item.model';
-import { InventoryItem } from './inventory_item.model';
+import { InventoryItem } from './relations/inventory_item.model';
 
 @Scopes(() => ({
   query: QueryUtil.query(['id', 'userId']),
