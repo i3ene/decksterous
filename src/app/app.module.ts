@@ -39,6 +39,7 @@ import { ProfileAvatarComponent } from './components/profile-avatar/profile-avat
 import { FriendListComponent } from './components/friend-list/friend-list.component';
 import { ProfileItemComponent } from './components/profile-item/profile-item.component';
 import { DevProfileComponent } from './pages/dev/profile/profile.component';
+import { FriendMenuListComponent } from './components/friend-menu-list/friend-menu-list.component';
 
 @NgModule({
   declarations: [
@@ -70,7 +71,8 @@ import { DevProfileComponent } from './pages/dev/profile/profile.component';
     ProfileAvatarComponent,
     FriendListComponent,
     ProfileItemComponent,
-    DevProfileComponent
+    DevProfileComponent,
+    FriendMenuListComponent
   ],
   imports: [
     BrowserModule,

@@ -26,8 +26,8 @@ export class NavigationComponent {
     {
       name: 'Profile',
       items: [
-        { name: 'Stats', icon: 'query_stats', link: [] },
-        { name: 'Inventory', icon: 'inventory_2', link: ['/navigation/inventory'] },
+        { name: 'Stats', icon: 'leaderboard', link: [] },
+        { name: 'Inventory', icon: 'category', link: ['/navigation/inventory'] },
         { name: 'Settings', icon: 'settings', link: [] },
       ],
     },

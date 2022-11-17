@@ -10,6 +10,7 @@
     </button>
     <mat-menu #menu="matMenu">
       <app-profile-menu-item (click)="profile()"></app-profile-menu-item>
+      <app-friend-menu-list (click)="$event.stopPropagation()"></app-friend-menu-list>
       <button mat-menu-item (click)="logout()">
         <mat-icon>logout</mat-icon>
         <span>Logout</span>
