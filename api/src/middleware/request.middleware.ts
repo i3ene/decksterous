@@ -21,7 +21,7 @@ export namespace RequestMiddleware {
     return async (req: Request, res: Response, next: NextFunction) => {
       const key = alias ? alias : model.name;
       const query = Object.keys(req.body).length ? req.body : req.query;
-      const data = await model.scope([{ method: ['query', query, Op.and] }].concat(scopes)).findOne();
+      const data = await model.scope(['defaultScope', { method: ['query', query, Op.and] }].concat(scopes)).findOne();
       if (data == null) req.data.addMessage('No ' + key + ' found!', 404);
       req.data[key] = data;
 
@@ -33,7 +33,7 @@ export namespace RequestMiddleware {
     return async (req: Request, res: Response, next: NextFunction) => {
       const key = alias ? alias : model.name;
       const query = Object.keys(req.body).length ? req.body : req.query;
-      const data = await model.scope([{ method: ['query', query, Op.or] }].concat(scopes)).findAll();
+      const data = await model.scope(['defaultScope', { method: ['query', query, Op.or] }].concat(scopes)).findAll();
       if (data == null) req.data.addMessage('No ' + key + ' found!', 404);
       req.data[key] = data;
 
@@ -47,7 +47,7 @@ export namespace RequestMiddleware {
       let id = 0;
       if (idKey) id = req.body[idKey] ?? req.query[idKey];
       else id = req.body.id ? req.body.id : req.query.id;
-      const data = await model.scope(scopes).findByPk(id);
+      const data = await model.scope(['defaultScope'].concat(scopes)).findByPk(id);
       if (data == null) req.data.addMessage('No ' + key + ' found!', 404);
       req.data[key] = data;
 
@@ -59,7 +59,7 @@ export namespace RequestMiddleware {
     return async (req: Request, res: Response, next: NextFunction) => {
       const key = alias ? alias : model.name;
       let ids = req.body[arrKey].map((x: any) => idKey ? x[idKey]: x);
-      const data = await model.scope(scopes).findAll(QueryUtil.ids(model, ids));
+      const data = await model.scope(['defaultScope'].concat(scopes)).findAll(QueryUtil.ids(model, ids));
       if (data == null) req.data.addMessage('No ' + key + ' found!', 404);
       req.data[key] = data;
 

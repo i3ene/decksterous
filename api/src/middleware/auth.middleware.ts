@@ -6,7 +6,7 @@ import { Config } from '../config';
 
 export namespace AuthMiddleware {
   export async function verifyUser(req: Request, res: Response, next: NextFunction): Promise<any> {
-    const user: User | null = await User.findOne({
+    const user: User | null = await User.scope([]).findOne({
       where: {
         name: req.body.name,
       },

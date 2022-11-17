@@ -1,10 +1,15 @@
-import { AutoIncrement, Column, DataType, Model, PrimaryKey, Table, Scopes, HasOne, BelongsToMany } from 'sequelize-typescript';
+import { AutoIncrement, Column, DataType, Model, PrimaryKey, Table, Scopes, HasOne, BelongsToMany, DefaultScope } from 'sequelize-typescript';
 import * as bcrypt from 'bcryptjs';
 import { Op } from 'sequelize';
 import { QueryUtil } from '../../utils/query.util';
 import { Inventory } from './inventory.model';
 import { Friend } from './friend.model';
 
+@DefaultScope(() => ({
+  attributes: {
+    exclude: ['password']
+  }
+}))
 @Scopes(() => ({
   query: QueryUtil.query(['id', 'name', 'mail', 'xp']),
   inventory: {
@@ -15,6 +20,11 @@ import { Friend } from './friend.model';
   },
   request: {
     include: [{model:User, as: 'requests'}],
+  },
+  password: {
+    attributes: {
+      include: ['password']
+    }
   }
 }))
 @Table
