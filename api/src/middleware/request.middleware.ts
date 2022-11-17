@@ -20,7 +20,8 @@ export namespace RequestMiddleware {
   export function find(model: { new (...args: any[]): any } & any, scopes: any[] = [], alias?: string) {
     return async (req: Request, res: Response, next: NextFunction) => {
       const key = alias ? alias : model.name;
-      const data = await model.scope([{ method: ['query', req.query, Op.and] }].concat(scopes)).findOne();
+      const query = req.body ?? req.query;
+      const data = await model.scope([{ method: ['query', query, Op.and] }].concat(scopes)).findOne();
       if (data == null) req.data.addMessage('No ' + key + ' found!', 404);
       req.data[key] = data;
 
@@ -31,7 +32,8 @@ export namespace RequestMiddleware {
   export function findAll(model: { new (...args: any[]): any } & any, scopes: any[] = [], alias?: string) {
     return async (req: Request, res: Response, next: NextFunction) => {
       const key = alias ? alias : model.name;
-      const data = await model.scope([{ method: ['query', req.query, Op.or] }].concat(scopes)).findAll();
+      const query = req.body ?? req.query;
+      const data = await model.scope([{ method: ['query', query, Op.or] }].concat(scopes)).findAll();
       if (data == null) req.data.addMessage('No ' + key + ' found!', 404);
       req.data[key] = data;
 
@@ -43,9 +45,21 @@ export namespace RequestMiddleware {
     return async (req: Request, res: Response, next: NextFunction) => {
       const key = alias ? alias : model.name;
       let id = 0;
-      if (idKey) id = req.body[idKey] ? req.body[idKey] : req.query[idKey];
+      if (idKey) id = req.body[idKey] ?? req.query[idKey];
       else id = req.body.id ? req.body.id : req.query.id;
       const data = await model.scope(scopes).findByPk(id);
+      if (data == null) req.data.addMessage('No ' + key + ' found!', 404);
+      req.data[key] = data;
+
+      next();
+    };
+  }
+
+  export function getAll(model: { new (...args: any[]): any } & any, scopes: any[] = [], arrKey: string, alias?: string, idKey?: string) {
+    return async (req: Request, res: Response, next: NextFunction) => {
+      const key = alias ? alias : model.name;
+      let ids = req.body[arrKey].map((x: any) => idKey ? x[idKey]: x);
+      const data = await model.scope(scopes).findAll(QueryUtil.ids(model, ids));
       if (data == null) req.data.addMessage('No ' + key + ' found!', 404);
       req.data[key] = data;
 
@@ -57,7 +71,7 @@ export namespace RequestMiddleware {
     return async (req: Request, res: Response, next: NextFunction) => {
       const key = alias ? alias : model.name;
       const payload = payloadKey ? req.body[payloadKey] : req.body;
-      const data = await model.create(QueryUtil.attributes(payload, model));
+      const data = await model.create(QueryUtil.attributes(payload, model)).catch((err: any) => console.log(err));
       if (data == undefined) return res.status(500).send('Something went wrong');
       else req.data.addMessage(key + ' successfully added!', 200, data);
       req.data[key] = data;
@@ -107,6 +121,9 @@ export namespace RequestMiddleware {
       if (req.data[key] == undefined) return res.status(500).send('No ' + key + ' data available!');
       await req.data[key].$set(association,  RequestUtils.byAttribute(req.data, data));
       req.data.addMessage(association + ' successfully set for ' + key + '!', 200);
+
+      console.log(key);
+      console.log(association);
 
       next();
     };

@@ -45,15 +45,15 @@
     <ng-container *ngIf="row == selected else display">
       <mat-form-field>
         <mat-label>{{column.name}}</mat-label>
-        <mat-select [(ngModel)]="row[column.key]">
-          <mat-option *ngFor="let option of column.select?.options" [value]="option[$any(column.select?.valueKey)]">
+        <mat-select #select [(ngModel)]="row[column.key]" [multiple]="column.select?.multiple">
+          <mat-option *ngFor="let option of column.select?.options" [value]="column.select?.valueKey ? option[$any(column.select?.valueKey)] : option">
             {{ option[$any(column.select?.displayKey)] }}
           </mat-option>
         </mat-select>
       </mat-form-field>
     </ng-container>
     <ng-template #display>
-      {{ row[column.key] }}
+      {{ column.select?.multiple ? map(row[column.key], column.select?.displayKey) : row[column.key] }}
     </ng-template>
   </ng-container>
   <ng-container *ngSwitchCase="'action'">

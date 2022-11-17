@@ -10,7 +10,7 @@ import { Item } from "./item.model";
   item: {
     include: [Item]
   },
-  ability: {
+  abilities: {
     include: [CardAbility]
   }
 }))

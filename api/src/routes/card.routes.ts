@@ -7,16 +7,18 @@ import { Card } from '../models/data/card.model';
 import { CardTypeRoutes } from './cardType.routes';
 import { CardDeckRoutes } from './cardDeck.routes';
 import { CardAbilityRoutes } from './cardAbility.routes';
+import { Item } from '../models/data/item.model';
+import { CardAbility } from '../models/data/cardAbility.model';
 
 export const CardRoutes = Router();
 
-CardRoutes.get('/all', [middleware.findAll(Card)], controller.result(Card));
+CardRoutes.get('/all', [middleware.findAll(Card, ['item', 'abilities'])], controller.result(Card));
 
-CardRoutes.get('/', [middleware.find(Card, ['item', 'ability'])], controller.result(Card));
+CardRoutes.get('/', [middleware.find(Card, ['item', 'abilities'])], controller.result(Card));
 
 CardRoutes.post('/', [auth.isAdmin, middleware.add(Card)], controller.message('last'));
 
-CardRoutes.put('/', [auth.isAdmin, middleware.get(Card), middleware.edit(Card)], controller.message('last'));
+CardRoutes.put('/', [auth.isAdmin, middleware.get(Card), middleware.edit(Card), middleware.getAll(CardAbility, [], 'abilities', undefined, 'id'), middleware.setAssociation(Card, "abilities", CardAbility)], controller.message('last'));
 
 CardRoutes.delete('/', [auth.isAdmin, middleware.get(Card), middleware.remove(Card)], controller.message('last'));
 

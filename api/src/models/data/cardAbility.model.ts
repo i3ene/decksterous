@@ -4,7 +4,7 @@ import { Card } from "./card.model";
 import { CardCardAbility } from "./relations/card_cardAbility.model";
 
 @Scopes(() => ({
-  query: QueryUtil.query(['key', 'name', 'description']),
+  query: QueryUtil.query(['id', 'key', 'name', 'description']),
   cards: {
     include: [Card]
   }
@@ -12,6 +12,10 @@ import { CardCardAbility } from "./relations/card_cardAbility.model";
 @Table
 export class CardAbility extends Model<CardAbility> {
   @PrimaryKey
+  @AutoIncrement
+  @Column(DataType.INTEGER)
+  id!: number;
+
   @Column(DataType.STRING(64))
   key!: string;
 

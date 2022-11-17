@@ -1,5 +1,5 @@
 import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
-import { Card } from 'src/app/models/data/card.model';
+import { Card, CardAbility, CardType } from 'src/app/models/data/card.model';
 import { Item } from 'src/app/models/data/item.model';
 import { ColumnAction, IColumn, ITableActionEvent } from 'src/app/models/object/table.model';
 import { RequestService } from 'src/app/services/request/request.service';
@@ -16,6 +16,8 @@ export class DevCardComponent implements OnInit {
 
   data!: Card[];
   items: Item[] = [new Item({name: '- None -'})];
+  types: CardType[] = [new CardType({type: '- None -'})];
+  abilities: CardAbility[] = [];
   columns: IColumn[] = [
     { key: 'id', name: 'ID' },
     { key: 'health', name: 'Health', type: 'number' },
@@ -26,6 +28,17 @@ export class DevCardComponent implements OnInit {
       options: this.items,
       displayKey: 'name',
       valueKey: 'id'
+    }},
+    { key: 'typeId', name: 'Type ID', type: 'select', select: {
+      multiple: false,
+      options: this.types,
+      displayKey: 'type',
+      valueKey: 'id'
+    }},
+    { key: 'abilities', name: 'Abilities', type: 'select', select: {
+      multiple: true,
+      options: this.abilities,
+      displayKey: 'name'
     }},
     new ColumnAction("Action", [
       { name: 'edit', icon: 'edit' },
@@ -41,6 +54,18 @@ export class DevCardComponent implements OnInit {
   ngOnInit(): void {
     this.loadCards();
     this.loadItems();
+    this.loadCardTypes();
+    this.loadCardAbilities();
+  }
+
+  async loadCardAbilities(): Promise<void> {
+    const payload = await this.request.get("/item/card/ability/all");
+    this.abilities.push(...payload.map((x: any) => new CardAbility(x)));
+  }
+
+  async loadCardTypes(): Promise<void> {
+    const payload = await this.request.get("/item/card/type/all");
+    this.types.push(...payload.map((x: any) => new CardType(x)));
   }
 
   async loadItems(): Promise<void> {

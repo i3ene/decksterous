@@ -36,7 +36,7 @@ export class DevInventoryComponent {
   constructor(private request: RequestService) {}
 
   ngOnInit(): void {
-    this.loadInventory();
+    this.loadInventories();
     this.loadUsers();
   }
 
@@ -45,7 +45,7 @@ export class DevInventoryComponent {
     this.users.push(...payload.map((x: any) => new User(x)));
   }
 
-  async loadInventory(): Promise<void> {
+  async loadInventories(): Promise<void> {
     const payload = await this.request.get("/inventory/all");
     this.data = payload.map((x: any) => new Inventory(x));
   }
