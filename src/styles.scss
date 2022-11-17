@@ -1,11 +1,11 @@
-
+@use 'sass:map';
 // Custom Theming for Angular Material
 // For more information: https://material.angular.io/guide/theming
-@use '@angular/material' as mat;
+@use "@angular/material" as mat;
 // Plus imports for other components in your app.
 
-@import './styles/global.scss';
-@import './styles/restyle.scss';
+@import "./styles/global.scss";
+@import "./styles/restyle.scss";
 
 // Include the common styles for Angular Material. We include this here so that you only
 // have to load a single css file for Angular Material in your app.
@@ -23,23 +23,49 @@ $decksterous-warn: mat.define-palette(mat.$red-palette);
 
 // Create the theme object. A theme consists of configurations for individual
 // theming systems such as "color" or "typography".
-$decksterous-theme: mat.define-light-theme((
-  color: (
-    primary: $decksterous-primary,
-    accent: $decksterous-accent,
-    warn: $decksterous-warn,
+$decksterous-theme: mat.define-dark-theme(
+  (
+    color: (
+      primary: $decksterous-primary,
+      accent: $decksterous-accent,
+      warn: $decksterous-warn,
+    ),
   )
-));
+);
 
 // Include theme styles for core and each component used in your app.
 // Alternatively, you can import and @include the theme mixins for each component
 // that you are using.
-@include mat.all-component-themes($decksterous-theme);
+@mixin theme($theme) {
+  @include mat.all-component-themes($theme);
+  @include mat.all-component-colors($theme);
+  
+  body {
+    background-color: map.get(map.get($theme, background), background);
+    color: map.get(map.get($theme, foreground), text);
+  }
+
+  .app-background {
+    background-color: map.get(map.get($theme, background), background);
+  }
+
+  .card-background {
+    background-color: map.get(map.get($theme, background), card);
+  }
+}
+
+@include theme($decksterous-theme);
 
 /* You can add global styles to this file, and also import other style files */
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
 
 a:link {
   color: mat.get-color-from-palette($decksterous-primary, default);
