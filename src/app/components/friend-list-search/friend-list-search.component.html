@@ -1,0 +1,15 @@
+<div class="search-button" *ngIf="!searchField">
+  <button mat-mini-fab (click)="toggleEvent.emit(true)">
+    <mat-icon>search</mat-icon>
+  </button>
+</div>
+<mat-form-field *ngIf="searchField" class="search card-background">
+  <mat-label>Search...</mat-label>
+  <input #search matInput type="text" (keyup)="searchEvent.emit(search.value)" />
+  <button mat-icon-button matSuffix (click)="findEvent.emit(search.value)">
+    <mat-icon>search</mat-icon>
+  </button>
+  <button mat-icon-button matSuffix (click)="toggleEvent.emit(false)">
+    <mat-icon>close</mat-icon>
+  </button>
+</mat-form-field>

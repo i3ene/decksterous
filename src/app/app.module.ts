@@ -40,6 +40,7 @@ import { FriendListComponent } from './components/friend-list/friend-list.compon
 import { ProfileItemComponent } from './components/profile-item/profile-item.component';
 import { DevProfileComponent } from './pages/dev/profile/profile.component';
 import { FriendMenuListComponent } from './components/friend-menu-list/friend-menu-list.component';
+import { FriendListSearchComponent } from './components/friend-list-search/friend-list-search.component';
 
 @NgModule({
   declarations: [
@@ -72,7 +73,8 @@ import { FriendMenuListComponent } from './components/friend-menu-list/friend-me
     FriendListComponent,
     ProfileItemComponent,
     DevProfileComponent,
-    FriendMenuListComponent
+    FriendMenuListComponent,
+    FriendListSearchComponent
   ],
   imports: [
     BrowserModule,

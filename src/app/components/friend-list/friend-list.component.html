@@ -1,40 +1,43 @@
-<div class="search-button" *ngIf="search && !searchField">
-  <button mat-mini-fab (click)="searchField = true">
-    <mat-icon>search</mat-icon>
-  </button>
-</div>
-<mat-form-field *ngIf="searchField" class="search card-background">
-  <mat-label>Search...</mat-label>
-  <input matInput type="text" />
-  <button mat-icon-button matSuffix>
-    <mat-icon>search</mat-icon>
-  </button>
-  <button mat-icon-button matSuffix (click)="searchField = false">
-    <mat-icon>close</mat-icon>
-  </button>
-</mat-form-field>
-<ng-container *ngIf="!onlyFriends">
-  <mat-list-item *ngFor="let request of requests">
-    <app-profile-avatar mat-list-icon [src]="request.avatar"></app-profile-avatar>
-    <div mat-line>{{ request.name }}</div>
-    <div mat-line class="actions">
-      <button mat-stroked-button color="primary">Accept</button>
-      <button mat-stroked-button color="warn">Decline</button>
-    </div>
+<app-friend-list-search
+  *ngIf="search"
+  (toggleEvent)="setSearch($event)"
+  (searchEvent)="searchUsers($event)"
+  (findEvent)="findUsers($event)"
+></app-friend-list-search>
+<ng-container *ngIf="!searching else find">
+  <ng-container *ngIf="!onlyFriends">
+    <mat-list-item *ngFor="let request of requests">
+      <app-profile-avatar mat-list-icon [src]="request.avatar"></app-profile-avatar>
+      <div mat-line>{{ request.name }}</div>
+      <div mat-line class="actions">
+        <button mat-stroked-button color="primary">Accept</button>
+        <button mat-stroked-button color="warn">Decline</button>
+      </div>
+    </mat-list-item>
+    <mat-divider *ngIf="requests.length != 0"></mat-divider>
+  </ng-container>
+  <mat-list-item *ngFor="let friend of friends">
+    <app-profile-avatar mat-list-icon [src]="friend.avatar"></app-profile-avatar>
+    <div mat-line>{{ friend.name }}</div>
+    <div mat-line>Level: {{ stats.user(friend.xp).level }}</div>
   </mat-list-item>
-  <mat-divider *ngIf="requests.length != 0"></mat-divider>
+  <ng-container *ngIf="!onlyFriends">
+    <mat-divider *ngIf="invites.length != 0"></mat-divider>
+    <mat-list-item *ngFor="let request of requests" class="translucent">
+      <app-profile-avatar mat-list-icon [src]="request.avatar"></app-profile-avatar>
+      <div mat-line>{{ request.name }}</div>
+      <div mat-line>Invited</div>
+    </mat-list-item>
+  </ng-container>
+  <mat-list-item *ngIf="(friends.length + requests.length + invites.length) == 0"> No friends found... </mat-list-item>
 </ng-container>
-<mat-list-item *ngFor="let friend of friends">
-  <app-profile-avatar mat-list-icon [src]="friend.avatar"></app-profile-avatar>
-  <div mat-line>{{ friend.name }}</div>
-  <div mat-line>Level: {{ stats.user(friend.xp).level }}</div>
-</mat-list-item>
-<ng-container *ngIf="!onlyFriends">
-  <mat-divider *ngIf="invites.length != 0"></mat-divider>
-  <mat-list-item *ngFor="let request of requests" class="translucent">
-    <app-profile-avatar mat-list-icon [src]="request.avatar"></app-profile-avatar>
-    <div mat-line>{{ request.name }}</div>
-    <div mat-line>Invited</div>
+<ng-template #find>
+  <mat-list-item *ngFor="let search of searches">
+    <app-profile-avatar mat-list-icon [src]="search.avatar"></app-profile-avatar>
+      <div mat-line>{{ search.name }}</div>
+      <div mat-line class="actions">
+        <button mat-stroked-button color="primary">Invite</button>
+      </div>
   </mat-list-item>
-</ng-container>
-<mat-list-item *ngIf="friends.length == 0 && requests.length == 0 && invites.length == 0"> No friends... </mat-list-item>
+  <mat-list-item *ngIf="searches.length == 0"> No Users found... </mat-list-item>
+</ng-template>

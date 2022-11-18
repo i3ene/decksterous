@@ -33,7 +33,7 @@ export namespace RequestMiddleware {
     return async (req: Request, res: Response, next: NextFunction) => {
       const key = alias ? alias : model.name;
       const query = Object.keys(req.body).length ? req.body : req.query;
-      const data = await model.scope(['defaultScope', { method: ['query', query, Op.or] }].concat(scopes)).findAll();
+      const data = await model.scope(['defaultScope', { method: ['query', query, Op.or, true] }].concat(scopes)).findAll();
       if (data == null) req.data.addMessage('No ' + key + ' found!', 404);
       req.data[key] = data;
 
