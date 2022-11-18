@@ -14,6 +14,6 @@
   <ng-template #footer>
     <a [routerLink]="['/auth/register']">Create Account</a>
     <span class="spacer"></span>
-    <button id="okButton" mat-raised-button [disabled]="!(credentials.password && credentials.name)" (click)="login()">OK</button>
+    <button id="okButton" mat-raised-button color="primary" [disabled]="!(credentials.password && credentials.name)" (click)="login()">OK</button>
   </ng-template>
 </app-form-card>

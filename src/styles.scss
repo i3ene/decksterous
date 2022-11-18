@@ -16,7 +16,7 @@
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue. Available color palettes: https://material.io/design/color/
 $decksterous-primary: mat.define-palette(mat.$green-palette);
-$decksterous-accent: mat.define-palette(mat.$deep-purple-palette, A200, A100, A400);
+$decksterous-accent: mat.define-palette(mat.$blue-gray-palette, A200, A100, A400);
 
 // The warn palette is optional (defaults to red).
 $decksterous-warn: mat.define-palette(mat.$red-palette);
@@ -39,7 +39,7 @@ $decksterous-theme: mat.define-dark-theme(
 @mixin theme($theme) {
   @include mat.all-component-themes($theme);
   @include mat.all-component-colors($theme);
-  
+
   body {
     background-color: map.get(map.get($theme, background), background);
     color: map.get(map.get($theme, foreground), text);
@@ -67,6 +67,8 @@ body {
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
+// Links
+
 a:link {
   color: mat.get-color-from-palette($decksterous-primary, default);
 }
@@ -81,4 +83,25 @@ a:hover {
 
 a:active {
   color: mat.get-color-from-palette($decksterous-warn, A100);
+}
+
+// Scrollbar
+
+::-webkit-scrollbar {
+  @extend .card-background;
+  width: 4px;
+  height: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: mat.get-color-from-palette($decksterous-primary, default);
+  border-radius: 12px;
+
+  &:hover {
+    background: mat.get-color-from-palette($decksterous-accent, default);
+  }
+}
+
+::-webkit-scrollbar-corner {
+  @extend .card-background;
 }
