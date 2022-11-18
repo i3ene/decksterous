@@ -21,6 +21,7 @@
     <div mat-line>{{ friend.name }}</div>
     <div mat-line>Level: {{ stats.user(friend.xp).level }}</div>
   </mat-list-item>
+  <mat-list-item *ngIf="_friends.length == 0 else info"> No friends... </mat-list-item>
   <ng-container *ngIf="!onlyFriends">
     <mat-divider *ngIf="invites.length != 0"></mat-divider>
     <mat-list-item *ngFor="let invite of invites" class="translucent">
@@ -29,8 +30,9 @@
       <div mat-line>Invited</div>
     </mat-list-item>
   </ng-container>
-  <mat-list-item *ngIf="_friends.length == 0"> No friends... </mat-list-item>
-  <mat-list-item *ngIf="(friends.length + requests.length + invites.length) == 0"> No friends found... </mat-list-item>
+  <ng-template #info>
+    <mat-list-item *ngIf="(friends.length + requests.length + invites.length) == 0"> No friends found... </mat-list-item>
+  </ng-template>
 </ng-container>
 <ng-template #find>
   <mat-list-item *ngFor="let search of searches">

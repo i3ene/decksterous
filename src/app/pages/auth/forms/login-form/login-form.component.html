@@ -2,11 +2,26 @@
   <ng-template #content>
     <mat-form-field appearance="fill">
       <mat-label>Name</mat-label>
-      <input id="nameInput" matInput [(ngModel)]="credentials.name" />
+      <input
+        id="nameInput"
+        matInput
+        [(ngModel)]="credentials.name"
+        onfocus="this.setSelectionRange(0, this.value.length)"
+        (keyup.enter)="passwordInput.value ? login() : passwordInput.focus()"
+        (keydown.Tab)="$event.preventDefault(); passwordInput.focus()"
+      />
     </mat-form-field>
     <mat-form-field appearance="fill">
       <mat-label>Password</mat-label>
-      <input id="passwordInput" #passwordInput matInput type="password" [(ngModel)]="credentials.password" />
+      <input
+        id="passwordInput"
+        #passwordInput
+        matInput
+        type="password"
+        [(ngModel)]="credentials.password"
+        onfocus="this.setSelectionRange(0, this.value.length)"
+        (keyup.enter)="passwordInput.value ? login() : undefined"
+      />
       <visibility-button matSuffix [element]="passwordInput"></visibility-button>
     </mat-form-field>
     <a [routerLink]="['/auth/reset']" class="information">Forgot Password?</a>
@@ -14,6 +29,14 @@
   <ng-template #footer>
     <a [routerLink]="['/auth/register']">Create Account</a>
     <span class="spacer"></span>
-    <button id="okButton" mat-raised-button color="primary" [disabled]="!(credentials.password && credentials.name)" (click)="login()">OK</button>
+    <button
+      id="okButton"
+      mat-raised-button
+      color="primary"
+      [disabled]="!(credentials.password && credentials.name)"
+      (click)="login()"
+    >
+      OK
+    </button>
   </ng-template>
 </app-form-card>

@@ -1,29 +1,31 @@
 <app-form-card [title]="'Reset Password'" [navigation]="['/auth/login']">
-    <ng-template #content>
-      <div class="row">
-        <mat-form-field appearance="fill">
-          <mat-label>Name</mat-label>
-          <input matInput required [(ngModel)]="credentials.name" />
-        </mat-form-field>
-        <mat-form-field appearance="fill">
-          <mat-label>New Password</mat-label>
-          <input #passwordInput matInput type="password" required [(ngModel)]="credentials.password" />
-          <visibility-button matSuffix [element]="passwordInput"></visibility-button>
-        </mat-form-field>
-      </div>
-      <div class="row">
-        <mat-form-field appearance="fill">
-          <mat-label>Email</mat-label>
-          <input matInput required [(ngModel)]="credentials.mail" />
-        </mat-form-field>
-        <mat-form-field appearance="fill">
-          <mat-label>(Repeat) New Password</mat-label>
-          <input #passwordRepeatInput matInput type="password" />
-          <visibility-button matSuffix [element]="passwordRepeatInput"></visibility-button>
-        </mat-form-field>
-      </div>
-    </ng-template>
-    <ng-template #footer>
-      <button mat-raised-button [disabled]="!(credentials.password && credentials.name && credentials.mail)" (click)="reset()">Confirm</button>
-    </ng-template>
-  </app-form-card>
+  <ng-template #content>
+    <div class="row">
+      <mat-form-field appearance="fill">
+        <mat-label>Name</mat-label>
+        <input matInput required [(ngModel)]="credentials.name" />
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>New Password</mat-label>
+        <input #passwordInput matInput type="password" required [(ngModel)]="credentials.password" />
+        <visibility-button matSuffix [element]="passwordInput"></visibility-button>
+      </mat-form-field>
+    </div>
+    <div class="row">
+      <mat-form-field appearance="fill">
+        <mat-label>Email</mat-label>
+        <input matInput required [(ngModel)]="credentials.mail" />
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>(Repeat) New Password</mat-label>
+        <input #passwordRepeatInput matInput type="password" />
+        <visibility-button matSuffix [element]="passwordRepeatInput"></visibility-button>
+      </mat-form-field>
+    </div>
+  </ng-template>
+  <ng-template #footer>
+    <button mat-raised-button [disabled]="!(credentials.password && credentials.name && credentials.mail)" (click)="reset()">
+      Confirm
+    </button>
+  </ng-template>
+</app-form-card>
