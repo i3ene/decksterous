@@ -52,6 +52,11 @@ $decksterous-theme: mat.define-dark-theme(
   .card-background {
     background-color: map.get(map.get($theme, background), card);
   }
+
+  * {
+    scrollbar-color: mat.get-color-from-palette($decksterous-primary, default) map.get(map.get($theme, background), background);
+    scrollbar-width: thin;
+  }
 }
 
 @include theme($decksterous-theme);
@@ -88,7 +93,7 @@ a:active {
 // Scrollbar
 
 ::-webkit-scrollbar {
-  @extend .card-background;
+  @extend .app-background;
   width: 4px;
   height: 4px;
 }
@@ -103,5 +108,6 @@ a:active {
 }
 
 ::-webkit-scrollbar-corner {
-  @extend .card-background;
+  @extend .app-background;
 }
+
