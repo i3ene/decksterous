@@ -5,7 +5,7 @@
 </div>
 <mat-form-field *ngIf="searchField" class="search card-background">
   <mat-label>Search...</mat-label>
-  <input #search matInput type="text" (keyup)="searchEvent.emit(search.value)" />
+  <input #search matInput type="text" (keyup)="searchEvent.emit(search.value)" (keyup.enter)="findEvent.emit(search.value)"/>
   <button mat-icon-button matSuffix (click)="findEvent.emit(search.value)">
     <mat-icon>search</mat-icon>
   </button>
