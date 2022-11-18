@@ -35,7 +35,7 @@
   </ng-template>
 </ng-container>
 <ng-template #find>
-  <mat-list-item *ngFor="let search of searches">
+  <mat-list-item *ngFor="let search of searches" [routerLink]="['/navigation/profile']" [queryParams]="{id: search.id}">
     <app-profile-avatar mat-list-icon [src]="search.avatar"></app-profile-avatar>
       <div mat-line>{{ search.name }}</div>
       <div mat-line class="actions">
