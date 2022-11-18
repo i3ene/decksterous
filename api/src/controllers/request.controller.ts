@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import { Message } from '../models/object/data.express';
 import { RequestUtils } from '../utils/request.util';
 
 export namespace RequestController {
@@ -9,7 +10,7 @@ export namespace RequestController {
     };
   }
 
-  export function message(index?: number | 'last') {
+  export function message(index?: number | 'last' | 'success') {
     return (req: Request, res: Response) => {
       let result = req.data.messages;
       if (index && req.data.messages.length) {
@@ -18,7 +19,15 @@ export namespace RequestController {
           if (index < 0) index = 0;
           result = req.data.messages[index];
         } else {
-          result = req.data.messages[req.data.messages.length - 1];
+          switch (index) {
+            case 'last':
+              result = req.data.messages[req.data.messages.length - 1];
+              break;
+            case 'success':
+              result = (req.data.messages as Message[]).find(x => x.status == 200);
+              if (!result) result = message("last");
+              break;
+          }
         }
       }
 
