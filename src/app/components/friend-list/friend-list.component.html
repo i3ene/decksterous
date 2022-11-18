@@ -1,8 +1,8 @@
 <app-friend-list-search
   *ngIf="search"
   (toggleEvent)="setSearch($event)"
-  (searchEvent)="searchUsers($event)"
-  (findEvent)="findUsers($event)"
+  (searchEvent)="searchFriends($event)"
+  (findEvent)="searchUsers($event)"
 ></app-friend-list-search>
 <ng-container *ngIf="!searching else find">
   <ng-container *ngIf="!onlyFriends">
@@ -10,7 +10,7 @@
       <app-profile-avatar mat-list-icon [src]="request.avatar"></app-profile-avatar>
       <div mat-line>{{ request.name }}</div>
       <div mat-line class="actions">
-        <button mat-stroked-button color="primary">Accept</button>
+        <button mat-stroked-button color="primary" (click)="acceptFriend(request.id!)">Accept</button>
         <button mat-stroked-button color="warn">Decline</button>
       </div>
     </mat-list-item>
@@ -23,12 +23,13 @@
   </mat-list-item>
   <ng-container *ngIf="!onlyFriends">
     <mat-divider *ngIf="invites.length != 0"></mat-divider>
-    <mat-list-item *ngFor="let request of requests" class="translucent">
-      <app-profile-avatar mat-list-icon [src]="request.avatar"></app-profile-avatar>
-      <div mat-line>{{ request.name }}</div>
+    <mat-list-item *ngFor="let invite of invites" class="translucent">
+      <app-profile-avatar mat-list-icon [src]="invite.avatar"></app-profile-avatar>
+      <div mat-line>{{ invite.name }}</div>
       <div mat-line>Invited</div>
     </mat-list-item>
   </ng-container>
+  <mat-list-item *ngIf="_friends.length == 0"> No friends... </mat-list-item>
   <mat-list-item *ngIf="(friends.length + requests.length + invites.length) == 0"> No friends found... </mat-list-item>
 </ng-container>
 <ng-template #find>
@@ -36,7 +37,7 @@
     <app-profile-avatar mat-list-icon [src]="search.avatar"></app-profile-avatar>
       <div mat-line>{{ search.name }}</div>
       <div mat-line class="actions">
-        <button mat-stroked-button color="primary">Invite</button>
+        <button mat-stroked-button color="primary" (click)="inviteUser(search.id!)">Invite</button>
       </div>
   </mat-list-item>
   <mat-list-item *ngIf="searches.length == 0"> No Users found... </mat-list-item>

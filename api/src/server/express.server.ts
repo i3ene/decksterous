@@ -5,6 +5,7 @@ import { UserRoutes } from '../routes/user.routes';
 import { InventoryRoutes } from '../routes/inventory.routes';
 import { RequestMiddleware } from '../middleware/request.middleware';
 import { ItemRoutes } from '../routes/item.routes';
+import { SelfRoutes } from '../routes/self.routes';
 
 export const app = express();
 
@@ -16,6 +17,7 @@ app.use(RequestMiddleware.handler);
 app.use('/auth', AuthRoutes);
 
 app.use(AuthMiddleware.verifyToken);
+app.use('/self', SelfRoutes);
 app.use('/user', UserRoutes);
 app.use('/item', ItemRoutes);
 app.use('/inventory', InventoryRoutes);

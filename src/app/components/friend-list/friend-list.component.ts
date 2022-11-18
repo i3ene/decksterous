@@ -9,9 +9,13 @@ import { StatsService } from 'src/app/services/stats.service';
   styleUrls: ['./friend-list.component.scss'],
 })
 export class FriendListComponent {
+  _userId!: number;
   @Input() set userId(value: number | undefined) {
     if (!value) return;
-    //this.loadFriends(value);
+    this._userId = value;
+    this.loadFriends(value);
+    this.loadInvites(value);
+    this.loadRequests(value);
   }
   @Input() onlyFriends: boolean = true;
   @Input() search: boolean = false;
@@ -53,6 +57,18 @@ export class FriendListComponent {
     this.searches = new Array(2).fill({ name: 'Loading...' });
   }
 
+  async loadInvites(id: number) {
+    const payload = await this.request.get(`/user/friend/invites?id=${id}`);
+    if (!payload) this.invites = [];
+    else this.invites = payload.map((x: any) => new User(x));
+  }
+
+  async loadRequests(id: number) {
+    const payload = await this.request.get(`/user/friend/requests?id=${id}`);
+    if (!payload) this.requests = [];
+    else this.requests = payload.map((x: any) => new User(x));
+  }
+
   async loadFriends(id: number) {
     const payload = await this.request.get(`/user/friend?id=${id}`);
     if (!payload) this.friends = [];
@@ -63,6 +79,13 @@ export class FriendListComponent {
     const payload = await this.request.get(`/user/all?name=${name}`);
     if (!payload) this.searches = [];
     else this.searches = payload.map((x: any) => new User(x));
+    this.filterList();
+  }
+
+  filterList() {
+    const filter = ([] as any[]).concat(this._friends.map(x => x.id)).concat(this._invites.map(x => x.id)).concat(this._requests.map(x => x.id));
+    filter.push(this._userId);
+    this.searches = this.searches.filter(x => !filter.includes(x.id));
   }
 
   setSearch(value: boolean) {
@@ -71,13 +94,27 @@ export class FriendListComponent {
     this.searches = [];
   }
 
-  searchUsers(value: string) {
-    console.log(value);
+  searchFriends(value: string) {
     this.filter = value;
   }
 
-  findUsers(value: string) {
+  searchUsers(value: string) {
     this.searching = true;
     this.loadUsers(value);
+  }
+
+  async inviteUser(id: number) {
+    const invite = this.searches.find(x => x.id == id);
+    if (invite) this._invites.push(invite);
+    this.filterList();
+    const result = await this.request.post(`/self/friend/invite`, { id });
+  }
+
+  async acceptFriend(id: number) {
+    const index = this._requests.findIndex(x => x.id == id);
+    if (index < 0) return;
+    const request = this._requests.splice(index, 1)[0];
+    if (request) this._friends.push(request);
+    const result = await this.request.post(`/self/friend/invite`, { id });
   }
 }

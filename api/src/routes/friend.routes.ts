@@ -14,6 +14,6 @@ FriendRoutes.delete("/", [auth.isAdmin, middleware.get(User), middleware.get(Use
 
 FriendRoutes.get("/check", [middleware.get(User), middleware.get(User, [], 'friend', 'friendId'), middleware.hasAssociation(User, 'friends', 'friend')], controller.result([User, 'friends']));
 
-FriendRoutes.get("/requests", [middleware.get(User), middleware.getAssociation(User, 'friends'), middleware.getAssociation(User, 'requests'), middleware.difference('right', [User, 'requests'], [User, 'friends'], 'difference', 'id')], controller.result('difference'));
+FriendRoutes.get("/invites", [middleware.get(User), middleware.getAssociation(User, 'friends'), middleware.getAssociation(User, 'requests'), middleware.difference('right', [User, 'requests'], [User, 'friends'], 'difference', 'id')], controller.result('difference'));
 
-FriendRoutes.get("/invites", [middleware.get(User), middleware.getAssociation(User, 'friends'), middleware.getAssociation(User, 'requests'), middleware.difference('left', [User, 'requests'], [User, 'friends'], 'difference', 'id')], controller.result('difference'));
+FriendRoutes.get("/requests", [middleware.get(User), middleware.getAssociation(User, 'friends'), middleware.getAssociation(User, 'requests'), middleware.difference('left', [User, 'requests'], [User, 'friends'], 'difference', 'id')], controller.result('difference'));

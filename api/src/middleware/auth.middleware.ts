@@ -65,9 +65,20 @@ export namespace AuthMiddleware {
   }
 
   export async function isAdmin(req: Request, res: Response, next: NextFunction): Promise<any> {
-    if (req.user == null) return res.status(500).send({message: 'User object is null!'});
-    if (req.user.id != Config.Auth.ADMIN_ID) return res.status(401).send({message: 'Restricted to Admin!'});
+    if (req.user == null) return res.status(500).send({ message: 'User object is null!' });
+    if (req.user.id != Config.Auth.ADMIN_ID) return res.status(401).send({ message: 'Restricted to Admin!' });
 
     next();
+  }
+
+  export function getSelf(key: string) {
+    return async (req: Request, res: Response, next: NextFunction) => {
+      if (req.user == null) return res.status(500).send({ message: 'User object is null!' });
+      const user: User | null = await User.scope([]).findByPk(req.user.id);
+      if (user == undefined) return res.status(500).send({ message: 'No User found for Token ID!' });
+      req.data[key] = user;
+
+      next();
+    };
   }
 }
