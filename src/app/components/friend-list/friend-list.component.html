@@ -11,7 +11,7 @@
       <div mat-line>{{ request.name }}</div>
       <div mat-line class="actions">
         <button mat-stroked-button color="primary" (click)="acceptFriend(request.id!)">Accept</button>
-        <button mat-stroked-button color="warn">Decline</button>
+        <button mat-stroked-button color="warn" (click)="declineFriend(request.id!)">Decline</button>
       </div>
     </mat-list-item>
     <mat-divider *ngIf="requests.length != 0"></mat-divider>

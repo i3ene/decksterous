@@ -7,3 +7,5 @@ import { User } from "../models/data/user.model";
 export const SelfRoutes = Router();
 
 SelfRoutes.post("/friend/invite", [auth.getSelf('user'), middleware.get(User, [], 'friend'), middleware.addAssociation(User, 'friends', 'friend', 'user')], controller.message("last"));
+
+SelfRoutes.post("/friend/decline", [auth.getSelf('user'), middleware.get(User, [], 'friend'), middleware.removeAssociation(User, 'friends', 'user', 'friend')], controller.message("last"));

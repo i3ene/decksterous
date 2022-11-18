@@ -117,4 +117,11 @@ export class FriendListComponent {
     if (request) this._friends.push(request);
     const result = await this.request.post(`/self/friend/invite`, { id });
   }
+
+  async declineFriend(id: number) {
+    const index = this._requests.findIndex(x => x.id == id);
+    if (index < 0) return;
+    const request = this._requests.splice(index, 1)[0];
+    const result = await this.request.post(`/self/friend/decline`, { id });
+  }
 }
