@@ -6,7 +6,7 @@
 ></app-friend-list-search>
 <ng-container *ngIf="!searching else find">
   <ng-container *ngIf="!onlyFriends">
-    <mat-list-item *ngFor="let request of requests">
+    <mat-list-item *ngFor="let request of requests" [routerLink]="['/navigation/profile']" [queryParams]="{id: request.id}">
       <app-profile-avatar mat-list-icon [src]="request.avatar"></app-profile-avatar>
       <div mat-line>{{ request.name }}</div>
       <div mat-line class="actions">
@@ -16,7 +16,7 @@
     </mat-list-item>
     <mat-divider *ngIf="requests.length != 0"></mat-divider>
   </ng-container>
-  <mat-list-item *ngFor="let friend of friends">
+  <mat-list-item *ngFor="let friend of friends" [routerLink]="['/navigation/profile']" [queryParams]="{id: friend.id}">
     <app-profile-avatar mat-list-icon [src]="friend.avatar"></app-profile-avatar>
     <div mat-line>{{ friend.name }}</div>
     <div mat-line>Level: {{ stats.user(friend.xp).level }}</div>
@@ -24,7 +24,7 @@
   <mat-list-item *ngIf="_friends.length == 0 else info"> No friends... </mat-list-item>
   <ng-container *ngIf="!onlyFriends">
     <mat-divider *ngIf="invites.length != 0"></mat-divider>
-    <mat-list-item *ngFor="let invite of invites" class="translucent">
+    <mat-list-item *ngFor="let invite of invites" [routerLink]="['/navigation/profile']" [queryParams]="{id: invite.id}" class="translucent">
       <app-profile-avatar mat-list-icon [src]="invite.avatar"></app-profile-avatar>
       <div mat-line>{{ invite.name }}</div>
       <div mat-line>Invited</div>
