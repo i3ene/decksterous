@@ -22,9 +22,14 @@ export class Game {
    */
   events: GameEvents = new GameEvents();
 
+  /**
+   * Ammount of cards possible to place on the field
+   */
+  fieldSize: number = 5;
+
   constructor(name: string, rules: GameRules, ...players: GamePlayer[]) {
     this.name = name;
-    this.players = new GamePlayers(players);
+    this.players = new GamePlayers(this, players);
     // TODO: Combine rules with default rules
   }
 
