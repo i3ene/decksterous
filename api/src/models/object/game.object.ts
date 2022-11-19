@@ -1,27 +1,67 @@
+import EventEmitter from "events";
+import { GameEvent, GameEvents, GameEventState, GamePlayer, GamePlayers, GameRules } from "./game.model";
+
 export class Game {
-  player1!: any;
-  player2!: any;
+  /**
+   * Name of the game room
+   */
+  name: string;
 
-  cardsOnField!: any[];
-  ruleSet!: any;
+  /**
+   * Rules for this game
+   */
+  rules!: GameRules;
 
-  constructor() {}
+  /**
+   * Players of this game
+   */
+  players: GamePlayers;
 
-  beforeGameStart(): void {}
+  /**
+   * Game events (with states)
+   */
+  events: GameEvents = new GameEvents();
 
-  atGameStart(): void {}
+  constructor(name: string, rules: GameRules, ...players: GamePlayer[]) {
+    this.name = name;
+    this.players = new GamePlayers(players);
+    // TODO: Combine rules with default rules
+  }
 
-  afterGameStart(): void {}
+  beforeStart(): void {
+    this.events[GameEvent.START].emit(GameEventState.BEFORE, null);
+  }
 
-  beforeTurn(): void {}
+  atStart(): void {
+    this.events[GameEvent.START].emit(GameEventState.AT, null);
+  }
 
-  atTurn(): void {}
+  afterStart(): void {
+    this.events[GameEvent.START].emit(GameEventState.AFTER, null);
+  }
 
-  afterTurn(): void {}
+  beforeTurn(): void {
+    this.events[GameEvent.TURN].emit(GameEventState.BEFORE, null);
+  }
 
-  beforeGameEnd(): void {}
+  atTurn(): void {
+    this.events[GameEvent.TURN].emit(GameEventState.AT, null);
+  }
 
-  atGameEnd(): void {}
+  afterTurn(): void {
+    this.players.next();
+    this.events[GameEvent.TURN].emit(GameEventState.AFTER, null);
+  }
 
-  afterGameEnd(): void {}
+  beforeEnd(): void {
+    this.events[GameEvent.END].emit(GameEventState.BEFORE, null);
+  }
+
+  atEnd(): void {
+    this.events[GameEvent.END].emit(GameEventState.AT, null);
+  }
+
+  afterEnd(): void {
+    this.events[GameEvent.END].emit(GameEventState.AFTER, null);
+  }
 }
