@@ -3,6 +3,20 @@
   margin-left: -2px !important;
 }
 
+.inline {
+  display: flex !important;
+  flex-direction: row;
+  gap: 8px;
+  align-items: baseline;
+}
+
+.status {
+  height: 9px;
+  width: 9px;
+  border-radius: 50%;
+  background-color: gray;
+}
+
 .actions > * {
   margin-right: 4px;
 }
