@@ -22,6 +22,11 @@ export class GameEvents {
   [GameEvent.END]: EventEmitter = new EventEmitter();
 }
 
+export class GameLogicState {
+  event: GameEvent = GameEvent.START;
+  state: GameEventState = GameEventState.BEFORE;
+}
+
 export interface GameRule {
   [key: string]: any;
 }
@@ -52,6 +57,11 @@ export class GamePlayer {
    * Cards in hand
    */
   cards: Card[] = [];
+
+  /**
+   * Cards on the graveyard
+   */
+  grave: Card[] = [];
 
   /**
    * Cards on field
@@ -96,10 +106,22 @@ export class GamePlayer {
     return true;
   }
 
+  /**
+   * Remove a card from field and onto the graveyard.
+   * @param fieldIndex Index of field
+   */
   removeCard(fieldIndex: number): void {
-    if (this.field.get(fieldIndex)) this.field.delete(fieldIndex);
+    const card = this.field.get(fieldIndex);
+    if (!card) return;
+    this.grave.push(card);
+    this.field.delete(fieldIndex);
   }
 
+  /**
+   * Add/Remove health from card on the field. If health is lower or `0` it will automatically be removed.
+   * @param fieldIndex Index on field
+   * @param amount Health to add/remove
+   */
   cardHealth(fieldIndex: number, amount: number): void {
     const card = this.field.get(fieldIndex);
     if (!card) return;
@@ -107,7 +129,13 @@ export class GamePlayer {
     if (card.health <= 0) this.removeCard(fieldIndex);
   }
 
-  attackCard(attacker: Card, fieldIndex: number): void {
+  /**
+   * Attack a card on field.
+   * @param attacker Attacker card
+   * @param fieldIndex Index of field
+   */
+  attackCard(attacker: Card | undefined, fieldIndex: number): void {
+    if (!attacker) return;
     this.cardHealth(fieldIndex, -attacker.damage);
   }
 }
@@ -119,14 +147,9 @@ export class GamePlayers {
   map: Map<number, GamePlayer> = new Map<number, GamePlayer>();
 
   /**
-   * Start index of the key for the `map`
-   */
-  static readonly _startIndex: number = 1;
-
-  /**
    * Real index
    */
-  _index: number = GamePlayers._startIndex;
+  _index: number = 0;
 
   /**
    * Index of current player
@@ -135,12 +158,27 @@ export class GamePlayers {
     return this._index;
   }
   set index(value: number) {
-    if (value > this.map.size) this._index = GamePlayers._startIndex;
-    else this._index = Math.max(GamePlayers._startIndex, value);
+    this._index = this.bound(value);
+  }
+
+  /**
+   * Retrieve next active player
+   * @returns next player
+   */
+  get next(): GamePlayer {
+    return this.map.get(this.bound(this.index + 1))!;
+  }
+
+  /**
+   * Retrieve current active player
+   * @returns current player
+   */
+  get current(): GamePlayer {
+    return this.map.get(this.index)!;
   }
 
   constructor(game: Game, players: GamePlayer[]) {
-    let key = GamePlayers._startIndex;
+    let key = 0;
     for (const player of players) {
       player.game = game;
       this.map.set(key++, player);
@@ -148,19 +186,29 @@ export class GamePlayers {
   }
 
   /**
+   * Bound an index number to max player size
+   * @param value Value to bound
+   * @returns Number in bounds
+   */
+  bound(value: number): number {
+    let index = 0;
+    while (value != 0) {
+      let increment = value > 0 ? -1 : 1;
+      index -= increment;
+      if (index > this.map.size) index = 0;
+      else if (index < 0) index = this.map.size;
+      value += increment;
+    }
+    return index;
+  }
+
+  /**
    * Increments to next player index.
    * (Rolls back if out of bound.)
    * @returns current `index`
    */
-  next(): number {
-    return ++this.index;
-  }
-
-  /**
-   * Retrieve current active player
-   * @returns current player
-   */
-  current(): GamePlayer {
-    return this.map.get(this.index)!;
+  turn(): number {
+    ++this.index;
+    return this.index;
   }
 }
