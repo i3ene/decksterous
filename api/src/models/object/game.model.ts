@@ -1,8 +1,10 @@
 import EventEmitter from 'events';
-import { Socket } from 'socket.io';
+import { BroadcastOperator, Socket } from 'socket.io';
+import { DefaultEventsMap } from 'socket.io/dist/typed-events';
 import { Card } from '../data/card.model';
 import { User } from '../data/user.model';
 import { Game } from './game.object';
+import { GameAction } from './socket.model';
 
 export enum GameEvent {
   START = 'start',
@@ -88,6 +90,7 @@ export class GamePlayer {
     const cards: Card[] = [];
     while (amount-- > 0) {
       cards.push(...this.deck.splice(this.deck.length, 1));
+      this.game?.room.emit(GameAction.CARD, null); //TODO: emit drawing of card
     }
     this.cards.push(...cards);
     return cards;
@@ -103,6 +106,7 @@ export class GamePlayer {
     if (cardIndex > this.cards.length || this.game!.fieldSize <= fieldIndex || this.field.get(fieldIndex)) return false;
     const card = this.cards.splice(cardIndex, 1)[0];
     this.field.set(fieldIndex, card);
+    this.game?.room.emit(GameAction.CARD, null); //TODO: emit placing of card
     return true;
   }
 
@@ -115,6 +119,7 @@ export class GamePlayer {
     if (!card) return;
     this.grave.push(card);
     this.field.delete(fieldIndex);
+    this.game?.room.emit(GameAction.CARD, null); //TODO: emit death of card
   }
 
   /**
@@ -126,6 +131,7 @@ export class GamePlayer {
     const card = this.field.get(fieldIndex);
     if (!card) return;
     card.health += amount;
+    this.game?.room.emit(GameAction.CARD, null); //TODO: emit new health of card
     if (card.health <= 0) this.removeCard(fieldIndex);
   }
 
@@ -136,11 +142,17 @@ export class GamePlayer {
    */
   attackCard(attacker: Card | undefined, fieldIndex: number): void {
     if (!attacker) return;
+    this.game?.room.emit(GameAction.CARD, null); //TODO: emit card attack
     this.cardHealth(fieldIndex, -attacker.damage);
   }
 }
 
 export class GamePlayers {
+  /**
+   * Reference to the game
+   */
+   game?: Game;
+
   /**
    * Map of all players
    */
@@ -178,6 +190,7 @@ export class GamePlayers {
   }
 
   constructor(game: Game, players: GamePlayer[]) {
+    this.game = game;
     let key = 0;
     for (const player of players) {
       player.game = game;
@@ -209,6 +222,7 @@ export class GamePlayers {
    */
   turn(): number {
     ++this.index;
+    this.game?.room.emit(GameAction.GAME, null); //TODO: emit next player turn
     return this.index;
   }
 }

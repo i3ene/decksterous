@@ -1,11 +1,13 @@
 import EventEmitter from "events";
+import { BroadcastOperator } from "socket.io";
+import { DefaultEventsMap } from "socket.io/dist/typed-events";
 import { GameEvent, GameEvents, GameEventState, GameLogicState, GamePlayer, GamePlayers, GameRules } from "./game.model";
 
 export class Game {
   /**
-   * Name of the game room
+   * Room connection of server
    */
-  name: string;
+   room: BroadcastOperator<DefaultEventsMap, any>;
 
   /**
    * Rules for this game
@@ -32,9 +34,9 @@ export class Game {
    */
   logic: GameLogic;
 
-  constructor(name: string, rules: GameRules, ...players: GamePlayer[]) {
+  constructor(room: BroadcastOperator<DefaultEventsMap, any>, rules: GameRules, ...players: GamePlayer[]) {
     this.logic = new GameLogic(this);
-    this.name = name;
+    this.room = room;
     this.players = new GamePlayers(this, players);
     // TODO: Combine rules with default rules
   }
@@ -64,11 +66,11 @@ export class Game {
   }
 
   atTurn(): void {
-    this.logic.attack();
     this.events[GameEvent.TURN].emit(GameEventState.AT, null);
   }
 
   afterTurn(): void {
+    this.logic.attack();
     this.players.turn();
     this.events[GameEvent.TURN].emit(GameEventState.AFTER, null);
   }
