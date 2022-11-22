@@ -29,7 +29,7 @@ export class SocketService {
   /**
    * Active listeners for individual rooms
    */
-  subcsriptions: Map<string, Subscription> = new Map();
+  subscriptions: Map<string, Subscription> = new Map();
 
   constructor(public socket: SocketConnection) {
     this.socket.fromEvent<any>('room_socket_join').subscribe((message) => this.addMessage(message));
@@ -47,7 +47,7 @@ export class SocketService {
   joinRoom(room: string) {
     this.socket.emit('room_join', room);
     let sub = this.socket.fromEvent<any>('room_socket_event_' + room).subscribe((event) => this.addEvent(room, event));
-    this.subcsriptions.set(room, sub);
+    this.subscriptions.set(room, sub);
   }
 
   /**
@@ -58,8 +58,8 @@ export class SocketService {
     console.log(this.joinedRooms);
     this.joinedRooms.delete(room);
     this.socket.emit('room_leave', room);
-    this.subcsriptions.get(room)?.unsubscribe();
-    this.subcsriptions.delete(room);
+    this.subscriptions.get(room)?.unsubscribe();
+    this.subscriptions.delete(room);
   }
 
   /**
