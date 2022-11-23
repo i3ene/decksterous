@@ -1,7 +1,7 @@
 import EventEmitter from "events";
 import { BroadcastOperator } from "socket.io";
 import { DefaultEventsMap } from "socket.io/dist/typed-events";
-import { GameEvent, GameEvents, GameEventState, GameLogicState, GamePlayer, GamePlayers, GameRules } from "./game.model";
+import { GameEvent, GameEvents, GameEventState, GameLogicState, GamePlayer, GamePlayerEvent, GamePlayers, GameRules } from "./game.model";
 
 export class Game {
   /**
@@ -30,7 +30,7 @@ export class Game {
   fieldSize: number = 5;
 
   /**
-   * State/Logic machine for game functionallity 
+   * State/Logic machine for game functionallity
    */
   logic: GameLogic;
 
