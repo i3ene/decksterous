@@ -200,7 +200,6 @@ export class GamePlayers {
       player.game = game;
       this.map.set(key++, player);
     }
-
   }
 
   /**
