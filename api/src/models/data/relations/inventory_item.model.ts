@@ -1,4 +1,4 @@
-import {AutoIncrement, BelongsToMany, Column, DataType, ForeignKey, HasOne, Model, PrimaryKey, Table} from 'sequelize-typescript';
+import {AutoIncrement, BelongsTo, BelongsToMany, Column, DataType, ForeignKey, HasOne, Model, PrimaryKey, Table} from 'sequelize-typescript';
 import {Item} from '../item.model';
 import {Inventory} from '../inventory.model';
 import { CardDeck } from '../cardDeck.model';
@@ -20,11 +20,8 @@ export class InventoryItem extends Model<InventoryItem> {
   @Column(DataType.INTEGER)
   itemId!: number;
 
-  @HasOne(() => Card)
-  card?: Card;
-
-  @HasOne(() => CardDeck)
-  cardDeck?: CardDeck;
+  @BelongsTo(() => Item)
+  item?: Item;
 
   @BelongsToMany(() => CardDeck, () => InventoryItemCardDeck)
   decks?: CardDeck[];
