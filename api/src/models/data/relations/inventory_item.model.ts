@@ -2,7 +2,7 @@ import {AutoIncrement, BelongsToMany, Column, DataType, ForeignKey, HasOne, Mode
 import {Item} from '../item.model';
 import {Inventory} from '../inventory.model';
 import { CardDeck } from '../cardDeck.model';
-import { ItemCardDeck } from './item_cardDeck.model';
+import { InventoryItemCardDeck } from './inventoryItem_cardDeck.model';
 import { Card } from '../card.model';
 
 @Table
@@ -26,6 +26,6 @@ export class InventoryItem extends Model<InventoryItem> {
   @HasOne(() => CardDeck)
   cardDeck?: CardDeck;
 
-  @BelongsToMany(() => CardDeck, () => ItemCardDeck)
+  @BelongsToMany(() => CardDeck, () => InventoryItemCardDeck)
   decks?: CardDeck[];
 }

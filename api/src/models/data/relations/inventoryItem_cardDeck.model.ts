@@ -5,7 +5,7 @@ import { Item } from '../item.model';
 import { InventoryItem } from './inventory_item.model';
 
 @Table
-export class ItemCardDeck extends Model<ItemCardDeck> {
+export class InventoryItemCardDeck extends Model<InventoryItemCardDeck> {
   @ForeignKey(() => InventoryItem)
   @Column(DataType.INTEGER)
   inventoyItemId!: number;

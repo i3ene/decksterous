@@ -1,7 +1,7 @@
 import {AllowNull, AutoIncrement, BelongsTo, BelongsToMany, Column, DataType, ForeignKey, HasMany, Model, PrimaryKey, Scopes, Table} from "sequelize-typescript";
 import {QueryUtil} from "../../utils/query.util";
 import { Card } from "./card.model";
-import { ItemCardDeck } from "./relations/item_cardDeck.model";
+import { InventoryItemCardDeck } from "./relations/inventoryItem_cardDeck.model";
 import { Item } from "./item.model";
 import { InventoryItem } from "./relations/inventory_item.model";
 
@@ -25,6 +25,6 @@ export class CardDeck extends Model<CardDeck> {
   @Column(DataType.INTEGER)
   itemId!: number;
 
-  @BelongsToMany(() => InventoryItem, () => ItemCardDeck)
+  @BelongsToMany(() => InventoryItem, () => InventoryItemCardDeck)
   items?: InventoryItem[];
 }
