@@ -1,0 +1,14 @@
+<mat-form-field>
+  <mat-label>{{title}}</mat-label>
+  <input #input matInput type="text" (change)="textEvent.emit(input.value)"/>
+  <button (click)="searchEvent.emit(input.value)" mat-icon-button matSuffix>
+    <mat-icon>
+      search
+    </mat-icon>
+  </button>
+  <button (click)="input.value = ''" mat-icon-button matSuffix>
+    <mat-icon>
+      close
+    </mat-icon>
+  </button>
+</mat-form-field>

@@ -12,7 +12,7 @@
       <dev-inventory (selectedEvent)="inventory.inventoryId = $event.id"></dev-inventory>
     </div>
     <dev-profile #profile></dev-profile>
-    <app-inventory #inventory></app-inventory>
+    <dev-user-inventory #inventory></dev-user-inventory>
     <div class="table-columns">
       <dev-item></dev-item>
       <dev-card></dev-card>
@@ -20,6 +20,10 @@
     <div class="table-columns">
       <dev-card-type></dev-card-type>
       <dev-card-ability></dev-card-ability>
+    </div>
+    <div class="table-columns">
+      <dev-card-deck></dev-card-deck>
+      <dev-deck-inventory></dev-deck-inventory>
     </div>
   </div>
 </div>

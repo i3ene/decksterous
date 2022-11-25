@@ -14,6 +14,8 @@ export class FormTableComponent {
   @ViewChild('table') table!: MatTable<any>;
   @ViewChild(MatSort) sort!: MatSort;
 
+  @Input() title!: string;
+
   @Input() columns!: IColumn[];
   @Input() set data(value: any[]) {
     this.dataSource = new MatTableDataSource<any>(value);

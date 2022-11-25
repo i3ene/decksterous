@@ -41,6 +41,10 @@ import { ProfileItemComponent } from './components/profile-item/profile-item.com
 import { DevProfileComponent } from './pages/dev/profile/profile.component';
 import { FriendMenuListComponent } from './components/friend-menu-list/friend-menu-list.component';
 import { FriendListSearchComponent } from './components/friend-list-search/friend-list-search.component';
+import { FormSearchComponent } from './templates/form-search/form-search.component';
+import { DevCardDeckComponent } from './pages/dev/card-deck/card-deck.component';
+import { DevDeckInventoryComponent } from './pages/dev/deck-inventory/deck-inventory.component';
+import { DevUserInventoryComponent } from './pages/dev/user-inventory/user-inventory.component';
 
 @NgModule({
   declarations: [
@@ -74,7 +78,11 @@ import { FriendListSearchComponent } from './components/friend-list-search/frien
     ProfileItemComponent,
     DevProfileComponent,
     FriendMenuListComponent,
-    FriendListSearchComponent
+    FriendListSearchComponent,
+    FormSearchComponent,
+    DevCardDeckComponent,
+    DevDeckInventoryComponent,
+    DevUserInventoryComponent
   ],
   imports: [
     BrowserModule,

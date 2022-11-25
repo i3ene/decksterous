@@ -45,7 +45,19 @@ export class CardAbility {
   constructor(obj?: any) {
     this.name = obj?.name ?? '';
     this.description = obj?.description ?? '';
-    if (obj?.key) this.id = Number(obj.id);
+    if (obj?.id) this.id = Number(obj.id);
     if (obj?.key) this.key = obj.key;
+  }
+}
+
+export class CardDeck {
+  id?: number;
+  itemId?: number;
+  items?: Item[];
+
+  constructor(obj?: any) {
+    if (obj?.id) this.id = Number(obj.id);
+    if (obj?.itemId) this.itemId = Number(obj.itemId);
+    if (obj?.items && Array.isArray(obj?.items)) this.items = obj.items.map((x: any) => new Item(x));
   }
 }
