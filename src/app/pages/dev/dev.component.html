@@ -14,7 +14,7 @@
     <dev-profile #profile></dev-profile>
     <dev-user-inventory #inventory></dev-user-inventory>
     <div class="table-columns">
-      <dev-item></dev-item>
+      <dev-item (selectedEvent)="inventory.addItem($event.id)"></dev-item>
       <dev-card></dev-card>
     </div>
     <div class="table-columns">

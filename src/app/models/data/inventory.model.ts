@@ -3,7 +3,7 @@ import { Item } from "./item.model";
 export class Inventory {
   id?: number;
   userId?: number;
-  items?: any[];
+  items?: Item[];
 
   constructor(obj: any) {
     if (obj?.id) this.id = Number(obj.id);

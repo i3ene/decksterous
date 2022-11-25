@@ -6,6 +6,7 @@ export namespace RequestUtils {
       } else if (Array.isArray(key)) {
         data = data;
         for (const attr of key) {
+          if (data == undefined) break;
           if (typeof attr == 'string') {
             data = data[attr];
           } else {

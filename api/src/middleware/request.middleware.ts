@@ -41,12 +41,17 @@ export namespace RequestMiddleware {
     };
   }
 
-  export function get(model: { new (...args: any[]): any } & any, scopes: any[] = [], alias?: string, idKey?: string) {
+  export function get(model: { new (...args: any[]): any } & any, scopes: any[] = [], alias?: string, idKey?: string | string[]) {
     return async (req: Request, res: Response, next: NextFunction) => {
       const key = alias ? alias : model.name;
       let id = 0;
-      if (idKey) id = req.body[idKey] ?? req.query[idKey];
-      else id = req.body.id ? req.body.id : req.query.id;
+      if (idKey) {
+        let bodyId = RequestUtils.byAttribute(req.body, idKey);
+        let queryId = RequestUtils.byAttribute(req.query, idKey)
+        id = bodyId ?? queryId;
+      } else {
+        id = req.body.id ? req.body.id : req.query.id;
+      }
       const data = await model.scope(['defaultScope'].concat(scopes)).findByPk(id);
       if (data == null) req.data.addMessage('No ' + key + ' found!', 404);
       req.data[key] = data;
@@ -55,10 +60,12 @@ export namespace RequestMiddleware {
     };
   }
 
-  export function getAll(model: { new (...args: any[]): any } & any, scopes: any[] = [], arrKey: string, alias?: string, idKey?: string) {
+  export function getAll(model: { new (...args: any[]): any } & any, scopes: any[] = [], arrKey: string | string[], alias?: string, idKey?: string | string[]) {
     return async (req: Request, res: Response, next: NextFunction) => {
       const key = alias ? alias : model.name;
-      let ids = req.body[arrKey] ? req.body[arrKey].map((x: any) => idKey ? x[idKey]: x) : [];
+      let value: any = req.body;
+      value = RequestUtils.byAttribute(value, arrKey);
+      let ids: any[] = value ? value.map((x: any) => idKey ? RequestUtils.byAttribute(x, idKey) : x) : [];
       const data = await model.scope(['defaultScope'].concat(scopes)).findAll(QueryUtil.ids(model, ids));
       if (data == null) req.data.addMessage('No ' + key + ' found!', 404);
       req.data[key] = data;
