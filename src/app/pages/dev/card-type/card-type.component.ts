@@ -12,7 +12,6 @@ import { FormTableComponent } from 'src/app/templates/form-table/form-table.comp
 export class DevCardTypeComponent implements OnInit {
 
   @ViewChild('formTable') table!: FormTableComponent;
-  @Output() selectedEvent: EventEmitter<any> = new EventEmitter<any>();
 
   data!: CardType[];
   columns: IColumn[] = [
@@ -21,7 +20,6 @@ export class DevCardTypeComponent implements OnInit {
     new ColumnAction("Action", [
       { name: 'edit', icon: 'edit' },
       { name: 'delete', icon: 'delete' },
-      { name: 'select', icon: 'radio_button_unchecked' },
       { name: 'cancel', icon: 'close', onSelect: true },
       { name: 'save', icon: 'check', onSelect: true },
     ])
@@ -56,8 +54,6 @@ export class DevCardTypeComponent implements OnInit {
         await this.request.delete("/item/card/type", payload);
         this.table.deleteSelect(payload);
         break;
-      case 'select':
-        this.selectedEvent.emit(event.row);
     }
   }
 

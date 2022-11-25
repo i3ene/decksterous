@@ -7,17 +7,23 @@
   </span>
   <div class="table-rows">
     <dev-socket></dev-socket>
+
+    <mat-divider></mat-divider>
+
+    <dev-profile #profile></dev-profile>
     <div class="table-columns">
       <dev-user (selectedEvent)="inventory.userId = $event.id; profile.id = $event.id"></dev-user>
-      <dev-inventory (selectedEvent)="inventory.inventoryId = $event.id"></dev-inventory>
-    </div>
-    <dev-profile #profile></dev-profile>
-    <dev-user-inventory #inventory></dev-user-inventory>
-    <div class="table-columns">
       <dev-item (selectedEvent)="inventory.addItem($event.id)"></dev-item>
-      <dev-card></dev-card>
     </div>
     <div class="table-columns">
+      <dev-inventory (selectedEvent)="inventory.inventoryId = $event.id"></dev-inventory>
+      <dev-user-inventory #inventory></dev-user-inventory>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <div class="table-columns">
+      <dev-card></dev-card>
       <dev-card-type></dev-card-type>
       <dev-card-ability></dev-card-ability>
     </div>
