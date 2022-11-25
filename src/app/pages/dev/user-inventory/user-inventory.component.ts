@@ -25,15 +25,16 @@ export class DevUserInventoryComponent {
       inventory: { id: this.ref.inventory?.id },
       item: { id: id },
     });
+    this.ref.realod();
   }
 
   async removeItems() {
     if (!this.ref.inventory?.id) return;
     let ids = this.ref.selectedItems.map(x => { return { id: x.item.id }});
-    const paylod = await this.request.delete("/inventory/item", {
+    const paylod = await this.request.delete("/inventory/items", {
       inventory: { id: this.ref.inventory?.id },
       items: ids,
     });
-    this.ref.loadItems(this.ref.inventory.id);
+    this.ref.realod();
   }
 }

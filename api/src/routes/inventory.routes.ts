@@ -20,4 +20,8 @@ InventoryRoutes.delete("/", [auth.isAdmin, middleware.get(Inventory), middleware
 
 InventoryRoutes.post("/item", [auth.isAdmin, middleware.get(Inventory, [], undefined, ["inventory", "id"]), middleware.get(Item, [], undefined, ["item", "id"]), middleware.addAssociation(Inventory, "items", Item)], controller.message("last"));
 
-InventoryRoutes.delete("/item", [auth.isAdmin, middleware.get(Inventory, [], undefined, ["inventory", "id"]), middleware.getAll(Item, [], 'items', undefined, 'id'), middleware.removeAssociation(Inventory, "items", Item)], controller.message("last"));
+InventoryRoutes.post("/items", [auth.isAdmin, middleware.get(Inventory, [], undefined, ["inventory", "id"]), middleware.getAll(Item, [], 'items', undefined, 'id'), middleware.addAssociation(Inventory, "items", Item)], controller.message("last"));
+
+InventoryRoutes.delete("/item", [auth.isAdmin, middleware.get(Inventory, [], undefined, ["inventory", "id"]), middleware.get(Item, [], undefined, ["item", "id"]), middleware.removeAssociation(Inventory, "items", Item)], controller.message("last"));
+
+InventoryRoutes.delete("/items", [auth.isAdmin, middleware.get(Inventory, [], undefined, ["inventory", "id"]), middleware.getAll(Item, [], 'items', undefined, 'id'), middleware.removeAssociation(Inventory, "items", Item)], controller.message("last"));

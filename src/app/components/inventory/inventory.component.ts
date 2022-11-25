@@ -42,4 +42,9 @@ export class InventoryComponent {
     return this.itemRefs.filter(x => x.selected);
   }
 
+  realod(): void {
+    if (!this.inventory?.id) return;
+    this.loadItems(this.inventory.id);
+  }
+
 }
