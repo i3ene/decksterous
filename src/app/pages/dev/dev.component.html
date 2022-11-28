@@ -17,7 +17,7 @@
     </div>
     <div class="table-columns">
       <dev-inventory (selectedEvent)="inventory.inventoryId = $event.id"></dev-inventory>
-      <dev-user-inventory #inventory></dev-user-inventory>
+      <dev-user-inventory #inventory (selectedEvent)="deck.addItems($event)"></dev-user-inventory>
     </div>
 
     <mat-divider></mat-divider>
@@ -28,8 +28,8 @@
       <dev-card-ability></dev-card-ability>
     </div>
     <div class="table-columns">
-      <dev-card-deck></dev-card-deck>
-      <dev-deck-inventory></dev-deck-inventory>
+      <dev-card-deck (selectedEvent)="deck.deckId = $event.id"></dev-card-deck>
+      <dev-deck-inventory #deck></dev-deck-inventory>
     </div>
   </div>
 </div>

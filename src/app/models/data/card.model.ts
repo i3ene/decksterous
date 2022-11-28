@@ -1,3 +1,4 @@
+import { InventoryItem } from "./inventory.model";
 import { Item } from "./item.model";
 
 export class Card {
@@ -53,11 +54,16 @@ export class CardAbility {
 export class CardDeck {
   id?: number;
   itemId?: number;
-  items?: Item[];
+  inventoryItems?: InventoryItem[];
 
   constructor(obj?: any) {
     if (obj?.id) this.id = Number(obj.id);
     if (obj?.itemId) this.itemId = Number(obj.itemId);
-    if (obj?.items && Array.isArray(obj?.items)) this.items = obj.items.map((x: any) => new Item(x));
+    if (obj?.items && Array.isArray(obj?.items)) this.inventoryItems = obj.items.map((x: any) => new InventoryItem(x));
+  }
+
+  get items(): Item[] {
+    if (!this.inventoryItems) return [];
+    return this.inventoryItems.map(x => x.item!);
   }
 }

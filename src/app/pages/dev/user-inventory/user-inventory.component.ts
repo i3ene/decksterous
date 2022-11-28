@@ -1,5 +1,7 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { InventoryComponent } from 'src/app/components/inventory/inventory.component';
+import { ItemComponent } from 'src/app/components/item/item.component';
+import { Item } from 'src/app/models/data/item.model';
 import { RequestService } from 'src/app/services/request/request.service';
 
 @Component({
@@ -16,6 +18,8 @@ export class DevUserInventoryComponent {
   @Input() set userId(value: number) {
     this.ref.userId = value;
   }
+
+  @Output() selectedEvent: EventEmitter<Item[]> = new EventEmitter<Item[]>();
 
   constructor(private request: RequestService) {}
 
@@ -36,5 +40,9 @@ export class DevUserInventoryComponent {
       items: ids,
     });
     this.ref.realod();
+  }
+
+  selectItems() {
+    this.selectedEvent.emit(this.ref.selectedItems.map(x => x.item));
   }
 }
