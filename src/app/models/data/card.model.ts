@@ -54,16 +54,11 @@ export class CardAbility {
 export class CardDeck {
   id?: number;
   itemId?: number;
-  inventoryItems?: InventoryItem[];
+  items?: Item[];
 
   constructor(obj?: any) {
     if (obj?.id) this.id = Number(obj.id);
     if (obj?.itemId) this.itemId = Number(obj.itemId);
-    if (obj?.items && Array.isArray(obj?.items)) this.inventoryItems = obj.items.map((x: any) => new InventoryItem(x));
-  }
-
-  get items(): Item[] {
-    if (!this.inventoryItems) return [];
-    return this.inventoryItems.map(x => x.item!);
+    if (obj?.inventoryItems && Array.isArray(obj?.inventoryItems)) this.items = obj.inventoryItems.map((x: any) => InventoryItem.parse(new InventoryItem(x)));
   }
 }

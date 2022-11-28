@@ -7,7 +7,7 @@ import { InventoryItem } from "./relations/inventory_item.model";
 
 @Scopes(() => ({
   query: QueryUtil.query(['id', 'name', 'description']),
-  items: {
+  inventoryItems: {
     include: [{
       model: InventoryItem,
       include: [Item]
@@ -26,5 +26,5 @@ export class CardDeck extends Model<CardDeck> {
   itemId!: number;
 
   @BelongsToMany(() => InventoryItem, () => InventoryItemCardDeck)
-  items?: InventoryItem[];
+  inventoryItems?: InventoryItem[];
 }

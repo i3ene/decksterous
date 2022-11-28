@@ -25,4 +25,13 @@ export class DevDeckInventoryComponent {
     });
     this.ref.realod();
   }
+
+  async removeItems() {
+    let ids = this.ref.selectedItems.map(x => { return { id: x.item.inventoryItem?.id }});
+    const payload = await this.request.delete("/item/card/deck/items", {
+      deck: { id: this.ref.id?.value },
+      items: ids,
+    });
+    this.ref.realod();
+  }
 }
