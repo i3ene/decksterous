@@ -8,10 +8,15 @@
 
 .container img {
   align-self: center;
+  margin-bottom: 8px;
 }
 
 .header {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  gap: 8px;
+}
+
+h2 {
+  margin-bottom: 8px !important;
 }

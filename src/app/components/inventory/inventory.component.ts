@@ -40,7 +40,7 @@ export class InventoryComponent {
 
   async loadItems(id: number, user?: boolean) {
     const payload = await this.request.get(`/inventory?${user ? 'userId' : 'id'}=${id}`);
-    // TODO: Fix spelling mismatch on Item.InventoryItem
+    // TODO: Fix spelling mismatch on "Item.InventoryItem" (See Item Model)
     this.inventory = new Inventory(payload);
     if (!this.inventory.items) this.items = [];
     else this.items = this.inventory.items;

@@ -1,8 +1,9 @@
 <div class="container">
   <span class="header">
-    <h2>{{ item.name }}</h2>
+    <img [src]="getTypeImage(item)" [width]="20" [height]="20" /><h2>{{ item.name }}</h2>
+    <span class="spacer"></span>
     <mat-checkbox *ngIf="selectable" [(ngModel)]="selected"></mat-checkbox>
   </span>
-  <img [src]="item.image" [alt]="item.image" />
+  <img #image [src]="item.image" [alt]="item.image" [width]="200" [height]="200" (error)="image.src = defaultSrc"/>
   <p>{{ item.description }}</p>
 </div>
