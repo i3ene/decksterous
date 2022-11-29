@@ -45,6 +45,7 @@ import { FormSearchTemplate } from './templates/form-search/form-search.componen
 import { DevCardDeckComponent } from './pages/dev/card-deck/card-deck.component';
 import { DevDeckInventoryComponent } from './pages/dev/deck-inventory/deck-inventory.component';
 import { DevUserInventoryComponent } from './pages/dev/user-inventory/user-inventory.component';
+import { CardDeckDialogue } from './dialogues/card-deck/card-deck.component';
 
 @NgModule({
   declarations: [
@@ -82,7 +83,8 @@ import { DevUserInventoryComponent } from './pages/dev/user-inventory/user-inven
     FormSearchTemplate,
     DevCardDeckComponent,
     DevDeckInventoryComponent,
-    DevUserInventoryComponent
+    DevUserInventoryComponent,
+    CardDeckDialogue
   ],
   imports: [
     BrowserModule,

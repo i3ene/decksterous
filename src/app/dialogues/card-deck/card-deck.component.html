@@ -1,0 +1,13 @@
+<h2 mat-dialog-title>New Deck</h2>
+<mat-dialog-content>
+  <mat-form-field>
+    <mat-label>Deck Name</mat-label>
+    <input matInput type="text" />
+  </mat-form-field>
+
+  <app-inventory [selectable]="true"></app-inventory>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-button [mat-dialog-close]="true" cdkFocusInitial>Create</button>
+</mat-dialog-actions>
