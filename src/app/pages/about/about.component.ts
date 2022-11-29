@@ -4,7 +4,7 @@ import { Component } from '@angular/core';
   templateUrl: './about.component.html',
   styleUrls: ['./about.component.scss']
 })
-export class AboutComponent {
+export class AboutPage {
   technologies: { title: string; img: string, imgSize: number, text: string }[] = [
     { title: "Node.js", img: "https://www.svgrepo.com/show/354118/nodejs.svg", imgSize: 64, text: "text" },
     { title: "Angular", img: "https://www.svgrepo.com/show/373427/angular.svg", imgSize: 32, text: "text" },

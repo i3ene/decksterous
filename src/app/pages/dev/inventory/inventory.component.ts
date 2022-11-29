@@ -3,7 +3,7 @@ import { Inventory } from 'src/app/models/data/inventory.model';
 import { User } from 'src/app/models/data/user.model';
 import { ColumnAction, IColumn, ITableActionEvent } from 'src/app/models/object/table.model';
 import { RequestService } from 'src/app/services/request/request.service';
-import { FormTableComponent } from 'src/app/templates/form-table/form-table.component';
+import { FormTableTemplate } from 'src/app/templates/form-table/form-table.component';
 
 @Component({
   selector: 'dev-inventory',
@@ -11,7 +11,7 @@ import { FormTableComponent } from 'src/app/templates/form-table/form-table.comp
   styleUrls: ['./inventory.component.scss']
 })
 export class DevInventoryComponent {
-  @ViewChild('formTable') table!: FormTableComponent;
+  @ViewChild('formTable') table!: FormTableTemplate;
   @Output() selectedEvent: EventEmitter<any> = new EventEmitter<any>();
 
   data!: Inventory[];

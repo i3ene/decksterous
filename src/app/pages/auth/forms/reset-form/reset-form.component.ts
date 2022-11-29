@@ -9,7 +9,7 @@ import { RequestService } from 'src/app/services/request/request.service';
   styleUrls: ['./reset-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ResetFormComponent {
+export class ResetForm {
 
   credentials: User = new User();
 

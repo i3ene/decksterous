@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { FormTableColumnComponent } from './form-table-column.component';
+import { FormTableColumnTemplate } from './form-table-column.component';
 
 describe('FormTableColumnComponent', () => {
-  let component: FormTableColumnComponent;
-  let fixture: ComponentFixture<FormTableColumnComponent>;
+  let component: FormTableColumnTemplate;
+  let fixture: ComponentFixture<FormTableColumnTemplate>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ FormTableColumnComponent ]
+      declarations: [ FormTableColumnTemplate ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(FormTableColumnComponent);
+    fixture = TestBed.createComponent(FormTableColumnTemplate);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

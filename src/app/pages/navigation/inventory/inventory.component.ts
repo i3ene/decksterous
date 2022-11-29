@@ -6,7 +6,7 @@ import { TokenService } from 'src/app/services/auth/token.service';
   templateUrl: './inventory.component.html',
   styleUrls: ['./inventory.component.scss']
 })
-export class UserInventoryComponent implements OnInit {
+export class UserInventoryPage implements OnInit {
 
   @ViewChild(InventoryComponent, { static: true }) inventory!: InventoryComponent;
 

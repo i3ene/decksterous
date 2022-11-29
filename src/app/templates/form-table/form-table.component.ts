@@ -5,11 +5,11 @@ import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { IColumn, ITableActionEvent } from 'src/app/models/object/table.model';
 
 @Component({
-  selector: 'app-form-table',
+  selector: 'template-form-table',
   templateUrl: './form-table.component.html',
   styleUrls: ['./form-table.component.scss'],
 })
-export class FormTableComponent {
+export class FormTableTemplate {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild('table') table!: MatTable<any>;
   @ViewChild(MatSort) sort!: MatSort;

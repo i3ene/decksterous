@@ -1,11 +1,11 @@
 import { Component, ContentChild, ContentChildren, Input, TemplateRef } from '@angular/core';
 
 @Component({
-  selector: 'app-form-card',
+  selector: 'template-form-card',
   templateUrl: './form-card.component.html',
   styleUrls: ['./form-card.component.scss']
 })
-export class FormCardComponent {
+export class FormCardTemplate {
   @Input() title!: string;
   @Input() navigation!: any;
 

@@ -4,30 +4,30 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NavigationComponent } from './pages/navigation/navigation.component';
+import { NavigationPage } from './pages/navigation/navigation.component';
 import { MaterialModule } from './modules/material.module';
-import { LoginFormComponent } from './pages/auth/forms/login-form/login-form.component';
-import { AuthComponent } from './pages/auth/auth.component';
-import { RegisterFormComponent } from './pages/auth/forms/register-form/register-form.component';
-import { ResetFormComponent } from './pages/auth/forms/reset-form/reset-form.component';
+import { LoginForm } from './pages/auth/forms/login-form/login-form.component';
+import { AuthPage } from './pages/auth/auth.component';
+import { RegisterForm } from './pages/auth/forms/register-form/register-form.component';
+import { ResetForm } from './pages/auth/forms/reset-form/reset-form.component';
 import { VisibilityButtonComponent } from './components/visibility-button/visibility-button.component';
-import { FormCardComponent } from './templates/form-card/form-card.component';
+import { FormCardTemplate } from './templates/form-card/form-card.component';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './services/auth/auth.interceptor';
 import { REQUEST_CONFIG } from './config/request.config';
 import { FormsModule } from '@angular/forms';
-import { AboutComponent } from './pages/about/about.component';
+import { AboutPage } from './pages/about/about.component';
 import { SocketIoModule } from 'ngx-socket-io';
 import { SocketConnection } from './services/request/socket.connection';
 import { DevComponent } from './pages/dev/dev.component';
 import { DevSocketComponent } from './pages/dev/socket/socket.component';
-import { GameComponent } from './pages/game/game.component';
+import { GamePage } from './pages/game/game.component';
 import { InventoryComponent } from './components/inventory/inventory.component';
 import { DevUserComponent } from './pages/dev/user/user.component';
 import { DevInventoryComponent } from './pages/dev/inventory/inventory.component';
-import { FormTableComponent } from './templates/form-table/form-table.component';
-import { FormTableColumnComponent } from './templates/form-table-column/form-table-column.component';
-import { UserInventoryComponent } from './pages/navigation/inventory/inventory.component';
+import { FormTableTemplate } from './templates/form-table/form-table.component';
+import { FormTableColumnTemplate } from './templates/form-table-column/form-table-column.component';
+import { UserInventoryPage } from './pages/navigation/inventory/inventory.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { ItemComponent } from './components/item/item.component';
 import { DevCardComponent } from './pages/dev/card/card.component';
@@ -41,7 +41,7 @@ import { ProfileItemComponent } from './components/profile-item/profile-item.com
 import { DevProfileComponent } from './pages/dev/profile/profile.component';
 import { FriendMenuListComponent } from './components/friend-menu-list/friend-menu-list.component';
 import { FriendListSearchComponent } from './components/friend-list-search/friend-list-search.component';
-import { FormSearchComponent } from './templates/form-search/form-search.component';
+import { FormSearchTemplate } from './templates/form-search/form-search.component';
 import { DevCardDeckComponent } from './pages/dev/card-deck/card-deck.component';
 import { DevDeckInventoryComponent } from './pages/dev/deck-inventory/deck-inventory.component';
 import { DevUserInventoryComponent } from './pages/dev/user-inventory/user-inventory.component';
@@ -49,23 +49,23 @@ import { DevUserInventoryComponent } from './pages/dev/user-inventory/user-inven
 @NgModule({
   declarations: [
     AppComponent,
-    NavigationComponent,
-    AuthComponent,
-    LoginFormComponent,
-    RegisterFormComponent,
-    ResetFormComponent,
+    NavigationPage,
+    AuthPage,
+    LoginForm,
+    RegisterForm,
+    ResetForm,
     VisibilityButtonComponent,
-    FormCardComponent,
-    AboutComponent,
+    FormCardTemplate,
+    AboutPage,
     DevComponent,
     DevSocketComponent,
-    GameComponent,
+    GamePage,
     InventoryComponent,
     DevUserComponent,
     DevInventoryComponent,
-    FormTableComponent,
-    FormTableColumnComponent,
-    UserInventoryComponent,
+    FormTableTemplate,
+    FormTableColumnTemplate,
+    UserInventoryPage,
     ProfileComponent,
     ItemComponent,
     DevItemComponent,
@@ -79,7 +79,7 @@ import { DevUserInventoryComponent } from './pages/dev/user-inventory/user-inven
     DevProfileComponent,
     FriendMenuListComponent,
     FriendListSearchComponent,
-    FormSearchComponent,
+    FormSearchTemplate,
     DevCardDeckComponent,
     DevDeckInventoryComponent,
     DevUserInventoryComponent

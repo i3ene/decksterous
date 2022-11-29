@@ -6,7 +6,7 @@ import { ThreeLogic } from 'src/app/logic/three.logic';
   templateUrl: './game.component.html',
   styleUrls: ['./game.component.scss'],
 })
-export class GameComponent implements AfterViewInit {
+export class GamePage implements AfterViewInit {
   @ViewChild('canvas') canvasRef!: ElementRef;
 
   threeLogic!: ThreeLogic;

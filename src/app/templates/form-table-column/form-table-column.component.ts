@@ -5,11 +5,11 @@ import { IColumn, ITableActionEvent } from 'src/app/models/object/table.model';
 import { DataService } from 'src/app/services/data.service';
 
 @Component({
-  selector: 'app-form-table-column',
+  selector: 'template-form-table-column',
   templateUrl: './form-table-column.component.html',
   styleUrls: ['./form-table-column.component.scss']
 })
-export class FormTableColumnComponent {
+export class FormTableColumnTemplate {
 
   @Input() selected: any;
   @Input() column!: IColumn;

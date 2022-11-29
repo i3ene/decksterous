@@ -1,4 +1,4 @@
-<app-form-card [title]="'Create Account'" [navigation]="['/auth/login']">
+<template-form-card [title]="'Create Account'" [navigation]="['/auth/login']">
   <ng-template #content>
     <mat-form-field appearance="fill">
       <mat-label>Name</mat-label>
@@ -30,4 +30,4 @@
   <ng-template #footer>
     <button mat-raised-button [disabled]="!(credentials.password && credentials.name && credentials.mail)" (click)="register()">Register</button>
   </ng-template>
-</app-form-card>
+</template-form-card>

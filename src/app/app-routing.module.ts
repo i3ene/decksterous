@@ -1,41 +1,41 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { NavigationComponent } from './pages/navigation/navigation.component';
-import { AuthComponent } from './pages/auth/auth.component';
-import { LoginFormComponent } from './pages/auth/forms/login-form/login-form.component';
-import { RegisterFormComponent } from './pages/auth/forms/register-form/register-form.component';
-import { ResetFormComponent } from './pages/auth/forms/reset-form/reset-form.component';
+import { NavigationPage } from './pages/navigation/navigation.component';
+import { AuthPage } from './pages/auth/auth.component';
+import { LoginForm } from './pages/auth/forms/login-form/login-form.component';
+import { RegisterForm } from './pages/auth/forms/register-form/register-form.component';
+import { ResetForm } from './pages/auth/forms/reset-form/reset-form.component';
 import { AuthGuard } from './services/auth/auth.guard';
-import { AboutComponent } from './pages/about/about.component';
+import { AboutPage } from './pages/about/about.component';
 import { DevComponent } from './pages/dev/dev.component';
-import { GameComponent } from './pages/game/game.component';
-import { UserInventoryComponent } from './pages/navigation/inventory/inventory.component';
+import { GamePage } from './pages/game/game.component';
+import { UserInventoryPage } from './pages/navigation/inventory/inventory.component';
 import { ProfileComponent } from './components/profile/profile.component';
 
 const routes: Routes = [
   { path: 'dev', component: DevComponent },
-  { path: 'about', component: AboutComponent },
+  { path: 'about', component: AboutPage },
   {
     path: 'auth',
-    component: AuthComponent,
+    component: AuthPage,
     children: [
-      { path: 'login', component: LoginFormComponent },
-      { path: 'register', component: RegisterFormComponent },
-      { path: 'reset', component: ResetFormComponent },
+      { path: 'login', component: LoginForm },
+      { path: 'register', component: RegisterForm },
+      { path: 'reset', component: ResetForm },
       { path: '**', redirectTo: 'login' },
     ],
   },
   {
     path: 'navigation',
-    component: NavigationComponent,
+    component: NavigationPage,
     canActivateChild: [AuthGuard],
     children: [
-      { path: 'inventory', component: UserInventoryComponent },
+      { path: 'inventory', component: UserInventoryPage },
       { path: 'profile', component: ProfileComponent },
       { path: '**', redirectTo: 'inventory' },
     ],
   },
-  { path: 'game', component: GameComponent, canActivate: [AuthGuard] },
+  { path: 'game', component: GamePage, canActivate: [AuthGuard] },
   { path: '**', redirectTo: 'navigation' },
 ];
 

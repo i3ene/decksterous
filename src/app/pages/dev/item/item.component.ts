@@ -2,7 +2,7 @@ import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/cor
 import { Item } from 'src/app/models/data/item.model';
 import { ColumnAction, IColumn, ITableActionEvent } from 'src/app/models/object/table.model';
 import { RequestService } from 'src/app/services/request/request.service';
-import { FormTableComponent } from 'src/app/templates/form-table/form-table.component';
+import { FormTableTemplate } from 'src/app/templates/form-table/form-table.component';
 
 @Component({
   selector: 'dev-item',
@@ -11,7 +11,7 @@ import { FormTableComponent } from 'src/app/templates/form-table/form-table.comp
 })
 export class DevItemComponent implements OnInit {
 
-  @ViewChild('formTable') table!: FormTableComponent;
+  @ViewChild('formTable') table!: FormTableTemplate;
   @Output() selectedEvent: EventEmitter<any> = new EventEmitter<any>();
 
   data!: Item[];

@@ -9,7 +9,7 @@ import { RequestService } from 'src/app/services/request/request.service';
   styleUrls: ['./register-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class RegisterFormComponent {
+export class RegisterForm {
 
   credentials: User = new User();
 

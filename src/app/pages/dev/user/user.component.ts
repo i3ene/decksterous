@@ -2,7 +2,7 @@ import { Component, ElementRef, EventEmitter, OnInit, Output, ViewChild } from '
 import { User } from 'src/app/models/data/user.model';
 import { ColumnAction, IColumn, ITableActionEvent } from 'src/app/models/object/table.model';
 import { RequestService } from 'src/app/services/request/request.service';
-import { FormTableComponent } from 'src/app/templates/form-table/form-table.component';
+import { FormTableTemplate } from 'src/app/templates/form-table/form-table.component';
 
 @Component({
   selector: 'dev-user',
@@ -11,7 +11,7 @@ import { FormTableComponent } from 'src/app/templates/form-table/form-table.comp
 })
 export class DevUserComponent implements OnInit {
 
-  @ViewChild('formTable') table!: FormTableComponent;
+  @ViewChild('formTable') table!: FormTableTemplate;
   @Output() selectedEvent: EventEmitter<any> = new EventEmitter<any>();
 
   data!: User[];

@@ -2,7 +2,7 @@ import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/cor
 import { CardType } from 'src/app/models/data/card.model';
 import { ColumnAction, IColumn, ITableActionEvent } from 'src/app/models/object/table.model';
 import { RequestService } from 'src/app/services/request/request.service';
-import { FormTableComponent } from 'src/app/templates/form-table/form-table.component';
+import { FormTableTemplate } from 'src/app/templates/form-table/form-table.component';
 
 @Component({
   selector: 'dev-card-type',
@@ -11,7 +11,7 @@ import { FormTableComponent } from 'src/app/templates/form-table/form-table.comp
 })
 export class DevCardTypeComponent implements OnInit {
 
-  @ViewChild('formTable') table!: FormTableComponent;
+  @ViewChild('formTable') table!: FormTableTemplate;
 
   data!: CardType[];
   columns: IColumn[] = [

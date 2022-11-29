@@ -10,7 +10,7 @@ import { RequestService } from 'src/app/services/request/request.service';
   styleUrls: ['./login-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LoginFormComponent {
+export class LoginForm {
 
   credentials: User = new User();
 

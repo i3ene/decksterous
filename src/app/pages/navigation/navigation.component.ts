@@ -7,7 +7,7 @@ import { MenuCategory } from 'src/app/models/object/menu.model';
   templateUrl: './navigation.component.html',
   styleUrls: ['./navigation.component.scss'],
 })
-export class NavigationComponent {
+export class NavigationPage {
   menuCategories: MenuCategory[] = [
     {
       name: 'Dashboard',
