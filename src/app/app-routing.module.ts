@@ -11,6 +11,8 @@ import { DevComponent } from './pages/dev/dev.component';
 import { GamePage } from './pages/game/game.component';
 import { UserInventoryPage } from './pages/navigation/inventory/inventory.component';
 import { ProfileComponent } from './components/profile/profile.component';
+import { HomePage } from './pages/navigation/home/home.component';
+import { LobbyPage } from './pages/navigation/lobby/lobby.component';
 
 const routes: Routes = [
   { path: 'dev', component: DevComponent },
@@ -30,9 +32,11 @@ const routes: Routes = [
     component: NavigationPage,
     canActivateChild: [AuthGuard],
     children: [
+      { path: 'home', component: HomePage },
+      { path: 'lobby', component: LobbyPage },
       { path: 'inventory', component: UserInventoryPage },
       { path: 'profile', component: ProfileComponent },
-      { path: '**', redirectTo: 'inventory' },
+      { path: '**', redirectTo: 'home' },
     ],
   },
   { path: 'game', component: GamePage, canActivate: [AuthGuard] },

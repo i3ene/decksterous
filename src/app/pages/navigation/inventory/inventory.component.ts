@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { InventoryComponent } from 'src/app/components/inventory/inventory.component';
 import { CreateCardDeckDialogue } from 'src/app/dialogues/create-card-deck/create-card-deck.component';
-import { EditCardDeckComponent } from 'src/app/dialogues/edit-card-deck/edit-card-deck.component';
+import { EditCardDeckDialogue } from 'src/app/dialogues/edit-card-deck/edit-card-deck.component';
 import { CardDeck } from 'src/app/models/data/card.model';
 import { Item, ItemType } from 'src/app/models/data/item.model';
 import { TokenService } from 'src/app/services/auth/token.service';
@@ -40,7 +40,7 @@ export class UserInventoryPage implements OnInit {
   }
 
   editDeck(deck: CardDeck): void {
-    this.dialog.open(EditCardDeckComponent, {
+    this.dialog.open(EditCardDeckDialogue, {
       data: {
         deck: deck,
         items: this.inventory.items

@@ -8,7 +8,7 @@ import { Item, ItemType } from 'src/app/models/data/item.model';
   templateUrl: './edit-card-deck.component.html',
   styleUrls: ['./edit-card-deck.component.scss']
 })
-export class EditCardDeckComponent implements OnInit {
+export class EditCardDeckDialogue implements OnInit {
 
   @ViewChild(InventoryComponent, { static: true }) inventory!: InventoryComponent;
 

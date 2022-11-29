@@ -20,7 +20,7 @@ export class NavigationPage {
       name: 'Community',
       items: [
         { name: 'Marketplace', icon: 'storefront', link: [] },
-        { name: 'Lobbies', icon: 'list', link: [] },
+        { name: 'Lobbies', icon: 'list', link: ["/navigation/lobby"] },
       ],
     },
     {
