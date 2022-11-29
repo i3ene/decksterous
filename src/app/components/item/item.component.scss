@@ -8,19 +8,29 @@
 
 .center {
   align-self: center;
-  margin-bottom: 8px;
 }
 
 .header {
   display: flex;
   flex-direction: row;
   gap: 8px;
+  margin-bottom: 8px;
+  cursor: pointer;
+}
+
+.header:hover {
+  background-color: rgba(238, 238, 238, 0.1);
+  border-radius: 4px;
 }
 
 h2 {
-  margin-bottom: 8px !important;
+  margin-bottom: 0px !important;
 }
 
 img {
   background-color: #eee;
+}
+
+p {
+  margin-top: 8px;
 }

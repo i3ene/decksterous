@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Item, ItemType } from 'src/app/models/data/item.model';
 
 @Component({
@@ -9,6 +9,8 @@ import { Item, ItemType } from 'src/app/models/data/item.model';
 export class ItemComponent {
   @Input() item!: Item;
   @Input() selectable: boolean = false;
+  @Output() clickedEvent: EventEmitter<Item> = new EventEmitter<Item>();
+
   selected: boolean = false;
   defaultSrc: string = '/assets/undefined.svg';
 

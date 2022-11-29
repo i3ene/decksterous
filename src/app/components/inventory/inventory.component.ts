@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, Input, ViewChildren } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, ViewChildren, Output, EventEmitter } from '@angular/core';
 import { CardDeck } from 'src/app/models/data/card.model';
 import { Inventory } from 'src/app/models/data/inventory.model';
 import { Item } from 'src/app/models/data/item.model';
@@ -29,6 +29,8 @@ export class InventoryComponent {
   }
 
   @Input() selectable: boolean = false;
+
+  @Output() clickedEvent: EventEmitter<Item> = new EventEmitter<Item>();
 
   id?: { type: 'deck' | 'user' | 'inventory'; value: number };
 
