@@ -6,6 +6,6 @@
     <span class="spacer"></span>
     <mat-checkbox *ngIf="selectable" [(ngModel)]="selected"></mat-checkbox>
   </span>
-  <img #image class="center" [src]="item.image" [alt]="item.image" [width]="200" [height]="200" (error)="image.src = defaultSrc"/>
+  <img #image class="center" [src]="item.image" [alt]="item.image" [width]="150" [height]="150" (error)="image.src = defaultSrc"/>
   <p>{{ item.description }}</p>
 </div>

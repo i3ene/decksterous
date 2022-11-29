@@ -23,9 +23,15 @@ export class Item {
     // TODO: Fix spelling mistake
   }
 
-  get type() {
-    if (this.card) return "Card";
-    if (this.cardDeck) return "CardDeck";
-    return "Item";
+  get type(): ItemType {
+    if (this.card) return ItemType.CARD;
+    if (this.cardDeck) return ItemType.DECK;
+    return ItemType.ITEM;
   }
+}
+
+export enum ItemType {
+  CARD = "Card",
+  DECK = "Deck",
+  ITEM = "Item"
 }

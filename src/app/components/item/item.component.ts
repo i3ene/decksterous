@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Item } from 'src/app/models/data/item.model';
+import { Item, ItemType } from 'src/app/models/data/item.model';
 
 @Component({
   selector: 'app-item',
@@ -14,13 +14,13 @@ export class ItemComponent {
 
   getTypeImage(item: Item): string {
     switch (item.type) {
-      case 'Card':
+      case ItemType.CARD:
         // TODO: Card Icon
         break;
-      case 'CardDeck':
-        // TODO: CardDeck Icon
+      case ItemType.DECK:
+        // TODO: Card Deck Icon
         break;
-      case 'Item':
+      case ItemType.ITEM:
         // TODO: Item Icon
         break;
     }
