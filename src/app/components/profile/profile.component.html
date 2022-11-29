@@ -7,7 +7,7 @@
     </div>
     <div class="progress">
       <mat-progress-bar [value]="stats.user(user.xp).progress * 100" class="bar"></mat-progress-bar>
-      <div class="xp">{{ user.xp }}/{{ stats.user(user.xp).next }} XP</div>
+      <div class="xp">{{ stats.user(user.xp).levelCurrent }}/{{ stats.user(user.xp).levelNext }} XP</div>
     </div>
   </div>
 

@@ -5,5 +5,5 @@
 <mat-progress-bar [value]="stats.user(user.xp).progress * 100"></mat-progress-bar>
 <div class="content">
   <span>Level: {{stats.user(user.xp).level}}</span>
-  <span>{{user.xp}}/{{stats.user(user.xp).next}} xp</span>
+  <span>{{stats.user(user.xp).levelCurrent}}/{{stats.user(user.xp).levelNext}} xp</span>
 </div>
