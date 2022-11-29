@@ -10,7 +10,7 @@ import { Item, ItemType } from 'src/app/models/data/item.model';
 })
 export class EditCardDeckDialogue implements OnInit {
 
-  @ViewChild(InventoryComponent, { static: true }) inventory!: InventoryComponent;
+  @ViewChild("cards", { static: true }) inventory!: InventoryComponent;
 
   deck!: CardDeck;
 
