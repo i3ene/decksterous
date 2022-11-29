@@ -1,4 +1,4 @@
-<mat-card class="content">
+<div class="content">
   <span *ngIf="!items.length">No Items in Inventory...</span>
   <app-item *ngFor="let item of items" [item]="item" class="item" [selectable]="selectable"></app-item>
-</mat-card>
+</div>

@@ -1,6 +1,6 @@
-<div class="container mat-elevation-z2 card-background">
+<mat-card>
   <div class="actions">
     <button mat-flat-button color="warn" [disabled]="!ref || !ref.selectedItems.length" (click)="removeItems()">Remove</button>
   </div>
   <app-inventory [selectable]="true"></app-inventory>
-</div>
+</mat-card>
