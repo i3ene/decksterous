@@ -2,7 +2,7 @@
 <mat-dialog-content>
   <mat-form-field>
     <mat-label>Deck Name</mat-label>
-    <input matInput type="text" />
+    <input matInput type="text" [(ngModel)]="deck.item!.name" />
   </mat-form-field>
 
   <app-inventory [selectable]="true"></app-inventory>
