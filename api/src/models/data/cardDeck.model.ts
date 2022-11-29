@@ -10,7 +10,10 @@ import { InventoryItem } from "./relations/inventory_item.model";
   inventoryItems: {
     include: [{
       model: InventoryItem,
-      include: [Item]
+      include: [{
+        model: Item,
+        include: [Card]
+      }]
     }]
   }
 }))

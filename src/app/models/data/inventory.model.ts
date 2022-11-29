@@ -25,12 +25,3 @@ export class InventoryItem {
     if (obj?.item) this.item = new Item(obj.item);
   }
 }
-
-export namespace InventoryItem {
-  export function parse(obj: InventoryItem): Item {
-    const item = new Item(obj.item);
-    delete obj.item;
-    item.inventoryItem = new InventoryItem(obj);
-    return item;
-  }
-}

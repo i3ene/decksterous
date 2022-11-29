@@ -10,15 +10,17 @@ export class Item {
   cardDeck?: CardDeck;
   inventoryItem?: InventoryItem;
 
-  constructor(obj: any) {
+  constructor(obj: any, inventoryItem?: any) {
     this.name = obj?.name ?? '';
     this.description = obj?.description ?? '';
     if (obj?.id) this.id = Number(obj.id);
     if (obj?.image) this.image = obj.image;
     if (obj?.card) this.card = new Card(obj.card, this);
-    if (obj?.inventoryItem) this.inventoryItem = new InventoryItem(obj.inventoryItem);
-    // TODO: Fix spelling mismatch
-    if (obj?.InventoryItem) this.inventoryItem = new InventoryItem(obj.InventoryItem);
+    if (obj?.cardDeck) this.cardDeck = new CardDeck(obj.cardDeck, this);
+    if (inventoryItem) this.inventoryItem = inventoryItem;
+    else if (obj?.inventoryItem) this.inventoryItem = new InventoryItem(obj.inventoryItem);
+    else if (obj?.InventoryItem) this.inventoryItem = new InventoryItem(obj.InventoryItem);
+    // TODO: Fix spelling mistake
   }
 
   get type() {
