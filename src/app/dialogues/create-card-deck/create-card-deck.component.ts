@@ -4,10 +4,10 @@ import { InventoryComponent } from 'src/app/components/inventory/inventory.compo
 import { Item, ItemType } from 'src/app/models/data/item.model';
 
 @Component({
-  templateUrl: './card-deck.component.html',
-  styleUrls: ['./card-deck.component.scss']
+  templateUrl: './create-card-deck.component.html',
+  styleUrls: ['./create-card-deck.component.scss']
 })
-export class CardDeckDialogue implements OnInit {
+export class CreateCardDeckDialogue implements OnInit {
 
   @ViewChild(InventoryComponent, { static: true }) inventory!: InventoryComponent;
 

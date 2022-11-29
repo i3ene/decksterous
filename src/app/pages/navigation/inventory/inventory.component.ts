@@ -1,7 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { InventoryComponent } from 'src/app/components/inventory/inventory.component';
-import { CardDeckDialogue } from 'src/app/dialogues/card-deck/card-deck.component';
+import { CreateCardDeckDialogue } from 'src/app/dialogues/create-card-deck/create-card-deck.component';
+import { EditCardDeckComponent } from 'src/app/dialogues/edit-card-deck/edit-card-deck.component';
+import { CardDeck } from 'src/app/models/data/card.model';
 import { Item, ItemType } from 'src/app/models/data/item.model';
 import { TokenService } from 'src/app/services/auth/token.service';
 
@@ -29,7 +31,7 @@ export class UserInventoryPage implements OnInit {
         break;
       case ItemType.DECK:
         // TODO: Deck Dialogue
-        this.createDeck();
+        this.editDeck(item.cardDeck!);
         break;
       case ItemType.ITEM:
         // TODO: Item Dialogue
@@ -37,8 +39,17 @@ export class UserInventoryPage implements OnInit {
     }
   }
 
-  createDeck() {
-    this.dialog.open(CardDeckDialogue, {
+  editDeck(deck: CardDeck): void {
+    this.dialog.open(EditCardDeckComponent, {
+      data: {
+        deck: deck,
+        items: this.inventory.items
+      },
+    });
+  }
+
+  createDeck(): void {
+    this.dialog.open(CreateCardDeckDialogue, {
       data: {
         items: this.inventory.items
       },
