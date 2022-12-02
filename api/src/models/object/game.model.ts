@@ -194,12 +194,53 @@ export class GamePlayers {
     return this.map.get(this.index)!;
   }
 
-  constructor(game: Game, players: GamePlayer[]) {
-    let key = 0;
-    for (const player of players) {
-      player.game = game;
-      this.map.set(key++, player);
+  /**
+   * Reference to the game
+   */
+   game: Game;
+
+  constructor(game: Game) {
+    this.game = game;
+  }
+
+  /**
+   * Add players to the list.
+   * (If player is already in the list, it will be replaced by the new instance)
+   * @param player Player to add
+   */
+  add(player: GamePlayer) {
+    player.game = this.game;
+    this.map.set(this.find(player) ?? this.map.size + 1, player);
+  }
+
+  /**
+   * Remove player from list.
+   * (Map gets rearranged to adjust indices of the map)
+   * @param player Player instance or map key
+   */
+  remove(player: number | GamePlayer): void {
+    if (typeof player == 'number') this.map.delete(player);
+    else this.map.delete(this.find(player)!);
+    
+    const players = [];
+    for(const entry of this.map.values()) players.push(entry);
+    this.map = new Map();
+    for (const entry of players) this.add(entry);
+  }
+
+  /**
+   * Find key by player instance oder id
+   * @param player Player instance or id
+   * @returns Found key number else `undefined`
+   */
+  find(player: GamePlayer | number): number | undefined {
+    const id = typeof player == "number" ? player : player.user.id;
+    for(const key of this.map.keys()) {
+      const temp = this.map.get(key);
+      if (!temp) continue;
+      if (temp.user.id == id) return key;
     }
+    return undefined;
   }
 
   /**

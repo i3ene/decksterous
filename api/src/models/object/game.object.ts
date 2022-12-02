@@ -17,7 +17,7 @@ export class Game {
   /**
    * Players of this game
    */
-  players: GamePlayers;
+  players!: GamePlayers;
 
   /**
    * Game events (with states)
@@ -34,10 +34,10 @@ export class Game {
    */
   logic: GameLogic;
 
-  constructor(room: BroadcastOperator<DefaultEventsMap, any>, rules: GameRules, ...players: GamePlayer[]) {
+  constructor(room: BroadcastOperator<DefaultEventsMap, any>) {
+    this.players = new GamePlayers(this);
     this.logic = new GameLogic(this);
     this.room = room;
-    this.players = new GamePlayers(this, players);
     // TODO: Combine rules with default rules
   }
 

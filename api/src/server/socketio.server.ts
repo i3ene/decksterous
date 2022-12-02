@@ -1,17 +1,16 @@
 import * as socketio from "socket.io";
-import { Config } from "../config";
+import { AuthSocket } from "../socket/auth.socket";
+import { GameSocket } from "../socket/game.socket";
 import { RoomSocket } from "../socket/room.socket";
 import { server } from "./http.server";
 
 export const io = new socketio.Server(server);
 
 RoomSocket.listener(io);
+GameSocket.listener(io);
 
 io.on("connection", async (socket) => {
   console.log("socket", socket.id, "connected");
-  console.log(socket.handshake.headers[Config.Auth.HEADER]);
-
-  io.emit("socket_connect", "A new socket connected!");
-
+  await AuthSocket.register(io, socket);
   await RoomSocket.register(io, socket);
 });
