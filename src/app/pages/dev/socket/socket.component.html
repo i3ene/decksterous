@@ -1,13 +1,25 @@
 <mat-card class="row">
   <div>
     <h2>Rooms</h2>
-    <mat-form-field>
-      <mat-label>Room Name</mat-label>
-      <input matInput #roomNameInput />
-    </mat-form-field>
-    <br />
-    <button mat-stroked-button (click)="socket.joinRoom(roomNameInput.value)">Join</button>
-    <button mat-stroked-button (click)="socket.leaveRoom(roomNameInput.value)">Leave</button>
+
+    <ng-container *ngIf="!socket.subscriptions.get('room'); else gameInput">
+      <mat-form-field>
+        <mat-label>Room Name</mat-label>
+        <input matInput #roomNameInput />
+      </mat-form-field>
+      <br />
+      <button mat-stroked-button (click)="socket.joinRoom(roomNameInput.value)">Join</button>
+    </ng-container>
+    <ng-template #gameInput>
+      <button mat-stroked-button (click)="socket.leaveRoom()">Leave</button>
+
+      <ng-container *ngIf="!socket.subscriptions.get('game'); else gameInputLeave">
+        <button mat-stroked-button (click)="socket.joinGame()">Join Game</button>
+      </ng-container>
+      <ng-template #gameInputLeave>
+        <button mat-stroked-button (click)="socket.leaveGame()">Leave Game</button>
+      </ng-template>
+    </ng-template>
   </div>
 
   <mat-divider vertical></mat-divider>
@@ -33,7 +45,7 @@
     <mat-tab label="Messages">
       <table class="tab-content">
         <tr *ngFor="let item of socket.messages">
-          <td>{{ item.timestamp | date: 'HH:mm:ss' }}</td>
+          <td>{{ item.timestamp | date : "HH:mm:ss" }}</td>
           <td>
             <pre><code>{{ item.message | json }}</code></pre>
           </td>
@@ -45,20 +57,17 @@
         <pre><code>{{ socket.availableRooms | json }}</code></pre>
       </div>
     </mat-tab>
-    <mat-tab label="Joined Rooms">
+    <mat-tab label="Room Members">
       <table class="tab-content">
-        <tr *ngFor="let room of socket.joinedRooms | keyvalue">
-          <td>{{ room.key }}</td>
-          <td>
-            <pre><code>{{ room.value | json }}</code></pre>
-          </td>
+        <tr *ngFor="let member of socket.roomMembers">
+          <td>{{ member }}</td>
         </tr>
       </table>
     </mat-tab>
     <mat-tab label="Events">
       <table class="tab-content">
         <tr *ngFor="let item of socket.events">
-          <td>{{ item.room }} - {{ item.timestamp | date: 'HH:mm:ss' }}</td>
+          <td>{{ item.room }} - {{ item.timestamp | date : "HH:mm:ss" }}</td>
           <td>
             <pre><code>{{ item.event | json }}</code></pre>
           </td>

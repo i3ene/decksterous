@@ -3,6 +3,8 @@ import { RoomController } from '../controllers/room.controller';
 
 export namespace RoomSocket {
 
+  // TODO: A Socket can only join ONE Room at a time
+
   /**
    * Register function for room functionality
    * @param io Socket server
@@ -11,8 +13,8 @@ export namespace RoomSocket {
   export async function register(io: Server, socket: Socket) {
     socket.emit('room_list', await getRooms(io));
 
-    socket.on('room_join', (room) => RoomController.join(io, socket, room));
-    socket.on('room_leave', (room) => RoomController.leave(io, socket, room));
+    let previous: string | undefined = undefined;
+    socket.on('room_join', (room) => RoomController.join(io, socket, room, previous));
   }
 
   /**
@@ -46,7 +48,7 @@ export namespace RoomSocket {
    */
   export async function getRooms(io: Server) {
     var list = await getSockets(io);
-    return [...io.sockets.adapter.rooms].map(([entry, set]) => entry).filter((x) => !list.includes(x));
+    return [...io.sockets.adapter.rooms].map(([entry, set]) => entry).filter((x) => !list.includes(x)).filter((x) => !x.startsWith('game_'));
   }
 
   /**
