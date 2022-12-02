@@ -53,7 +53,7 @@ export class GamePlayer {
   /**
    * Selected deck of user;
    */
-  deck: Card[];
+  deck!: Card[];
 
   /**
    * Cards in hand
@@ -80,10 +80,22 @@ export class GamePlayer {
    */
   game?: Game;
 
-  constructor(socket: Socket, user: User, deck: Card[]) {
+  /**
+   * If player is ready
+   */
+  isReady: boolean = false;
+
+  constructor(socket: Socket, user: User) {
     this.socket = socket;
     this.user = user;
-    this.deck = deck;
+  }
+
+  /**
+   * Select a deck
+   * @param deckId Deck id 
+   */
+  selectDeck(deckId: number): void {
+    // TODO: this.deck = DECK_CARDS
   }
 
   /**
@@ -241,6 +253,17 @@ export class GamePlayers {
       if (temp.user.id == id) return key;
     }
     return undefined;
+  }
+
+  /**
+   * Get player instance by id
+   * @param player Player id
+   * @returns Found player instance else `undefined`
+   */
+  get(id: number): GamePlayer | undefined {
+    const key = this.find(id);
+    if (!key) return undefined;
+    else return this.map.get(key);
   }
 
   /**
