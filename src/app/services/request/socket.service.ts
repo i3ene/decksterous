@@ -28,7 +28,7 @@ export class SocketService {
   availableRooms!: string[];
 
   /**
-   * Active listeners for individual rooms
+   * Active listeners (for room and game) 
    */
   subscriptions: Map<string, Subscription> = new Map();
 

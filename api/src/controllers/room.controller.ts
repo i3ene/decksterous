@@ -5,15 +5,13 @@ import { GameController } from "./game.controller";
 
 export namespace RoomController {
   export async function join(io: Server, socket: Socket, room: string, previous?: string) {
+    if (previous) leave(io, socket, previous);
     if (room.startsWith('game_')) return;
 
     socket.join(room);
     io.to(room).emit('room_socket_join', new RoomActionEvent(socket.id, room, RoomAction.JOIN));
     var list = await RoomSocket.getSockets(io, room);
     io.to(room).emit('room_socket_list', { [room]: list });
-
-    if (previous) leave(io, socket, previous);
-    previous = room;
 
     joinEvents(io, socket, room);
   }

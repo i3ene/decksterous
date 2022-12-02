@@ -14,7 +14,10 @@ export namespace RoomSocket {
     socket.emit('room_list', await getRooms(io));
 
     let previous: string | undefined = undefined;
-    socket.on('room_join', (room) => RoomController.join(io, socket, room, previous));
+    socket.on('room_join', (room) => {
+      RoomController.join(io, socket, room, previous);
+      previous = room;
+    });
   }
 
   /**
