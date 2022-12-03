@@ -43,14 +43,16 @@
 
   <mat-tab-group>
     <mat-tab label="Messages">
-      <table class="tab-content">
-        <tr *ngFor="let item of socket.messages">
-          <td>{{ item.timestamp | date : "HH:mm:ss" }}</td>
-          <td>
-            <pre><code>{{ item.message | json }}</code></pre>
-          </td>
-        </tr>
-      </table>
+      <div class="tab-content">
+        <table>
+          <tr *ngFor="let item of socket.messages.reverse()">
+            <td>{{ item.timestamp | date : "HH:mm:ss" }}</td>
+            <td>
+              <pre><code>{{ item.message | json }}</code></pre>
+            </td>
+          </tr>
+        </table>
+      </div>
     </mat-tab>
     <mat-tab label="Available Rooms">
       <div class="tab-content">
@@ -58,21 +60,25 @@
       </div>
     </mat-tab>
     <mat-tab label="Room Members">
-      <table class="tab-content">
-        <tr *ngFor="let member of socket.roomMembers">
-          <td>{{ member }}</td>
-        </tr>
-      </table>
+      <div class="tab-content">
+        <table>
+          <tr *ngFor="let member of socket.roomMembers">
+            <td>{{ member }}</td>
+          </tr>
+        </table>
+      </div>
     </mat-tab>
     <mat-tab label="Events">
-      <table class="tab-content">
-        <tr *ngFor="let item of socket.events">
-          <td>{{ item.room }} - {{ item.timestamp | date : "HH:mm:ss" }}</td>
-          <td>
-            <pre><code>{{ item.event | json }}</code></pre>
-          </td>
-        </tr>
-      </table>
+      <div class="tab-content">
+        <table>
+          <tr *ngFor="let item of socket.events.reverse()">
+            <td>{{ item.room }} - {{ item.timestamp | date : "HH:mm:ss" }}</td>
+            <td>
+              <pre><code>{{ item.event | json }}</code></pre>
+            </td>
+          </tr>
+        </table>
+      </div>
     </mat-tab>
   </mat-tab-group>
 </mat-card>

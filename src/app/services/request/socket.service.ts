@@ -106,8 +106,8 @@ export class SocketService {
    * @param name Event name
    * @param data Event payload
    */
-  emitEvent(name: string, data: string) {
-    this.socket.emit(name, JSON.parse(data));
+  emitEvent(name: string, data: string | any) {
+    this.socket.emit(name, typeof data == 'string' ? JSON.parse(data) : data);
   }
 
   /**

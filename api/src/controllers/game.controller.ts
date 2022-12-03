@@ -66,7 +66,9 @@ export namespace GameController {
     if (!game) return;
     const player = game.players.get(socket.user?.id!);
     if (!player) return;
-    player.selectDeck(deckId);
+    const success = await player.selectDeck(deckId);
+    if (!success) socket.emit('game_socket_event', `Deck ${deckId} could not be selected!`);
+    else socket.emit('game_socket_event', `Deck ${deckId} selected`);
   }
 
   export async function setReady(io: Server, socket: Socket, room: string, state: boolean) {
@@ -74,6 +76,8 @@ export namespace GameController {
     if (!game) return;
     const player = game.players.get(socket.user?.id!);
     if (!player) return;
-    player.isReady = state;
+    const success = player.setReady(state);
+    if (!success) socket.emit('game_socket_event', "Please select a deck first!");
+    else io.to(room).emit('game_socket_event', `${socket.user?.name} is ${!state ? 'not' : ''} ready`);
   }
 }

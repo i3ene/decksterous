@@ -15,7 +15,19 @@ import { InventoryItem } from "./relations/inventory_item.model";
         include: [Card]
       }]
     }]
-  }
+  },
+  gameDeck: {
+    include: [{
+      model: InventoryItem,
+      include: [{
+        model: Item,
+        include: [{
+          model: Card,
+          include: [Item]
+        }]
+      }]
+    }]
+  },
 }))
 @Table
 export class CardDeck extends Model<CardDeck> {

@@ -2,6 +2,7 @@ import EventEmitter from 'events';
 import { BroadcastOperator, Socket } from 'socket.io';
 import { DefaultEventsMap } from 'socket.io/dist/typed-events';
 import { Card } from '../data/card.model';
+import { CardDeck } from '../data/cardDeck.model';
 import { User } from '../data/user.model';
 import { Game } from './game.object';
 import { GameAction } from './socket.model';
@@ -53,7 +54,7 @@ export class GamePlayer {
   /**
    * Selected deck of user;
    */
-  deck!: Card[];
+  deck: Card[];
 
   /**
    * Cards in hand
@@ -88,14 +89,30 @@ export class GamePlayer {
   constructor(socket: Socket, user: User) {
     this.socket = socket;
     this.user = user;
+    this.deck = [];
+  }
+
+  /**
+   * Set ready state of player.
+   * (If deck is empty, it will not set the ready state)
+   * @param state Is ready
+   * @returns `false` if deck is empty when setting ready
+   */
+  setReady(state: boolean): boolean {
+    if (state && this.deck.length == 0) return false;
+    this.isReady = state;
+    return true;
   }
 
   /**
    * Select a deck
    * @param deckId Deck id 
    */
-  selectDeck(deckId: number): void {
-    // TODO: this.deck = DECK_CARDS
+  async selectDeck(deckId: number): Promise<boolean> {
+    const deck: CardDeck | null = await CardDeck.scope(['gameDeck']).findByPk(deckId);
+    if (!deck || !deck.inventoryItems) return false;
+    this.deck = deck.inventoryItems.map(x => x.item?.card!);
+    return true;
   }
 
   /**
