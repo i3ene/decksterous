@@ -101,14 +101,18 @@ export class GamePlayer {
   setReady(state: boolean): boolean {
     if (state && this.deck.length == 0) return false;
     this.isReady = state;
+    if (state) this.event.emit(GameAction.PLAYER, new GamePlayerEvent(this, GameAction.PLAYER_READY)); //TODO: emit player is ready
     return true;
   }
 
   /**
-   * Select a deck
+   * Select a deck.
+   * If deck does not exist or player is ready, it will not change deck.
    * @param deckId Deck id 
+   * @returns `true` if deck was successfully loaded.
    */
   async selectDeck(deckId: number): Promise<boolean> {
+    if (this.isReady) return false;
     const deck: CardDeck | null = await CardDeck.scope(['gameDeck']).findByPk(deckId);
     if (!deck || !deck.inventoryItems) return false;
     this.deck = deck.inventoryItems.map(x => x.item?.card!);
@@ -239,6 +243,7 @@ export class GamePlayers {
    */
   add(player: GamePlayer) {
     player.game = this.game;
+    player.event.addListener(GameAction.PLAYER, (event) => this.eventHandler(GameAction.PLAYER, event));
     this.map.set(this.find(player) ?? this.map.size + 1, player);
   }
 
@@ -312,17 +317,40 @@ export class GamePlayers {
   }
 
   /**
+   * Check if every player is ready.
+   * (Need to be atleast 2 player.)
+   * @returns `true` if everyone is ready.
+   */
+  areReady(): boolean {
+    if (this.map.size < 2) return false;
+    for(const player of this.map.values()) {
+      if (!player.isReady) return false;
+    }
+    return true;
+  }
+
+  /**
    * Bubble events from players
    * @param player Initiator
    * @param event Event symbol
    * @param args Event data
    */
-  eventHandler(player: GamePlayer, event: any, args: any[]) {
-    this.events.emit(event, { player, args } as GamePlayerEvent);
+  eventHandler(action: GameAction,  event: GamePlayerEvent) {
+    this.events.emit(action, event);
   }
 }
 
 export interface GamePlayerEvent {
-  player: GamePlayer;
-  args: any | any[];
+  player?: GamePlayer;
+  action: GameAction;
+  args?: any | any[];
+}
+
+
+export class GamePlayerEvent implements GamePlayerEvent {
+  constructor(player: GamePlayer, action: GameAction, args?: any) {
+    this.player = player;
+    this.action = action;
+    if (args) this.args = args;
+  }
 }

@@ -18,6 +18,7 @@ export class RoomActionEvent {
 export enum GameAction {
   GAME = 'game',
   PLAYER = 'player',
+  PLAYER_READY = 'player_ready',
   CARD = 'card'
 }
 
@@ -38,9 +39,9 @@ export enum SocketEvent {
   ROOM_SOCKET_LEAVE = 'room_socket_leave',
   GAME = "game_",
   GAME_SERVER = 'game_event',
-  GAME_JOIN = 'room_join',
-  GAME_LEAVE = 'room_leave',
+  GAME_JOIN = 'game_join',
+  GAME_LEAVE = 'game_leave',
   GAME_SOCKET = 'game_socket_event',
-  GAME_SOCKET_JOIN = 'room_socket_join',
-  GAME_SOCKET_LEAVE = 'room_socket_leave',
+  GAME_SOCKET_JOIN = 'game_socket_join',
+  GAME_SOCKET_LEAVE = 'game_socket_leave',
 }

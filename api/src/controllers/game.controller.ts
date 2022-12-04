@@ -79,6 +79,6 @@ export namespace GameController {
     if (!player) return;
     const success = player.setReady(state);
     if (!success) socket.emit(SocketEvent.GAME_SOCKET, "Please select a deck first!");
-    else io.to(room).emit(SocketEvent.GAME_SOCKET, `${socket.user?.name} is ${!state ? 'not' : ''} ready`);
+    else io.to(room).emit(SocketEvent.GAME_SOCKET, `${socket.user?.name} ${!state ? 'is not' : 'is'} ready`);
   }
 }
