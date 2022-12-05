@@ -7,14 +7,14 @@ import { FriendRoutes } from "./friend.routes";
 
 export const UserRoutes = Router();
 
-UserRoutes.get("/all", [middleware.findAll(User)], controller.result(User));
+UserRoutes.get("/all", [middleware.findAll({ model: User})], controller.result(User));
 
-UserRoutes.get("/", [middleware.find(User)], controller.result(User));
+UserRoutes.get("/", [middleware.find({ model: User})], controller.result(User));
 
-UserRoutes.post("/", [auth.isAdmin, middleware.add(User)], controller.message("last"));
+UserRoutes.post("/", [auth.isAdmin, middleware.add({ model: User})], controller.message("last"));
 
-UserRoutes.put("/", [auth.isAdmin, middleware.get(User), middleware.edit(User)], controller.message("last"));
+UserRoutes.put("/", [auth.isAdmin, middleware.get({ model: User}), middleware.edit({ model: User})], controller.message("last"));
 
-UserRoutes.delete("/", [auth.isAdmin, middleware.get(User), middleware.remove(User)], controller.message("last"));
+UserRoutes.delete("/", [auth.isAdmin, middleware.get({ model: User}), middleware.remove({ model: User})], controller.message("last"));
 
 UserRoutes.use("/friend", FriendRoutes);

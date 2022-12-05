@@ -9,20 +9,20 @@ import { InventoryItem } from '../models/data/relations/inventory_item.model';
 
 export const CardDeckRoutes = Router();
 
-CardDeckRoutes.get("/all", [middleware.findAll(CardDeck)], controller.result(CardDeck));
+CardDeckRoutes.get("/all", [middleware.findAll({ model: CardDeck})], controller.result(CardDeck));
 
-CardDeckRoutes.get("/", [middleware.find(CardDeck, ['inventoryItems'])], controller.result(CardDeck));
+CardDeckRoutes.get("/", [middleware.find({ model: CardDeck, scopes: ['inventoryItems']})], controller.result(CardDeck));
 
-CardDeckRoutes.post("/", [auth.isAdmin, middleware.add(CardDeck)], controller.message("last"));
+CardDeckRoutes.post("/", [auth.isAdmin, middleware.add({ model: CardDeck})], controller.message("last"));
 
-CardDeckRoutes.put("/", [auth.isAdmin, middleware.get(CardDeck), middleware.edit(CardDeck)], controller.message("last"));
+CardDeckRoutes.put("/", [auth.isAdmin, middleware.get({ model: CardDeck}), middleware.edit({ model: CardDeck})], controller.message("last"));
 
-CardDeckRoutes.delete("/", [auth.isAdmin, middleware.get(CardDeck), middleware.remove(CardDeck)], controller.message("last"));
+CardDeckRoutes.delete("/", [auth.isAdmin, middleware.get({ model: CardDeck}), middleware.remove({ model: CardDeck})], controller.message("last"));
 
-CardDeckRoutes.post("/item", [auth.isAdmin, middleware.get(CardDeck, [], undefined, ["deck", "id"]), middleware.get(InventoryItem, [], undefined, ["item", "id"]), middleware.addAssociation(CardDeck, "inventoryItems", InventoryItem)], controller.message("last"));
+CardDeckRoutes.post("/item", [auth.isAdmin, middleware.get({ model: CardDeck, body: { key: ["deck", "id"]}}), middleware.get({ model: InventoryItem, body: { key: ["item", "id"] }}), middleware.addAssociation({ model: CardDeck, association: { name: "inventoryItems", data: InventoryItem}})], controller.message("last"));
 
-CardDeckRoutes.post("/items", [auth.isAdmin, middleware.get(CardDeck, [], undefined, ["deck", "id"]), middleware.getAll(InventoryItem, [], 'items', undefined, 'id'), middleware.addAssociation(CardDeck, "inventoryItems", InventoryItem)], controller.message("last"));
+CardDeckRoutes.post("/items", [auth.isAdmin, middleware.get({ model: CardDeck, body: { key: ["deck", "id"]}}), middleware.getAll({ model: InventoryItem, list: { key: 'items', id: 'id'}}), middleware.addAssociation({ model: CardDeck, association: { name: "inventoryItems", data: InventoryItem}})], controller.message("last"));
 
-CardDeckRoutes.delete("/item", [auth.isAdmin, middleware.get(CardDeck, [], undefined, ["deck", "id"]), middleware.get(InventoryItem, [], undefined, ["item", "id"]), middleware.removeAssociation(CardDeck, "inventoryItems", InventoryItem)], controller.message("last"));
+CardDeckRoutes.delete("/item", [auth.isAdmin, middleware.get({ model: CardDeck, body: { key: ["deck", "id"]}}), middleware.get({ model: InventoryItem, body: { key: ["item", "id"] }}), middleware.removeAssociation({ model: CardDeck, association: { name: "inventoryItems", data: InventoryItem}})], controller.message("last"));
 
-CardDeckRoutes.delete("/items", [auth.isAdmin, middleware.get(CardDeck, [], undefined, ["deck", "id"]), middleware.getAll(InventoryItem, [], 'items', undefined, 'id'), middleware.removeAssociation(CardDeck, "inventoryItems", InventoryItem)], controller.message("last"));
+CardDeckRoutes.delete("/items", [auth.isAdmin, middleware.get({ model: CardDeck, body: { key: ["deck", "id"]}}), middleware.getAll({ model: InventoryItem, list: { key: 'items', id: 'id'}}), middleware.removeAssociation({ model: CardDeck, association: { name: "inventoryItems", data: InventoryItem}})], controller.message("last"));

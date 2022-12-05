@@ -185,7 +185,7 @@ export class GamePlayer {
   }
 }
 
-export class GamePlayers {
+export class GamePlayerCollection {
   /**
    * Map of all players
    */

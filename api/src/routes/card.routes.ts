@@ -12,15 +12,15 @@ import { CardAbility } from '../models/data/cardAbility.model';
 
 export const CardRoutes = Router();
 
-CardRoutes.get('/all', [middleware.findAll(Card, ['item', 'abilities'])], controller.result(Card));
+CardRoutes.get('/all', [middleware.findAll({ model: Card, scopes: ['item', 'abilities']})], controller.result(Card));
 
-CardRoutes.get('/', [middleware.find(Card, ['item', 'abilities'])], controller.result(Card));
+CardRoutes.get('/', [middleware.find({ model: Card, scopes: ['item', 'abilities']})], controller.result(Card));
 
-CardRoutes.post('/', [auth.isAdmin, middleware.add(Card), middleware.getAll(CardAbility, [], 'abilities', undefined, 'id'), middleware.setAssociation(Card, "abilities", CardAbility)], controller.message('success'));
+CardRoutes.post('/', [auth.isAdmin, middleware.add({ model: Card}), middleware.getAll({ model: CardAbility, list: { key: 'abilities', id: 'id'}}), middleware.setAssociation({ model: Card, association: { name: "abilities", data: CardAbility}})], controller.message('success'));
 
-CardRoutes.put('/', [auth.isAdmin, middleware.get(Card), middleware.edit(Card), middleware.getAll(CardAbility, [], 'abilities', undefined, 'id'), middleware.setAssociation(Card, "abilities", CardAbility)], controller.message('success'));
+CardRoutes.put('/', [auth.isAdmin, middleware.get({ model: Card}), middleware.edit({ model: Card}), middleware.getAll({ model: CardAbility, list: { key: 'abilities', id: 'id'}}), middleware.setAssociation({ model: Card, association: { name: "abilities", data: CardAbility}})], controller.message('success'));
 
-CardRoutes.delete('/', [auth.isAdmin, middleware.get(Card), middleware.remove(Card)], controller.message('last'));
+CardRoutes.delete('/', [auth.isAdmin, middleware.get({ model: Card}), middleware.remove({ model: Card})], controller.message('last'));
 
 CardRoutes.use('/type', CardTypeRoutes);
 

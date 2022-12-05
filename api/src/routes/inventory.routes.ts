@@ -8,20 +8,20 @@ import { User } from '../models/data/user.model';
 
 export const InventoryRoutes = Router();
 
-InventoryRoutes.get("/all", [middleware.findAll(Inventory)], controller.result(Inventory));
+InventoryRoutes.get("/all", [middleware.findAll({ model: Inventory})], controller.result(Inventory));
 
-InventoryRoutes.get("/", [middleware.find(Inventory, ['items'])], controller.result(Inventory));
+InventoryRoutes.get("/", [middleware.find({ model: Inventory, scopes: ['items']})], controller.result(Inventory));
 
-InventoryRoutes.post("/", [auth.isAdmin, middleware.add(Inventory)], controller.message("last"));
+InventoryRoutes.post("/", [auth.isAdmin, middleware.add({ model: Inventory})], controller.message("last"));
 
-InventoryRoutes.put("/", [auth.isAdmin, middleware.get(Inventory), middleware.get(User, [], undefined, "userId"), middleware.setAssociation(User, "inventory", Inventory)], controller.message("last"));
+InventoryRoutes.put("/", [auth.isAdmin, middleware.get({ model: Inventory}), middleware.get({ model: User, body: { key: "userId"}}), middleware.setAssociation({ model: User, association: { name: "inventory", data: Inventory}})], controller.message("last"));
 
-InventoryRoutes.delete("/", [auth.isAdmin, middleware.get(Inventory), middleware.remove(Inventory)], controller.message("last"));
+InventoryRoutes.delete("/", [auth.isAdmin, middleware.get({ model: Inventory}), middleware.remove({ model: Inventory})], controller.message("last"));
 
-InventoryRoutes.post("/item", [auth.isAdmin, middleware.get(Inventory, [], undefined, ["inventory", "id"]), middleware.get(Item, [], undefined, ["item", "id"]), middleware.addAssociation(Inventory, "items", Item)], controller.message("last"));
+InventoryRoutes.post("/item", [auth.isAdmin, middleware.get({ model: Inventory, body: { key: ["inventory", "id"]}}), middleware.get({ model: Item, body: { key: ["item", "id"]}}), middleware.addAssociation({ model: Inventory, association: { name: "items", data: Item}})], controller.message("last"));
 
-InventoryRoutes.post("/items", [auth.isAdmin, middleware.get(Inventory, [], undefined, ["inventory", "id"]), middleware.getAll(Item, [], 'items', undefined, 'id'), middleware.addAssociation(Inventory, "items", Item)], controller.message("last"));
+InventoryRoutes.post("/items", [auth.isAdmin, middleware.get({ model: Inventory, body: { key: ["inventory", "id"]}}), middleware.getAll({ model: Item, list: { key: 'items', id: 'id'}}), middleware.addAssociation({ model: Inventory, association: { name: "items", data: Item}})], controller.message("last"));
 
-InventoryRoutes.delete("/item", [auth.isAdmin, middleware.get(Inventory, [], undefined, ["inventory", "id"]), middleware.get(Item, [], undefined, ["item", "id"]), middleware.removeAssociation(Inventory, "items", Item)], controller.message("last"));
+InventoryRoutes.delete("/item", [auth.isAdmin, middleware.get({ model: Inventory, body: { key: ["inventory", "id"]}}), middleware.get({ model: Item, body: { key: ["item", "id"]}}), middleware.removeAssociation({ model: Inventory, association: { name: "items", data: Item}})], controller.message("last"));
 
-InventoryRoutes.delete("/items", [auth.isAdmin, middleware.get(Inventory, [], undefined, ["inventory", "id"]), middleware.getAll(Item, [], 'items', undefined, 'id'), middleware.removeAssociation(Inventory, "items", Item)], controller.message("last"));
+InventoryRoutes.delete("/items", [auth.isAdmin, middleware.get({ model: Inventory, body: { key: ["inventory", "id"]}}), middleware.getAll({ model: Item, list: { key: 'items', id: 'id'}}), middleware.removeAssociation({ model: Inventory, association: { name: "items", data: Item}})], controller.message("last"));

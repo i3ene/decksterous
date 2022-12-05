@@ -71,10 +71,10 @@ export namespace AuthMiddleware {
     next();
   }
 
-  export function getSelf(key: string) {
+  export function getSelf(key: string, scopes: any[] = []) {
     return async (req: Request, res: Response, next: NextFunction) => {
       if (req.user == null) return res.status(500).send({ message: 'User object is null!' });
-      const user: User | null = await User.scope([]).findByPk(req.user.id);
+      const user: User | null = await User.scope(['defaultScope'].concat(scopes)).findByPk(req.user.id);
       if (user == undefined) return res.status(500).send({ message: 'No User found for Token ID!' });
       req.data[key] = user;
 

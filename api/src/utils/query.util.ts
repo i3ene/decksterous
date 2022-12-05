@@ -84,4 +84,14 @@ export namespace QueryUtil {
       },
     };
   }
+
+  /**
+   * Check if object is empty
+   * @param obj Object to check
+   * @returns `true` if no keys are present
+   */
+  export function isEmpty(obj: any) {
+    if (!obj) return true;
+    return Object.keys(obj).length === 0;
+  }
 }

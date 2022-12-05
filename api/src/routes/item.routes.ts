@@ -8,14 +8,14 @@ import { CardRoutes } from './card.routes';
 
 export const ItemRoutes = Router();
 
-ItemRoutes.get("/all", [middleware.findAll(Item)], controller.result(Item));
+ItemRoutes.get("/all", [middleware.findAll({ model: Item})], controller.result(Item));
 
-ItemRoutes.get("/", [middleware.find(Item)], controller.result(Item));
+ItemRoutes.get("/", [middleware.find({ model: Item})], controller.result(Item));
 
-ItemRoutes.post("/", [auth.isAdmin, middleware.add(Item)], controller.message("last"));
+ItemRoutes.post("/", [auth.isAdmin, middleware.add({ model: Item})], controller.message("last"));
 
-ItemRoutes.put("/", [auth.isAdmin, middleware.get(Item), middleware.edit(Item)], controller.message("last"));
+ItemRoutes.put("/", [auth.isAdmin, middleware.get({ model: Item}), middleware.edit({ model: Item})], controller.message("last"));
 
-ItemRoutes.delete("/", [auth.isAdmin, middleware.get(Item), middleware.remove(Item)], controller.message("last"));
+ItemRoutes.delete("/", [auth.isAdmin, middleware.get({ model: Item}), middleware.remove({ model: Item})], controller.message("last"));
 
 ItemRoutes.use('/card', CardRoutes);

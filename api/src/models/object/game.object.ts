@@ -1,7 +1,7 @@
 import EventEmitter from "events";
 import { BroadcastOperator } from "socket.io";
 import { DefaultEventsMap } from "socket.io/dist/typed-events";
-import { GameEvent, GameEvents, GameEventState, GameLogicState, GamePlayer, GamePlayerEvent, GamePlayers, GameRules } from "./game.model";
+import { GameEvent, GameEvents, GameEventState, GameLogicState, GamePlayer, GamePlayerEvent, GamePlayerCollection, GameRules } from "./game.model";
 import { GameAction } from "./socket.model";
 
 export class Game {
@@ -18,7 +18,7 @@ export class Game {
   /**
    * Players of this game
    */
-  players: GamePlayers;
+  players: GamePlayerCollection;
 
   /**
    * Game events (with states)
@@ -36,7 +36,7 @@ export class Game {
   logic: GameLogic;
 
   constructor(room: BroadcastOperator<DefaultEventsMap, any>) {
-    this.players = new GamePlayers(this);
+    this.players = new GamePlayerCollection(this);
     this.logic = new GameLogic(this);
     this.room = room;
     // TODO: Combine rules with default rules
