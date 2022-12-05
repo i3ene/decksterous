@@ -30,7 +30,9 @@ export class InventoryComponent {
 
   @Input() selectable: boolean = false;
 
-  @Output() clickedEvent: EventEmitter<Item> = new EventEmitter<Item>();
+  @Output() itemClicked: EventEmitter<Item> = new EventEmitter<Item>();
+
+  @Output() itemsLoaded: EventEmitter<Item[]> = new EventEmitter<Item[]>();
 
   id?: { type: 'deck' | 'user' | 'inventory'; value: number };
 
@@ -40,19 +42,29 @@ export class InventoryComponent {
 
   constructor(private request: RequestService) {}
 
-  async loadItems(id: number, user?: boolean) {
-    const payload = await this.request.get(`/inventory?${user ? 'userId' : 'id'}=${id}`);
+  async loadItems(id: number, type: "inventory" | "user" | "deck" = "inventory") {
+    switch (type) {
+      case "inventory":
+        var payload = await this.request.get(`/inventory?id=${id}`);
+        this.inventory = new Inventory(payload);
+        var items = this.inventory.items;
+        break;
+      case "user":
+        var payload = await this.request.get(`/inventory?userId=${id}`);
+        this.inventory = new Inventory(payload);
+        var items = this.inventory.items;
+        break;
+      case "deck":
+        var payload = await this.request.get(`/item/card/deck?id=${id}`);
+        this.deck = new CardDeck(payload);
+        var items = this.deck.items;
+        break;
+    }
     // TODO: Fix spelling mismatch on "Item.InventoryItem" (See Item Model)
-    this.inventory = new Inventory(payload);
-    if (!this.inventory.items) this.items = [];
-    else this.items = this.inventory.items;
-  }
+    if (!items) this.items = [];
+    else this.items = items;
 
-  async loadDeckItems(id: number) {
-    const payload = await this.request.get(`/item/card/deck?id=${id}`);
-    this.deck = new CardDeck(payload);
-    if (!this.deck.items) this.items = [];
-    else this.items = this.deck.items;
+    this.itemsLoaded.emit(this.items);
   }
 
   get selectedItems(): ItemComponent[] {
@@ -71,13 +83,13 @@ export class InventoryComponent {
 
     switch (this.id?.type) {
       case 'deck':
-        this.loadDeckItems(this.id.value);
+        this.loadItems(this.id.value, "deck");
         break;
       case 'user':
-        this.loadItems(this.id.value, true);
+        this.loadItems(this.id.value, "user");
         break;
       case 'inventory':
-        this.loadItems(this.id.value, false);
+        this.loadItems(this.id.value, "inventory");
         break;
     }
   }

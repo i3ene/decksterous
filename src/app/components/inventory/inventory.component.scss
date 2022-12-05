@@ -4,9 +4,10 @@
   flex-wrap: wrap;
   justify-content: flex-start;
   gap: 8px;
+
+  width: 100%;
 }
 
 .item {
-  --elements: 5;
-  flex-basis: calc((100% / var(--elements)) - (2px * var(--elements)));
+  flex-basis: 170px;
 }

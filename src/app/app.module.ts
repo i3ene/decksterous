@@ -45,7 +45,6 @@ import { FormSearchTemplate } from './templates/form-search/form-search.componen
 import { DevCardDeckComponent } from './pages/dev/card-deck/card-deck.component';
 import { DevDeckInventoryComponent } from './pages/dev/deck-inventory/deck-inventory.component';
 import { DevUserInventoryComponent } from './pages/dev/user-inventory/user-inventory.component';
-import { CreateCardDeckDialogue } from './dialogues/create-card-deck/create-card-deck.component';
 import { EditCardDeckDialogue } from './dialogues/edit-card-deck/edit-card-deck.component';
 import { HomePage } from './pages/navigation/home/home.component';
 import { LobbyPage } from './pages/navigation/lobby/lobby.component';
@@ -88,7 +87,6 @@ import { DevGameComponent } from './pages/dev/dev-game/dev-game.component';
     DevCardDeckComponent,
     DevDeckInventoryComponent,
     DevUserInventoryComponent,
-    CreateCardDeckDialogue,
     EditCardDeckDialogue,
     HomePage,
     LobbyPage,

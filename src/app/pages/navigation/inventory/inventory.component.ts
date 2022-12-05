@@ -1,11 +1,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { InventoryComponent } from 'src/app/components/inventory/inventory.component';
-import { CreateCardDeckDialogue } from 'src/app/dialogues/create-card-deck/create-card-deck.component';
 import { EditCardDeckDialogue } from 'src/app/dialogues/edit-card-deck/edit-card-deck.component';
 import { CardDeck } from 'src/app/models/data/card.model';
 import { Item, ItemType } from 'src/app/models/data/item.model';
 import { TokenService } from 'src/app/services/auth/token.service';
+import { RequestService } from 'src/app/services/request/request.service';
 
 @Component({
   templateUrl: './inventory.component.html',
@@ -17,7 +17,7 @@ export class UserInventoryPage implements OnInit {
 
   id!: number;
 
-  constructor(private token: TokenService, public dialog: MatDialog) {}
+  constructor(private token: TokenService, public dialog: MatDialog, private request: RequestService) {}
 
   ngOnInit(): void {
     const data = this.token.getTokenData();
@@ -40,19 +40,34 @@ export class UserInventoryPage implements OnInit {
   }
 
   editDeck(deck: CardDeck): void {
-    this.dialog.open(EditCardDeckDialogue, {
+    const dialog = this.dialog.open(EditCardDeckDialogue, {
       data: {
         deck: deck,
         items: this.inventory.items
       },
     });
+    dialog.afterClosed().subscribe(x => {
+      switch(x) {
+        case 'Save':
+          // TODO
+          break;
+        case 'Delete':
+          // TODO
+          break;
+      }
+    });
   }
 
-  createDeck(): void {
-    this.dialog.open(CreateCardDeckDialogue, {
+  createDeck() {
+    const dialog = this.dialog.open(EditCardDeckDialogue, {
       data: {
         items: this.inventory.items
       },
+    });
+    dialog.afterClosed().subscribe(async (x) => {
+      if (x != 'Save') return;
+      const deck = dialog.componentInstance.deck;
+      const payload = await this.request.post('/self/deck', deck);
     });
   }
 }

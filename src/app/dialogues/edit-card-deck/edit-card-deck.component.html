@@ -1,4 +1,4 @@
-<h2 mat-dialog-title>Edit Deck</h2>
+<h2 mat-dialog-title>{{ editMode ? 'Edit' : 'Create' }} Deck</h2>
 <mat-dialog-content>
   <mat-form-field>
     <mat-label>Deck Name</mat-label>
@@ -6,17 +6,17 @@
   </mat-form-field>
 
   <h3>Deck</h3>
-  <app-inventory [selectable]="true" [deckId]="deck.id!"></app-inventory>
+  <app-inventory #inventoryDeck (itemsLoaded)="filterCards()" (itemClicked)="moveToCards($event)" [deckId]="deck.id!"></app-inventory>
 
   <br/>
   <mat-divider></mat-divider>
 
   <h3>Cards</h3>
-  <app-inventory #cards [selectable]="true"></app-inventory>
+  <app-inventory #inventoryCards (itemClicked)="moveToDeck($event)"></app-inventory>
   
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-  <button mat-button mat-dialog-close>Delete</button>
+  <button mat-button [mat-dialog-close]="'Delete'" *ngIf="editMode">Delete</button>
   <button mat-button mat-dialog-close>Cancel</button>
-  <button mat-button [mat-dialog-close]="true" cdkFocusInitial>Save</button>
+  <button mat-button [mat-dialog-close]="'Save'" cdkFocusInitial>{{ editMode ? 'Save' : 'Create' }}</button>
 </mat-dialog-actions>

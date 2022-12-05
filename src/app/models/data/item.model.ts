@@ -10,7 +10,7 @@ export class Item {
   cardDeck?: CardDeck;
   inventoryItem?: InventoryItem;
 
-  constructor(obj: any, inventoryItem?: any) {
+  constructor(obj?: any, inventoryItem?: any) {
     this.name = obj?.name ?? '';
     this.description = obj?.description ?? '';
     if (obj?.id) this.id = Number(obj.id);

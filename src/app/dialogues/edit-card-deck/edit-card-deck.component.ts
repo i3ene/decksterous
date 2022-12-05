@@ -10,16 +10,42 @@ import { Item, ItemType } from 'src/app/models/data/item.model';
 })
 export class EditCardDeckDialogue implements OnInit {
 
-  @ViewChild("cards", { static: true }) inventory!: InventoryComponent;
+  @ViewChild("inventoryDeck", { static: true }) inventoryDeck!: InventoryComponent;
+  @ViewChild("inventoryCards", { static: true }) inventoryCards!: InventoryComponent;
 
   deck!: CardDeck;
+  editMode!: boolean;
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: any) { }
 
   ngOnInit(): void {
-    this.inventory.items = (this.data.items as Item[]).filter(x => x.type == ItemType.CARD);
-    this.deck = Object.assign({}, this.data.deck);
-    this.deck.item = Object.assign({}, this.deck.item);
+    this.inventoryCards.items = (this.data.items as Item[]).filter(x => x.type == ItemType.CARD);
+    this.editMode = !!this.data.deck;
+
+    console.log(this.inventoryCards.items[0]);
+
+    if(this.editMode) {
+      this.deck = Object.assign({}, this.data.deck);
+      this.deck.item = Object.assign({}, this.deck.item);
+    } else {
+      this.deck = new CardDeck();
+      this.deck.item = new Item();
+      this.inventoryDeck.items = [];
+    }
   }
 
+  filterCards() {
+    this.inventoryCards.items = this.inventoryCards.items.filter(x => !this.inventoryDeck.items.some(y => y.id == x.id));
+  }
+
+  moveToDeck(item: Item) {
+    this.inventoryDeck.items.push(item);
+    this.filterCards();
+  }
+
+  moveToCards(item: Item) {
+    let index = this.inventoryDeck.items.findIndex(x => x.id == item.id);
+    let card = this.inventoryDeck.items.splice(index, 1);
+    this.inventoryCards.items.push(card[0]);
+  }
 }

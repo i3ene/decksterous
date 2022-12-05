@@ -4,6 +4,6 @@
       <div>Items selected: {{ inventory?.selectedItems?.length }}</div>
       <button mat-flat-button color="primary" (click)="createDeck()">Create Deck</button>
     </div>
-    <app-inventory [selectable]="true" [userId]="id" (clickedEvent)="clicked($event)"></app-inventory>
+    <app-inventory [selectable]="true" [userId]="id" (itemClicked)="clicked($event)"></app-inventory>
   </mat-card>
 </div>
