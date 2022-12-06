@@ -33,7 +33,7 @@ export class SocketService {
     this.socket
       .fromEvent<any>('room_socket_list')
       .subscribe((collection: any) => this.membersHandler(collection));
-    this.socket.fromEvent<any>('room_list').subscribe((rooms: string[]) => this.roomsHandler(rooms));
+    this.socket.fromEvent<any>('room_list').subscribe((collection: any) => this.roomsHandler(collection));
   }
 
   /**
@@ -96,13 +96,14 @@ export class SocketService {
     }
   }
 
-  roomsHandler(rooms: string[]) {
+  roomsHandler(collection: any) {
+    console.log(collection);
+    const rooms = Object.keys(collection);
     const keys = Array.from(this.rooms.keys());
 
-    let outdated = rooms.filter(x => !keys.includes(x));
+    let outdated = keys.filter(x => !rooms.includes(x));
     for (const room of outdated) this.rooms.delete(room);
 
-    let updated =  keys.filter(x => !rooms.includes(x));
-    for (const room of updated) this.rooms.set(room, []);
+    for (const room of rooms) this.rooms.set(room, collection[room]);
   }
 }

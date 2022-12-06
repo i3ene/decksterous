@@ -10,7 +10,7 @@ export namespace RoomSocket {
    * @param socket Socket connection
    */
   export async function register(io: Server, socket: Socket) {
-    socket.emit(SocketAction.ROOM_LIST, await getRooms(io));
+    socket.emit(SocketAction.ROOM_LIST, await getRoomCollection(io));
 
     let previous: string | undefined = undefined;
     socket.on(SocketAction.ROOM_JOIN, (room) => {
@@ -25,22 +25,35 @@ export namespace RoomSocket {
    */
   export function listener(io: Server) {
     io.sockets.adapter.on('create-room', async (room) => {
-      io.emit(SocketAction.ROOM_LIST, await getRooms(io));
+      if (!room.startsWith(SocketAction.ROOM)) return;
+      io.emit(SocketAction.ROOM_LIST, await getRoomCollection(io));
       console.log(`room ${room} was created`);
     });
 
     io.sockets.adapter.on('delete-room', async (room) => {
-      io.emit(SocketAction.ROOM_LIST, await getRooms(io));
+      if (!room.startsWith(SocketAction.ROOM)) return;
+      io.emit(SocketAction.ROOM_LIST, await getRoomCollection(io));
       console.log(`room ${room} was deleted`);
     });
 
-    io.sockets.adapter.on('join-room', (room, id) => {
+    io.sockets.adapter.on('join-room', async (room, id) => {
+      if (!room.startsWith(SocketAction.ROOM)) return;
+      io.emit(SocketAction.ROOM_LIST, await getRoomCollection(io));
       console.log(`socket ${id} has joined room ${room}`);
     });
 
-    io.sockets.adapter.on('leave-room', (room, id) => {
+    io.sockets.adapter.on('leave-room', async (room, id) => {
+      if (!room.startsWith(SocketAction.ROOM)) return;
+      io.emit(SocketAction.ROOM_LIST, await getRoomCollection(io));
       console.log(`socket ${id} has left room ${room}`);
     });
+  }
+
+  export async function getRoomCollection(io: Server) {
+    const rooms = await getRooms(io);
+    const collection: any = {};
+    for (const room of rooms) collection[room] = await getSockets(io, room);
+    return collection;
   }
 
   /**

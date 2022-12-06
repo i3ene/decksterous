@@ -5,6 +5,8 @@ import { GameController } from "./game.controller";
 
 export namespace RoomController {
   export async function join(io: Server, socket: Socket, room: string, previous?: string) {
+    room = SocketAction.ROOM + room;
+
     if (previous) leave(io, socket, previous);
     if (room.startsWith(SocketAction.GAME)) return;
 
