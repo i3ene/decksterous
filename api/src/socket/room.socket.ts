@@ -1,6 +1,6 @@
 import { Server, Socket } from 'socket.io';
 import { RoomController } from '../controllers/room.controller';
-import { SocketEvent } from '../models/object/socket.model';
+import { SocketAction } from '../models/object/socket.model';
 
 export namespace RoomSocket {
 
@@ -10,10 +10,10 @@ export namespace RoomSocket {
    * @param socket Socket connection
    */
   export async function register(io: Server, socket: Socket) {
-    socket.emit(SocketEvent.ROOM_LIST, await getRooms(io));
+    socket.emit(SocketAction.ROOM_LIST, await getRooms(io));
 
     let previous: string | undefined = undefined;
-    socket.on(SocketEvent.ROOM_JOIN, (room) => {
+    socket.on(SocketAction.ROOM_JOIN, (room) => {
       RoomController.join(io, socket, room, previous);
       previous = room;
     });
@@ -25,12 +25,12 @@ export namespace RoomSocket {
    */
   export function listener(io: Server) {
     io.sockets.adapter.on('create-room', async (room) => {
-      io.emit(SocketEvent.ROOM_LIST, await getRooms(io));
+      io.emit(SocketAction.ROOM_LIST, await getRooms(io));
       console.log(`room ${room} was created`);
     });
 
     io.sockets.adapter.on('delete-room', async (room) => {
-      io.emit(SocketEvent.ROOM_LIST, await getRooms(io));
+      io.emit(SocketAction.ROOM_LIST, await getRooms(io));
       console.log(`room ${room} was deleted`);
     });
 

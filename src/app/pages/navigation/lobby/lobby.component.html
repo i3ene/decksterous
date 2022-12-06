@@ -4,18 +4,5 @@
     <span class="spacer"></span>
     <button mat-flat-button color="primary" (click)="createLobby()">New Lobby</button>
   </div>
-  <mat-card *ngFor="let room of socket.availableRooms" class="row">
-    <span>{{ room }}</span>
-    <span class="center">
-      <mat-icon>visibility</mat-icon>
-      <div>0</div>
-    </span>
-    <span class="spacer"></span>
-    <button mat-stroked-button>Join</button>
-  </mat-card>
-  <div *ngIf="!socket.availableRooms.length" class="row">
-    <span class="spacer"></span>
-    <span>No lobbies available...</span>
-    <span class="spacer"></span>
-  </div>
+  <app-lobby-list></app-lobby-list>
 </div>

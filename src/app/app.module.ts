@@ -50,6 +50,7 @@ import { HomePage } from './pages/navigation/home/home.component';
 import { LobbyPage } from './pages/navigation/lobby/lobby.component';
 import { DevGameComponent } from './pages/dev/dev-game/dev-game.component';
 import { NewLobbyDialogue } from './dialogues/new-lobby/new-lobby.component';
+import { LobbyListComponent } from './components/lobby-list/lobby-list.component';
 
 @NgModule({
   declarations: [
@@ -92,7 +93,8 @@ import { NewLobbyDialogue } from './dialogues/new-lobby/new-lobby.component';
     HomePage,
     LobbyPage,
     DevGameComponent,
-    NewLobbyDialogue
+    NewLobbyDialogue,
+    LobbyListComponent
   ],
   imports: [
     BrowserModule,

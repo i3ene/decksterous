@@ -2,22 +2,22 @@
   <div>
     <h2>Rooms</h2>
 
-    <ng-container *ngIf="!socket.subscriptions.get('room'); else gameInput">
+    <ng-container *ngIf="!socket.subscriptions.get(SocketKey.ROOM); else gameInput">
       <mat-form-field>
         <mat-label>Room Name</mat-label>
         <input matInput #roomNameInput />
       </mat-form-field>
       <br />
-      <button mat-stroked-button (click)="socket.joinRoom(roomNameInput.value)">Join</button>
+      <button mat-stroked-button (click)="socket.join(SocketKey.ROOM, roomNameInput.value)">Join</button>
     </ng-container>
     <ng-template #gameInput>
-      <button mat-stroked-button (click)="socket.leaveRoom()">Leave</button>
+      <button mat-stroked-button (click)="socket.leave(SocketKey.ROOM)">Leave</button>
 
-      <ng-container *ngIf="!socket.subscriptions.get('game'); else gameInputLeave">
-        <button mat-stroked-button (click)="socket.joinGame()">Join Game</button>
+      <ng-container *ngIf="!socket.subscriptions.get(SocketKey.GAME); else gameInputLeave">
+        <button mat-stroked-button (click)="socket.join(SocketKey.GAME)">Join Game</button>
       </ng-container>
       <ng-template #gameInputLeave>
-        <button mat-stroked-button (click)="socket.leaveGame()">Leave Game</button>
+        <button mat-stroked-button (click)="socket.leave(SocketKey.GAME)">Leave Game</button>
       </ng-template>
     </ng-template>
   </div>
@@ -54,16 +54,12 @@
         </table>
       </div>
     </mat-tab>
-    <mat-tab label="Available Rooms">
-      <div class="tab-content">
-        <pre><code>{{ socket.availableRooms | json }}</code></pre>
-      </div>
-    </mat-tab>
-    <mat-tab label="Room Members">
+    <mat-tab label="Rooms">
       <div class="tab-content">
         <table>
-          <tr *ngFor="let member of socket.roomMembers">
-            <td>{{ member }}</td>
+          <tr *ngFor="let room of socket.rooms | keyvalue">
+            <td>{{ room.key }}</td>
+            <td>{{ room.value }}</td>
           </tr>
         </table>
       </div>

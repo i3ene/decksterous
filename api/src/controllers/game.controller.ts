@@ -2,33 +2,33 @@ import { Server, Socket } from 'socket.io';
 import { RoomSocket } from '../socket/room.socket';
 import { Game } from '../models/object/game.object';
 import { GamePlayer } from '../models/object/game.model';
-import { GameActionEvent, SocketEvent } from '../models/object/socket.model';
+import { GameActionEvent, SocketAction } from '../models/object/socket.model';
 
 export namespace GameController {
   export const games: Map<string, Game> = new Map();
 
   export async function join(io: Server, socket: Socket, room: string) {
     socket.join(room);
-    io.to(room).emit(SocketEvent.GAME_SOCKET_JOIN, `User ${socket.user?.name} joined the game ${room}`);
+    io.to(room).emit(SocketAction.GAME_SOCKET_JOIN, `User ${socket.user?.name} joined the game ${room}`);
 
     joinEvents(io, socket, room);
   }
 
   export async function leave(io: Server, socket: Socket, room: string) {
-    io.to(room).emit(SocketEvent.GAME_SOCKET_LEAVE, `User ${socket.user?.name} left the game ${room}`);
+    io.to(room).emit(SocketAction.GAME_SOCKET_LEAVE, `User ${socket.user?.name} left the game ${room}`);
     socket.leave(room);
 
     leaveEvents(io, socket);
   }
 
   export function joinEvents(io: Server, socket: Socket, room: string) {
-    socket.on(SocketEvent.GAME_SERVER, async (event) => {
+    socket.on(SocketAction.GAME_SERVER, async (event) => {
       actionEvent(io, socket, room, event);
     });
   }
 
   export function leaveEvents(io: Server, socket: Socket) {
-    socket.removeAllListeners(SocketEvent.GAME_SERVER);
+    socket.removeAllListeners(SocketAction.GAME_SERVER);
   }
 
   export async function addPlayer(io: Server, socket: Socket, room: string) {
@@ -57,7 +57,7 @@ export namespace GameController {
         setReady(io, socket, room, event.state);
         break;
       case 'test':
-        socket.emit(SocketEvent.GAME_SOCKET, { players: games.get(room)?.players.map.size });
+        socket.emit(SocketAction.GAME_SOCKET, { players: games.get(room)?.players.map.size });
         break;
     }
   }
@@ -68,8 +68,8 @@ export namespace GameController {
     const player = game.players.get(socket.user?.id!);
     if (!player) return;
     const success = await player.selectDeck(deckId);
-    if (!success) socket.emit(SocketEvent.GAME_SOCKET, `Deck ${deckId} could not be selected!`);
-    else socket.emit(SocketEvent.GAME_SOCKET, `Deck ${deckId} selected`);
+    if (!success) socket.emit(SocketAction.GAME_SOCKET, `Deck ${deckId} could not be selected!`);
+    else socket.emit(SocketAction.GAME_SOCKET, `Deck ${deckId} selected`);
   }
 
   export async function setReady(io: Server, socket: Socket, room: string, state: boolean) {
@@ -78,7 +78,7 @@ export namespace GameController {
     const player = game.players.get(socket.user?.id!);
     if (!player) return;
     const success = player.setReady(state);
-    if (!success) socket.emit(SocketEvent.GAME_SOCKET, "Please select a deck first!");
-    else io.to(room).emit(SocketEvent.GAME_SOCKET, `${socket.user?.name} ${!state ? 'is not' : 'is'} ready`);
+    if (!success) socket.emit(SocketAction.GAME_SOCKET, "Please select a deck first!");
+    else io.to(room).emit(SocketAction.GAME_SOCKET, `${socket.user?.name} ${!state ? 'is not' : 'is'} ready`);
   }
 }

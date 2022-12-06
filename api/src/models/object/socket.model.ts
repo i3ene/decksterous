@@ -3,7 +3,7 @@ export enum RoomAction {
   LEAVE = 'left'
 }
 
-export class RoomActionEvent {
+export class RoomSocketEvent {
   socket: string;
   room: string;
   action: RoomAction;
@@ -27,7 +27,7 @@ export enum GameActionEvent {
   SET_READY = "set_ready"
 }
 
-export enum SocketEvent {
+export enum SocketAction {
   ROOM = "room_",
   ROOM_SERVER = 'room_event',
   ROOM_LIST = 'room_list',

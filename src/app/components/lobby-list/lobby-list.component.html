@@ -1,0 +1,14 @@
+<mat-card *ngFor="let room of socket.rooms | keyvalue" class="row">
+  <span>{{ room.key }}</span>
+  <span class="center">
+    <mat-icon>visibility</mat-icon>
+    <div>{{ room.value.length }}</div>
+  </span>
+  <span class="spacer"></span>
+  <button mat-stroked-button>Join</button>
+</mat-card>
+<div *ngIf="!socket.rooms.size" class="row">
+  <span class="spacer"></span>
+  <span>No lobbies available...</span>
+  <span class="spacer"></span>
+</div>
