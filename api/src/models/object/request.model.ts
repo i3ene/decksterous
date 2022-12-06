@@ -37,7 +37,7 @@ export interface RequestOptions {
      * Key(path) to access data from
      * (E.g. `req.data[key1][key2]...`.)
      */
-    key?: string | string[];
+    key?: string | string[] | any | any[];
     /**
      * Key(path) to save data to
      * (E.g. `req.data[key1][key2]...`.)

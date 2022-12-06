@@ -20,6 +20,7 @@ export class EditCardDeckDialogue implements OnInit {
     this.ref.beforeClosed().subscribe(x => {
       this.deck.items = this.inventoryDeck.items;
       this.deck.items.forEach(x => x.card = undefined);
+      this.deck.item!.cardDeck = undefined;
     });
   }
 

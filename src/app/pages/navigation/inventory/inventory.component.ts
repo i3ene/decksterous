@@ -46,13 +46,17 @@ export class UserInventoryPage implements OnInit {
         items: this.inventory.items
       },
     });
-    dialog.afterClosed().subscribe(x => {
+    dialog.afterClosed().subscribe(async (x) => {
       switch(x) {
         case 'Save':
-          // TODO
+          var deck = dialog.componentInstance.deck;
+          var payload = await this.request.put('/self/deck', deck);
+          this.inventory.realod();
           break;
         case 'Delete':
-          // TODO
+          var deck = dialog.componentInstance.deck;
+          var payload = await this.request.delete('/self/deck', deck);
+          this.inventory.realod();
           break;
       }
     });
@@ -68,7 +72,7 @@ export class UserInventoryPage implements OnInit {
       if (x != 'Save') return;
       const deck = dialog.componentInstance.deck;
       const payload = await this.request.post('/self/deck', deck);
-      console.log(payload);
+      this.inventory.realod();
     });
   }
 }
