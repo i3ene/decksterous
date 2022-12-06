@@ -42,4 +42,7 @@ export class CardDeck extends Model<CardDeck> {
 
   @BelongsToMany(() => InventoryItem, () => InventoryItemCardDeck)
   inventoryItems?: InventoryItem[];
+
+  @BelongsTo(() => Item)
+  item?: Item;
 }

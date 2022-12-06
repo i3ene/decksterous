@@ -68,6 +68,7 @@ export class UserInventoryPage implements OnInit {
       if (x != 'Save') return;
       const deck = dialog.componentInstance.deck;
       const payload = await this.request.post('/self/deck', deck);
+      console.log(payload);
     });
   }
 }

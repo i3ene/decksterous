@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { InventoryComponent } from 'src/app/components/inventory/inventory.component';
 import { CardDeck } from 'src/app/models/data/card.model';
 import { Item, ItemType } from 'src/app/models/data/item.model';
@@ -16,13 +16,16 @@ export class EditCardDeckDialogue implements OnInit {
   deck!: CardDeck;
   editMode!: boolean;
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: any) { }
+  constructor(@Inject(MAT_DIALOG_DATA) public data: any, public ref: MatDialogRef<EditCardDeckDialogue>,) {
+    this.ref.beforeClosed().subscribe(x => {
+      this.deck.items = this.inventoryDeck.items;
+      this.deck.items.forEach(x => x.card = undefined);
+    });
+  }
 
   ngOnInit(): void {
     this.inventoryCards.items = (this.data.items as Item[]).filter(x => x.type == ItemType.CARD);
     this.editMode = !!this.data.deck;
-
-    console.log(this.inventoryCards.items[0]);
 
     if(this.editMode) {
       this.deck = Object.assign({}, this.data.deck);

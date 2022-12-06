@@ -75,12 +75,11 @@ export namespace QueryUtil {
    */
   export function ids(model: { new (...args: any[]): any } & any, arr: any[]): any {
     const attr = model.primaryKeyAttributes[0];
-    const keys = arr.map((x) => {
-      return { [attr]: x };
-    });
     return {
       where: {
-        [Op.or]: keys,
+        [attr]: {
+          [Op.in]: arr
+        }
       },
     };
   }
@@ -91,7 +90,18 @@ export namespace QueryUtil {
    * @returns `true` if no keys are present
    */
   export function isEmpty(obj: any) {
+    if (typeof obj == "number") return false;
     if (!obj) return true;
     return Object.keys(obj).length === 0;
+  }
+
+  /**
+   * Check if object is empty or `0`
+   * @param obj Object to check
+   * @returns `true` if no keys are present or `0`
+   */
+  export function isEmptyOrZero(obj: any) {
+    if (typeof obj == "number" && obj == 0) return true;
+    return isEmpty(obj);
   }
 }
