@@ -49,6 +49,7 @@ import { EditCardDeckDialogue } from './dialogues/edit-card-deck/edit-card-deck.
 import { HomePage } from './pages/navigation/home/home.component';
 import { LobbyPage } from './pages/navigation/lobby/lobby.component';
 import { DevGameComponent } from './pages/dev/dev-game/dev-game.component';
+import { NewLobbyDialogue } from './dialogues/new-lobby/new-lobby.component';
 
 @NgModule({
   declarations: [
@@ -90,7 +91,8 @@ import { DevGameComponent } from './pages/dev/dev-game/dev-game.component';
     EditCardDeckDialogue,
     HomePage,
     LobbyPage,
-    DevGameComponent
+    DevGameComponent,
+    NewLobbyDialogue
   ],
   imports: [
     BrowserModule,
