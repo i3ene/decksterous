@@ -2,20 +2,22 @@ import { Server, Socket } from 'socket.io';
 import { RoomSocket } from '../socket/room.socket';
 import { Game } from '../models/object/game.object';
 import { GamePlayer } from '../models/object/game.model';
-import { GameActionEvent, SocketAction } from '../models/object/socket.model';
+import { GameActionEvent, RoomAction, RoomSocketEvent, SocketAction } from '../models/object/socket.model';
 
 export namespace GameController {
   export const games: Map<string, Game> = new Map();
 
   export async function join(io: Server, socket: Socket, room: string) {
     socket.join(room);
-    io.to(room).emit(SocketAction.GAME_SOCKET_JOIN, `User ${socket.user?.name} joined the game ${room}`);
+    socket.emit(SocketAction.GAME_SOCKET_JOIN, new RoomSocketEvent(socket.id, room, RoomAction.JOIN));
+    io.to(room).emit(SocketAction.GAME_SOCKET, new RoomSocketEvent(socket.id, room, RoomAction.JOIN))
 
     joinEvents(io, socket, room);
   }
 
   export async function leave(io: Server, socket: Socket, room: string) {
-    io.to(room).emit(SocketAction.GAME_SOCKET_LEAVE, `User ${socket.user?.name} left the game ${room}`);
+    socket.emit(SocketAction.GAME_SOCKET_LEAVE, new RoomSocketEvent(socket.id, room, RoomAction.LEAVE));
+    io.to(room).emit(SocketAction.GAME_SOCKET, new RoomSocketEvent(socket.id, room, RoomAction.LEAVE))
     socket.leave(room);
 
     leaveEvents(io, socket);
@@ -50,35 +52,9 @@ export namespace GameController {
     if (!event.action) return;
 
     switch (event.action) {
-      case GameActionEvent.SELECT_DECK:
-        selectDeck(io, socket, room, event.deckId);
-        break;
-      case GameActionEvent.SET_READY:
-        setReady(io, socket, room, event.state);
-        break;
       case 'test':
         socket.emit(SocketAction.GAME_SOCKET, { players: games.get(room)?.players.map.size });
         break;
     }
-  }
-
-  export async function selectDeck(io: Server, socket: Socket, room: string, deckId: number) {
-    const game = games.get(room);
-    if (!game) return;
-    const player = game.players.get(socket.user?.id!);
-    if (!player) return;
-    const success = await player.selectDeck(deckId);
-    if (!success) socket.emit(SocketAction.GAME_SOCKET, `Deck ${deckId} could not be selected!`);
-    else socket.emit(SocketAction.GAME_SOCKET, `Deck ${deckId} selected`);
-  }
-
-  export async function setReady(io: Server, socket: Socket, room: string, state: boolean) {
-    const game = games.get(room);
-    if (!game) return;
-    const player = game.players.get(socket.user?.id!);
-    if (!player) return;
-    const success = player.setReady(state);
-    if (!success) socket.emit(SocketAction.GAME_SOCKET, "Please select a deck first!");
-    else io.to(room).emit(SocketAction.GAME_SOCKET, `${socket.user?.name} ${!state ? 'is not' : 'is'} ready`);
   }
 }

@@ -10,19 +10,19 @@ export namespace RoomController {
 
     socket.join(RoomSocket.realRoomName(room));
     socket.emit(SocketAction.ROOM_SOCKET_JOIN, new RoomSocketEvent(socket.id, room, RoomAction.JOIN));
-    //io.to(room).emit();
+    io.to(RoomSocket.realRoomName(room)).emit(SocketAction.ROOM_SOCKET, new RoomSocketEvent(socket.id, room, RoomAction.JOIN));
     var list = await RoomSocket.getSockets(io, room);
-    io.to(room).emit(SocketAction.ROOM_SOCKET_LIST, { [room]: list });
+    io.to(RoomSocket.realRoomName(room)).emit(SocketAction.ROOM_SOCKET_LIST, { [room]: list });
 
     joinEvents(io, socket, room);
   }
 
   export async function leave(io: Server, socket: Socket, room: string) {
-    //io.to(room).emit();
+    io.to(RoomSocket.realRoomName(room)).emit(SocketAction.ROOM_SOCKET, new RoomSocketEvent(socket.id, room, RoomAction.LEAVE));
     socket.emit(SocketAction.ROOM_SOCKET_LEAVE, new RoomSocketEvent(socket.id, room, RoomAction.LEAVE));
     socket.leave(RoomSocket.realRoomName(room));
     var list = await RoomSocket.getSockets(io, room);
-    io.to(room).emit(SocketAction.ROOM_SOCKET_LIST, { [room]: list });
+    io.to(RoomSocket.realRoomName(room)).emit(SocketAction.ROOM_SOCKET_LIST, { [room]: list });
 
     leaveEvents(io, socket);
   }
@@ -30,7 +30,7 @@ export namespace RoomController {
   export function joinEvents(io: Server, socket: Socket, room: string) {
     socket.on(SocketAction.ROOM_LEAVE, (event) => leave(io, socket, room));
     socket.on(SocketAction.ROOM_SERVER, async (event) => {
-      io.to(room).emit(SocketAction.ROOM_SOCKET, event);
+      io.to(RoomSocket.realRoomName(room)).emit(SocketAction.ROOM_SOCKET, event);
       actionEvent(io, socket, room, event);
     });
     socket.on(SocketAction.GAME_JOIN, async (event) => {

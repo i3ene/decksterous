@@ -5,7 +5,7 @@ import { Card } from '../data/card.model';
 import { CardDeck } from '../data/cardDeck.model';
 import { User } from '../data/user.model';
 import { Game } from './game.object';
-import { GameAction } from './socket.model';
+import { GameAction, GameActionEvent, SocketAction } from './socket.model';
 
 export enum GameEvent {
   START = 'start',
@@ -44,7 +44,15 @@ export class GamePlayer {
   /**
    * Socket connection of player
    */
-  socket: Socket;
+  _socket!: Socket;
+  get socket(): Socket {
+    return this._socket;
+  }
+  set socket(value: Socket) {
+    if (this._socket) this._socket.removeListener(SocketAction.GAME_SERVER, this.handleEvent);
+    this._socket = value;
+    value.on(SocketAction.GAME_SERVER, this.handleEvent.bind(this));
+  }
 
   /**
    * User object of player
@@ -92,6 +100,17 @@ export class GamePlayer {
     this.deck = [];
   }
 
+  handleEvent(event: any) {
+    switch (event.action) {
+      case GameActionEvent.SELECT_DECK:
+        this.selectDeck(event.deckId);
+        break;
+      case GameActionEvent.SET_READY:
+        this.setReady(event.state);
+        break;
+    }
+  }
+
   /**
    * Set ready state of player.
    * (If deck is empty, it will not set the ready state)
@@ -99,7 +118,10 @@ export class GamePlayer {
    * @returns `false` if deck is empty when setting ready
    */
   setReady(state: boolean): boolean {
-    if (state && this.deck.length == 0) return false;
+    if (state && this.deck.length == 0) {
+      this.socket.emit(SocketAction.GAME_SOCKET, "Please select a deck first!");
+      return false;
+    }
     this.isReady = state;
     if (state) this.event.emit(GameAction.PLAYER, new GamePlayerEvent(this, GameAction.PLAYER_READY)); //TODO: emit player is ready
     return true;
@@ -108,14 +130,21 @@ export class GamePlayer {
   /**
    * Select a deck.
    * If deck does not exist or player is ready, it will not change deck.
-   * @param deckId Deck id 
+   * @param deckId Deck id
    * @returns `true` if deck was successfully loaded.
    */
   async selectDeck(deckId: number): Promise<boolean> {
-    if (this.isReady) return false;
+    if (this.isReady) {
+      this.socket.emit(SocketAction.GAME_SOCKET, `Deck cannot not be changed when ready!`);
+      return false;
+    }
     const deck: CardDeck | null = await CardDeck.scope(['gameDeck']).findByPk(deckId);
-    if (!deck || !deck.inventoryItems) return false;
+    if (!deck || !deck.inventoryItems) {
+      this.socket.emit(SocketAction.GAME_SOCKET, `Deck ${deckId} could not be selected or was empty!`);
+      return false;
+    }
     this.deck = deck.inventoryItems.map(x => x.item?.card!);
+    this.socket.emit(SocketAction.GAME_SOCKET, `Deck ${deckId} selected.`);
     return true;
   }
 
@@ -255,7 +284,7 @@ export class GamePlayerCollection {
   remove(player: number | GamePlayer): void {
     if (typeof player == 'number') this.map.delete(player);
     else this.map.delete(this.find(player)!);
-    
+
     const players = [];
     for(const entry of this.map.values()) players.push(entry);
     this.map = new Map();
