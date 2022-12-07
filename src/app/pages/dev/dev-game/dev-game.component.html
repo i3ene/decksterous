@@ -2,7 +2,7 @@
   <mat-form-field>
     <mat-label>Deck ID</mat-label>
     <input #deckId matInput type="number"/>
-    <button mat-icon-button matSuffix (click)="selectDeck(deckId.value)">
+    <button mat-icon-button matSuffix (click)="game.selectDeck(deckId.value)">
       <mat-icon>check</mat-icon>
     </button>
   </mat-form-field>
@@ -12,7 +12,7 @@
   <mat-form-field>
     <input [hidden]="true" matInput>
     <mat-checkbox #ready>Ready</mat-checkbox>
-    <button mat-icon-button matSuffix (click)="setReady(ready.checked)">
+    <button mat-icon-button matSuffix (click)="game.setReady(ready.checked)">
       <mat-icon>check</mat-icon>
     </button>
   </mat-form-field>

@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { SocketSubscriptionKey } from 'src/app/models/object/service.model';
+import { GameService } from 'src/app/services/game.service';
+import { SocketService } from 'src/app/services/request/socket.service';
 
 @Component({
   selector: 'app-lobby-game',
@@ -7,6 +10,10 @@ import { Component, OnInit } from '@angular/core';
 })
 export class LobbyGameComponent {
 
-  constructor() { }
+  constructor(public game: GameService, public socket: SocketService) { }
+
+  get SocketKey() {
+    return SocketSubscriptionKey;
+  }
 
 }

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { GameService } from 'src/app/services/game.service';
 import { SocketService } from 'src/app/services/request/socket.service';
 
 @Component({
@@ -8,23 +9,7 @@ import { SocketService } from 'src/app/services/request/socket.service';
 })
 export class DevGameComponent {
 
-  event: string = 'game_event';
 
-  constructor(public socket: SocketService) { }
-
-  selectDeck(id: number | string) {
-    id = typeof id == 'string' ? Number(id) : id;
-    this.socket.emitEvent(this.event, {
-      action: "select_deck",
-      deckId: id
-    });
-  }
-
-  setReady(state: boolean) {
-    this.socket.emitEvent(this.event, {
-      action: "set_ready",
-      state: state
-    });
-  }
+  constructor(public game: GameService) { }
 
 }

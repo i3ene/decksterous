@@ -1,7 +1,34 @@
 <div class="container">
-  <div>HEADER</div>
-  <div>
-
+  <div class="header">
+    <button mat-icon-button (click)="socket.leave(SocketKey.GAME)">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <h3>Game Lobby</h3>
   </div>
-  <div>ACTIONS</div>
+  <table>
+    <tr>
+      <td>
+        <mat-form-field>
+          <mat-label>Deck ID</mat-label>
+          <input #deckId matInput type="number" />
+          <button mat-icon-button matSuffix (click)="game.selectDeck(deckId.value)">
+            <mat-icon>check</mat-icon>
+          </button>
+        </mat-form-field>
+      </td>
+      <td>
+        More...
+      </td>
+    </tr>
+    <tr>
+      <td>
+        More...
+      </td>
+    </tr>
+  </table>
+  <div class="actions">
+    <span class="spacer"></span>
+    <mat-checkbox #ready class="hidden">Ready</mat-checkbox>
+    <button mat-flat-button [color]="ready.checked ? 'accent' : 'primary'" (click)="ready.toggle(); game.setReady(ready.checked)">{{ ready.checked ? "Not Ready" : "Ready" }}</button>
+  </div>
 </div>
