@@ -5,7 +5,7 @@
     <div>{{ room.value.length }}</div>
   </span>
   <span class="spacer"></span>
-  <button mat-stroked-button>Join</button>
+  <button mat-stroked-button (click)="socket.join(SocketKey.ROOM, room.key)">Join</button>
 </mat-card>
 <div *ngIf="!socket.rooms.size" class="row">
   <span class="spacer"></span>

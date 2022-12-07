@@ -18,7 +18,6 @@ export class SocketService {
    */
   events: { timestamp: Date; room: string; event: any }[] = [];
 
-
   subscriptions: Map<SocketSubscriptionKey, Subscription> = new Map();
 
   names: Map<SocketSubscriptionKey, string> = new Map();
@@ -26,13 +25,19 @@ export class SocketService {
   rooms: Map<string, any> = new Map();
 
   constructor(public socket: SocketConnection) {
-    this.socket.fromEvent<any>('game_socket_join').subscribe((event: RoomSocketEvent) => this.joinHandler(SocketSubscriptionKey.GAME, event));
-    this.socket.fromEvent<any>('game_socket_leave').subscribe((event: RoomSocketEvent) => this.leaveHandler(SocketSubscriptionKey.GAME, event));
-    this.socket.fromEvent<any>('room_socket_join').subscribe((event: RoomSocketEvent) => this.joinHandler(SocketSubscriptionKey.ROOM, event));
-    this.socket.fromEvent<any>('room_socket_leave').subscribe((event: RoomSocketEvent) => this.leaveHandler(SocketSubscriptionKey.ROOM, event));
     this.socket
-      .fromEvent<any>('room_socket_list')
-      .subscribe((collection: any) => this.membersHandler(collection));
+      .fromEvent<any>('game_socket_join')
+      .subscribe((event: RoomSocketEvent) => this.joinHandler(SocketSubscriptionKey.GAME, event));
+    this.socket
+      .fromEvent<any>('game_socket_leave')
+      .subscribe((event: RoomSocketEvent) => this.leaveHandler(SocketSubscriptionKey.GAME, event));
+    this.socket
+      .fromEvent<any>('room_socket_join')
+      .subscribe((event: RoomSocketEvent) => this.joinHandler(SocketSubscriptionKey.ROOM, event));
+    this.socket
+      .fromEvent<any>('room_socket_leave')
+      .subscribe((event: RoomSocketEvent) => this.leaveHandler(SocketSubscriptionKey.ROOM, event));
+    this.socket.fromEvent<any>('room_socket_list').subscribe((collection: any) => this.membersHandler(collection));
     this.socket.fromEvent<any>('room_list').subscribe((collection: any) => this.roomsHandler(collection));
   }
 
@@ -62,6 +67,9 @@ export class SocketService {
     this.events.push({ timestamp: new Date(), room: room, event: event });
   }
 
+  isIn(key: SocketSubscriptionKey): boolean {
+    return !!this.subscriptions.get(key);
+  }
 
   join(key: SocketSubscriptionKey, room?: string) {
     this.socket.emit(key + '_join', room);
@@ -70,7 +78,6 @@ export class SocketService {
   leave(key: SocketSubscriptionKey) {
     this.socket.emit(key + '_leave');
   }
-
 
   createSubscription(key: SocketSubscriptionKey) {
     return this.socket.fromEvent<any>(key + '_socket_event').subscribe((event) => this.addEvent(key, event));
@@ -97,11 +104,10 @@ export class SocketService {
   }
 
   roomsHandler(collection: any) {
-    console.log(collection);
     const rooms = Object.keys(collection);
     const keys = Array.from(this.rooms.keys());
 
-    let outdated = keys.filter(x => !rooms.includes(x));
+    let outdated = keys.filter((x) => !rooms.includes(x));
     for (const room of outdated) this.rooms.delete(room);
 
     for (const room of rooms) this.rooms.set(room, collection[room]);

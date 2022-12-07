@@ -63,7 +63,7 @@ export namespace RoomSocket {
    */
   export async function getRooms(io: Server) {
     var list = await getSockets(io);
-    return [...io.sockets.adapter.rooms].map(([entry, set]) => entry).filter((x) => !list.includes(x)).filter((x) => !x.startsWith('game_'));
+    return [...io.sockets.adapter.rooms].map(([entry, set]) => entry).filter((x) => !list.includes(x)).filter((x) => x.startsWith(SocketAction.ROOM)).map((x) => x.substring(SocketAction.ROOM.length));
   }
 
   /**
@@ -73,7 +73,13 @@ export namespace RoomSocket {
    * @returns Promise Array of socket IDs
    */
   export async function getSockets(io: Server, room?: string) {
-    if (room) return (await io.in(room).fetchSockets()).map((x) => x.id);
+    if (room) return (await io.in(realRoomName(room)).fetchSockets()).map((x) => x.id);
     else return (await io.fetchSockets()).map((x) => x.id);
+  }
+
+  export function realRoomName(room: string): string {
+    let temp = room;
+    if (!temp.startsWith(SocketAction.ROOM)) temp = SocketAction.ROOM + temp;
+    return temp;
   }
 }

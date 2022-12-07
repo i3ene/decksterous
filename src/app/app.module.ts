@@ -51,6 +51,9 @@ import { LobbyPage } from './pages/navigation/lobby/lobby.component';
 import { DevGameComponent } from './pages/dev/dev-game/dev-game.component';
 import { NewLobbyDialogue } from './dialogues/new-lobby/new-lobby.component';
 import { LobbyListComponent } from './components/lobby-list/lobby-list.component';
+import { LobbyActionsComponent } from './components/lobby-actions/lobby-actions.component';
+import { LobbyRoomComponent } from './components/lobby-room/lobby-room.component';
+import { LobbyGameComponent } from './components/lobby-game/lobby-game.component';
 
 @NgModule({
   declarations: [
@@ -94,7 +97,10 @@ import { LobbyListComponent } from './components/lobby-list/lobby-list.component
     LobbyPage,
     DevGameComponent,
     NewLobbyDialogue,
-    LobbyListComponent
+    LobbyListComponent,
+    LobbyActionsComponent,
+    LobbyRoomComponent,
+    LobbyGameComponent
   ],
   imports: [
     BrowserModule,

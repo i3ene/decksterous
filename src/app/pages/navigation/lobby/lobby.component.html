@@ -1,8 +1,14 @@
 <div class="container">
-  <div class="row">
-    <h3>Lobbies:</h3>
-    <span class="spacer"></span>
-    <button mat-flat-button color="primary" (click)="createLobby()">New Lobby</button>
-  </div>
-  <app-lobby-list></app-lobby-list>
+  <ng-container *ngIf="socket.isIn(SocketKey.ROOM) else list">
+    <ng-container *ngIf="socket.isIn(SocketKey.GAME) else lobby">
+      <app-lobby-game></app-lobby-game>
+    </ng-container>
+    <ng-template #lobby>
+      <app-lobby-room [name]="socket.names.get(SocketKey.ROOM)"></app-lobby-room>
+    </ng-template>
+  </ng-container>
+  <ng-template #list>
+    <app-lobby-actions></app-lobby-actions>
+    <app-lobby-list></app-lobby-list>
+  </ng-template>
 </div>

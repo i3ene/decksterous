@@ -1,0 +1,17 @@
+<div class="container">
+  <div class="header">
+    <button mat-icon-button (click)="socket.leave(SocketKey.ROOM)">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <h3>{{ name }}</h3>
+  </div>
+  <div>
+    Information...
+  </div>
+  <div class="actions">
+    <span class="spacer"></span>
+    <button mat-flat-button color="primary" (click)="socket.join(SocketKey.GAME, name)">
+      Join Game
+    </button>
+  </div>
+</div>

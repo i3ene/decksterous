@@ -5,12 +5,10 @@ import { GameController } from "./game.controller";
 
 export namespace RoomController {
   export async function join(io: Server, socket: Socket, room: string, previous?: string) {
-    room = SocketAction.ROOM + room;
-
     if (previous) leave(io, socket, previous);
     if (room.startsWith(SocketAction.GAME)) return;
 
-    socket.join(room);
+    socket.join(RoomSocket.realRoomName(room));
     socket.emit(SocketAction.ROOM_SOCKET_JOIN, new RoomSocketEvent(socket.id, room, RoomAction.JOIN));
     //io.to(room).emit();
     var list = await RoomSocket.getSockets(io, room);
@@ -21,12 +19,12 @@ export namespace RoomController {
 
   export async function leave(io: Server, socket: Socket, room: string) {
     //io.to(room).emit();
-    socket.emit(SocketAction.ROOM_LEAVE, new RoomSocketEvent(socket.id, room, RoomAction.LEAVE));
-    socket.leave(room);
+    socket.emit(SocketAction.ROOM_SOCKET_LEAVE, new RoomSocketEvent(socket.id, room, RoomAction.LEAVE));
+    socket.leave(RoomSocket.realRoomName(room));
     var list = await RoomSocket.getSockets(io, room);
     io.to(room).emit(SocketAction.ROOM_SOCKET_LIST, { [room]: list });
 
-    leaveEvents(io, socket);    
+    leaveEvents(io, socket);
   }
 
   export function joinEvents(io: Server, socket: Socket, room: string) {
@@ -55,4 +53,6 @@ export namespace RoomController {
 
     // TODO: Handle actions
   }
+
+
 }
