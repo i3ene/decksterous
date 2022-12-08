@@ -2,7 +2,7 @@ import EventEmitter from "events";
 import { BroadcastOperator } from "socket.io";
 import { DefaultEventsMap } from "socket.io/dist/typed-events";
 import { GameEvent, GameEvents, GameEventState, GameLogicState, GamePlayer, GamePlayerEvent, GamePlayerCollection, GameRules } from "./game.model";
-import { GameAction } from "./socket.model";
+import { GameAction, SocketAction } from "./socket.model";
 
 export class Game {
   /**
@@ -129,6 +129,7 @@ export class GameLogic {
   playerEventHandler(event: GamePlayerEvent) {
     switch(event.action) {
       case GameAction.PLAYER_READY:
+        this.game.room.emit(SocketAction.GAME_SOCKET, `${event.player?.user.name} is ${event.args ? 'ready' : 'not ready'}.`);
         if (!this.game.players.areReady()) break;
         this.active.state = GameEventState.AFTER;
         this.game.execute();

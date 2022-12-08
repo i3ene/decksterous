@@ -118,12 +118,13 @@ export class GamePlayer {
    * @returns `false` if deck is empty when setting ready
    */
   setReady(state: boolean): boolean {
+    if (this.isReady == state) return true;
     if (state && this.deck.length == 0) {
       this.socket.emit(SocketAction.GAME_SOCKET, "Please select a deck first!");
       return false;
     }
     this.isReady = state;
-    if (state) this.event.emit(GameAction.PLAYER, new GamePlayerEvent(this, GameAction.PLAYER_READY)); //TODO: emit player is ready
+    this.event.emit(GameAction.PLAYER, new GamePlayerEvent(this, GameAction.PLAYER_READY, state));
     return true;
   }
 
