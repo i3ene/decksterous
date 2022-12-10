@@ -1,1 +1,7 @@
-<p>home works!</p>
+<div class="grid">
+    <mat-card *ngFor="let item of items" [class]="item.name" [routerLink]="item.link">
+        <mat-icon>
+            {{ item.icon }}
+        </mat-icon>
+    </mat-card>
+</div>
