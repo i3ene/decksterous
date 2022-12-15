@@ -143,6 +143,8 @@ export class GameLogic {
   attack(): void {
     const next = this.game.players.next;
     const current = this.game.players.current;
+    if (!current) return;
+    // TODO: Fix current.field undefined error
     for (const [index, card] of current.field) {
       next.attackCard(card, index);
     }
