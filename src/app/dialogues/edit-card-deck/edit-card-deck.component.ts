@@ -25,7 +25,8 @@ export class EditCardDeckDialogue implements OnInit {
   }
 
   ngOnInit(): void {
-    this.inventoryCards.items = (this.data.items as Item[]).filter(x => x.type == ItemType.CARD);
+    this.inventoryCards.items = (this.data.items as Item[]).filter(x => x.type == ItemType.CARD).map(x => Object.assign({}, x));
+    console.log(this.inventoryCards.items);
     this.editMode = !!this.data.deck;
 
     if(this.editMode) {
