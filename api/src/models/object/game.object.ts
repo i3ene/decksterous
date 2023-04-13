@@ -30,119 +30,112 @@ export class Game {
    */
   fieldSize: number = 5;
 
-  /**
-   * State/Logic machine for game functionallity
-   */
-  logic: GameLogic;
-
-  constructor(room: BroadcastOperator<DefaultEventsMap, any>) {
-    this.players = new GamePlayerCollection(this);
-    this.logic = new GameLogic(this);
-    this.room = room;
-    // TODO: Combine rules with default rules
-    this.execute();
-  }
-
-  execute(): void {
-    let func = "this.";
-    func += this.logic.active.state;
-    func += this.logic.active.event.charAt(0).toUpperCase() + this.logic.active.event.slice(1);
-    func += "();";
-    eval(func);
-  }
-
-  beforeStart(): void {
-    console.log("BeforeStart");
-    this.events[GameEvent.START].emit(GameEventState.BEFORE, null);
-
-    this.logic.active.state = GameEventState.AT;
-  }
-
-  atStart(): void {
-    console.log("AtStart");
-    this.events[GameEvent.START].emit(GameEventState.AT, null);
-
-    // Logic handles step
-  }
-
-  afterStart(): void {
-    console.log("AfterStart");
-    this.events[GameEvent.START].emit(GameEventState.AFTER, null);
-
-    this.logic.active.state = GameEventState.BEFORE;
-    this.logic.active.event = GameEvent.TURN;
-  }
-
-  beforeTurn(): void {
-    console.log("BeforeTurn");
-    this.events[GameEvent.TURN].emit(GameEventState.BEFORE, null);
-
-    this.logic.active.state = GameEventState.AT;
-  }
-
-  atTurn(): void {
-    console.log("AtTurn");
-    this.events[GameEvent.TURN].emit(GameEventState.AT, null);
-
-    // Logic handles step
-  }
-
-  afterTurn(): void {
-    console.log("AfterTurn");
-    this.logic.attack();
-    this.players.turn();
-    this.events[GameEvent.TURN].emit(GameEventState.AFTER, null);
-  }
-
-  beforeEnd(): void {
-    console.log("BeforeEnd");
-    this.events[GameEvent.END].emit(GameEventState.BEFORE, null);
-  }
-
-  atEnd(): void {
-    console.log("AtEnd");
-    this.events[GameEvent.END].emit(GameEventState.AT, null);
-  }
-
-  afterEnd(): void {
-    console.log("AfterEnd");
-    this.events[GameEvent.END].emit(GameEventState.AFTER, null);
-  }
-}
-
-export class GameLogic {
-  /**
-   * Game object
-   */
-  game: Game;
 
   /**
    * Current logic state
    */
   active: GameLogicState = new GameLogicState();
 
-  constructor(ref: Game) {
-    this.game = ref;
-    this.game.players.events.addListener(GameAction.PLAYER, this.playerEventHandler.bind(this));
+  constructor(room: BroadcastOperator<DefaultEventsMap, any>) {
+    this.players = new GamePlayerCollection(this);
+    this.room = room;
+    // TODO: Combine rules with default rules
+    //this.execute();
+
+    this.registerEvents();
+
+    this.events[GameEvent.START].emit(GameEventState.BEFORE, null);
+  }
+
+  registerEvents() {
+    this.events[GameEvent.START].on(GameEventState.BEFORE, this.beforeStart.bind(this));
+    this.events[GameEvent.START].on(GameEventState.AT, this.atStart.bind(this));
+    this.events[GameEvent.START].on(GameEventState.AFTER, this.afterStart.bind(this));
+    this.events[GameEvent.TURN].on(GameEventState.BEFORE, this.beforeTurn.bind(this));
+    this.events[GameEvent.TURN].on(GameEventState.AT, this.atTurn.bind(this));
+    this.events[GameEvent.TURN].on(GameEventState.AFTER, this.afterTurn.bind(this));
+    this.events[GameEvent.END].on(GameEventState.BEFORE, this.beforeEnd.bind(this));
+    this.events[GameEvent.END].on(GameEventState.AT, this.atEnd.bind(this));
+    this.events[GameEvent.END].on(GameEventState.AFTER, this.afterEnd.bind(this));
+
+    this.players.events.addListener(GameAction.PLAYER, this.playerEventHandler.bind(this));
   }
 
   playerEventHandler(event: GamePlayerEvent) {
     switch(event.action) {
       case GameAction.PLAYER_READY:
-        this.game.room.emit(SocketAction.GAME_SOCKET, `${event.player?.user.name} is ${event.args ? 'ready' : 'not ready'}.`);
-        if (!this.game.players.areReady()) break;
-        this.active.state = GameEventState.AFTER;
-        this.game.execute();
+        this.room.emit(SocketAction.GAME_SOCKET, `${event.player?.user.name} is ${event.args ? 'ready' : 'not ready'}.`);
+        if (!this.players.areReady()) break;
+        //this.active.state = GameEventState.AFTER;
+        this.events[GameEvent.START].emit(GameEventState.AFTER, null);
+        //this.game.execute();
         break;
+      // case GameAction.PLAYER_TURN_END:
+      //   // TODO: Logic (check if it is correct player)
+      //   this.events[GameEvent.TURN].emit(GameEventState.AFTER, null);
+      //   break;
     }
   }
+
+
+  // execute(): void {
+  //   let func = "this.";
+  //   func += this.logic.active.state;
+  //   func += this.logic.active.event.charAt(0).toUpperCase() + this.logic.active.event.slice(1);
+  //   func += "();";
+  //   eval(func);
+  // }
+
+  beforeStart(event: any): void {
+    console.log("BeforeStart");
+    this.events[GameEvent.START].emit(GameEventState.AT, null);
+  }
+
+  atStart(event: any): void {
+    console.log("AtStart");
+  }
+
+  afterStart(event: any): void {
+    console.log("AfterStart");
+    this.events[GameEvent.TURN].emit(GameEventState.BEFORE, null);
+  }
+
+  beforeTurn(event: any): void {
+    console.log("BeforeTurn");
+    this.events[GameEvent.TURN].emit(GameEventState.AT, null);
+  }
+
+  atTurn(event: any): void {
+    console.log("AtTurn");
+  }
+
+  afterTurn(event: any): void {
+    console.log("AfterTurn");
+    this.attack();
+    this.players.turn();
+  }
+
+  beforeEnd(event: any): void {
+    console.log("BeforeEnd");
+  }
+
+  atEnd(event: any): void {
+    console.log("AtEnd");
+  }
+
+  afterEnd(event: any): void {
+    console.log("AfterEnd");
+  }
+
+
+  /** ACTIONS **/
 
   /**
    * Do attack turn
    */
   attack(): void {
-    const next = this.game.players.next;
-    const current = this.game.players.current;
+    const next = this.players.next;
+    const current = this.players.current;
     if (!current) return;
     // TODO: Fix current.field undefined error
     for (const [index, card] of current.field) {
