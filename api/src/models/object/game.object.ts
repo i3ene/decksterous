@@ -1,14 +1,13 @@
-import EventEmitter from "events";
-import { BroadcastOperator } from "socket.io";
-import { DefaultEventsMap } from "socket.io/dist/typed-events";
-import { GameEvent, GameEvents, GameEventState, GameLogicState, GamePlayer, GamePlayerEvent, GamePlayerCollection, GameRules } from "./game.model";
-import { GameAction, SocketAction } from "./socket.model";
+import { BroadcastOperator } from 'socket.io';
+import { DefaultEventsMap } from 'socket.io/dist/typed-events';
+import { GameEvent, GameEvents, GameEventState, GamePlayerCollection, GamePlayerEvent, GameRules } from './game.model';
+import { GameAction, GameActionEvent, SocketAction } from './socket.model';
 
 export class Game {
   /**
    * Room connection of server
    */
-   room: BroadcastOperator<DefaultEventsMap, any>;
+  room: BroadcastOperator<DefaultEventsMap, any>;
 
   /**
    * Rules for this game
@@ -30,17 +29,15 @@ export class Game {
    */
   fieldSize: number = 5;
 
-
   /**
-   * Current logic state
+   * If the game is playing
    */
-  active: GameLogicState = new GameLogicState();
+  active: boolean = false;
 
   constructor(room: BroadcastOperator<DefaultEventsMap, any>) {
     this.players = new GamePlayerCollection(this);
     this.room = room;
     // TODO: Combine rules with default rules
-    //this.execute();
 
     this.registerEvents();
 
@@ -62,71 +59,85 @@ export class Game {
   }
 
   playerEventHandler(event: GamePlayerEvent) {
-    switch(event.action) {
+    // Handle global player events
+    switch (event.action) {
       case GameAction.PLAYER_READY:
         this.room.emit(SocketAction.GAME_SOCKET, `${event.player?.user.name} is ${event.args ? 'ready' : 'not ready'}.`);
         if (!this.players.areReady()) break;
-        //this.active.state = GameEventState.AFTER;
         this.events[GameEvent.START].emit(GameEventState.AFTER, null);
-        //this.game.execute();
         break;
-      // case GameAction.PLAYER_TURN_END:
-      //   // TODO: Logic (check if it is correct player)
-      //   this.events[GameEvent.TURN].emit(GameEventState.AFTER, null);
-      //   break;
     }
   }
 
+  playerActionEventHandler(event: GamePlayerEvent) {
+    // Check if game is not running
+    if (!this.active) {
+      // Handle basic events
+      switch (event.action) {
+        case GameActionEvent.SELECT_DECK:
+          event.player.selectDeck(event.args.deckId);
+          break;
+        case GameActionEvent.SET_READY:
+          event.player.setReady(event.args.state);
+          break;
+      }
+    }
 
-  // execute(): void {
-  //   let func = "this.";
-  //   func += this.logic.active.state;
-  //   func += this.logic.active.event.charAt(0).toUpperCase() + this.logic.active.event.slice(1);
-  //   func += "();";
-  //   eval(func);
-  // }
+    // Check if player action is from current players turn
+    if (this.players.current != event.player) {
+      // Handle turn based events
+      switch (event.action) {
+        case GameActionEvent.DRAW_CARD:
+          event.player.drawCards(event.args.amount);
+          break;
+        case GameActionEvent.PLACE_CARD:
+          event.player.placeCard(event.args.card, event.args.field);
+          break;
+      }
+    }
+  }
 
   beforeStart(event: any): void {
-    console.log("BeforeStart");
+    console.log('BeforeStart');
     this.events[GameEvent.START].emit(GameEventState.AT, null);
   }
 
   atStart(event: any): void {
-    console.log("AtStart");
+    console.log('AtStart');
   }
 
   afterStart(event: any): void {
-    console.log("AfterStart");
+    console.log('AfterStart');
+    this.active = true;
     this.events[GameEvent.TURN].emit(GameEventState.BEFORE, null);
   }
 
   beforeTurn(event: any): void {
-    console.log("BeforeTurn");
+    console.log('BeforeTurn');
     this.events[GameEvent.TURN].emit(GameEventState.AT, null);
   }
 
   atTurn(event: any): void {
-    console.log("AtTurn");
+    console.log('AtTurn');
   }
 
   afterTurn(event: any): void {
-    console.log("AfterTurn");
+    console.log('AfterTurn');
     this.attack();
     this.players.turn();
   }
 
   beforeEnd(event: any): void {
-    console.log("BeforeEnd");
+    console.log('BeforeEnd');
   }
 
   atEnd(event: any): void {
-    console.log("AtEnd");
+    console.log('AtEnd');
   }
 
   afterEnd(event: any): void {
-    console.log("AfterEnd");
+    console.log('AfterEnd');
   }
-
 
   /** ACTIONS **/
 
@@ -141,7 +152,5 @@ export class Game {
     for (const [index, card] of current.field) {
       next.attackCard(card, index);
     }
-
-    this.active.state = GameEventState.AFTER;
   }
 }

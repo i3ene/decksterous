@@ -1,6 +1,6 @@
 export enum RoomAction {
   JOIN = 'joined',
-  LEAVE = 'left'
+  LEAVE = 'left',
 }
 
 export class RoomSocketEvent {
@@ -19,16 +19,18 @@ export enum GameAction {
   GAME = 'game',
   PLAYER = 'player',
   PLAYER_READY = 'player_ready',
-  CARD = 'card'
+  CARD = 'card',
 }
 
 export enum GameActionEvent {
-  SELECT_DECK = "select_deck",
-  SET_READY = "set_ready"
+  SELECT_DECK = 'select_deck',
+  SET_READY = 'set_ready',
+  DRAW_CARD = 'draw_card',
+  PLACE_CARD = 'place_card',
 }
 
 export enum SocketAction {
-  ROOM = "room_",
+  ROOM = 'room_',
   ROOM_SERVER = 'room_event',
   ROOM_LIST = 'room_list',
   ROOM_JOIN = 'room_join',
@@ -37,7 +39,7 @@ export enum SocketAction {
   ROOM_SOCKET_LIST = 'room_socket_list',
   ROOM_SOCKET_JOIN = 'room_socket_join',
   ROOM_SOCKET_LEAVE = 'room_socket_leave',
-  GAME = "game_",
+  GAME = 'game_',
   GAME_SERVER = 'game_event',
   GAME_JOIN = 'game_join',
   GAME_LEAVE = 'game_leave',
