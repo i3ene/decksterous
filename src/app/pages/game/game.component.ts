@@ -18,7 +18,7 @@ export class GamePage implements AfterViewInit {
   ngAfterViewInit(): void {
     this.threeLogic = new ThreeLogic(this.canvasRef);
     this.threeLogic.loadScene(new TestScene());
-    setTimeout(() => this.threeLogic.loadScene(new GameScene(this.socket)), 200);
+    this.threeLogic.loadScene(new GameScene(this.socket));
   }
 
 }
