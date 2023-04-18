@@ -1,6 +1,6 @@
 import { ElementRef, isDevMode } from '@angular/core';
 import { IScene } from 'src/app/models/object/scene.model';
-import { Color, Mesh, Object3D, Path, PerspectiveCamera, Scene, TextureLoader, Vector3, WebGLRenderer } from 'three';
+import { Color, Mesh, Path, PerspectiveCamera, Scene, TextureLoader, Vector3, WebGLRenderer } from 'three';
 import * as TWEEN from '@tweenjs/tween.js';
 import { Tween } from '@tweenjs/tween.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
@@ -35,19 +35,13 @@ export class ThreeLogic {
 
   public scene!: Scene;
 
-  public loadedScenes: Map<string, IScene> = new Map();
-
-  public loadedObjects: { scene: IScene, object: Object3D }[] = [];
-
-  //public loopFunctions: { (threeLogic: ThreeLogic): void }[] = [];
+  public loopFunctions: { (threeLogic: ThreeLogic): void }[] = [];
 
   /** Constructor **/
 
   constructor(canvas: ElementRef | HTMLCanvasElement) {
     this.canvas = canvas instanceof ElementRef ? canvas.nativeElement : canvas;
     if (isDevMode()) this.statsPanel();
-    this.createScene();
-    this.startRenderingLoop();
   }
 
   private statsPanel() {
@@ -91,7 +85,7 @@ export class ThreeLogic {
       component.time.delta = time - component.time.previous;
       component.time.previous = time;
 
-      component.loadedScenes.forEach((sc) => Object.entries(sc.functions ?? {}).forEach((fn) => fn[1](component)));
+      component.loopFunctions.forEach((fn) => fn(component));
       component.renderer.render(component.scene, component.camera);
 
       component.stats.end();
@@ -102,32 +96,10 @@ export class ThreeLogic {
 
   /** Engine Setup **/
 
-  public loadScene(scene: IScene) {
-    this.unloadScene(scene);
-    this.loadedScenes.set(scene.constructor.name, scene);
-    if (scene.bind) scene.bind(this);
-  }
-
-  public unloadScene(scene: IScene) {
-    if (scene.unbind) scene.unbind(this);
-    const objects = this.loadedObjects.filter(x => x.scene == scene).map(x => x.object);
-    this.scene.remove(...objects);
-    this.loadedObjects = this.loadedObjects.filter(x => x.scene != scene);
-    this.loadedScenes.delete(scene.constructor.name);
-  }
-
-  public loadObject(ref: IScene, ...object: Object3D[]) {
-    object.forEach(x => {
-      this.loadedObjects.push({ scene: ref, object: x });
-      this.scene.add(x);
-    });
-  }
-
-  public removeObject(ref: IScene, ...object: Object3D[]) {
-    object.forEach(x => {
-      this.loadedObjects = this.loadedObjects.filter(y => !(y.scene == ref && y.object == x));
-      this.scene.add(x);
-    });
+  public registerScene(scene: IScene) {
+    this.createScene();
+    this.startRenderingLoop();
+    scene.bind(this);
   }
 
   /** Functions **/
