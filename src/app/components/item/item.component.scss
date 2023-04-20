@@ -1,6 +1,7 @@
 .container {
   display: flex;
   flex-direction: column;
+  border: 1px solid gray;
   border-radius: 4px;
   padding: 8px;
 }
@@ -28,10 +29,8 @@ h2 {
 
 img {
   background-color: #eee;
-  border: 1px solid gray;
 }
 
 p {
   margin-top: 8px;
-  height: 40px;
 }
