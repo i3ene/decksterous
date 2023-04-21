@@ -4,7 +4,7 @@ import { Card } from '../data/card.model';
 import { CardDeck } from '../data/cardDeck.model';
 import { User } from '../data/user.model';
 import { Game } from './game.object';
-import { GameAction, GameActionEvent, SocketAction } from './socket.model';
+import { FrontendAction, SocketAction } from './socket.model';
 
 export enum GameEvent {
   START = 'start',
@@ -12,13 +12,13 @@ export enum GameEvent {
   END = 'end',
 }
 
-export enum GameEventState {
+export enum GameState {
   BEFORE = 'before',
   AT = 'at',
   AFTER = 'after',
 }
 
-export class GameEvents {
+export class GameEventSet {
   [GameEvent.START]: EventEmitter = new EventEmitter();
   [GameEvent.TURN]: EventEmitter = new EventEmitter();
   [GameEvent.END]: EventEmitter = new EventEmitter();
@@ -26,17 +26,34 @@ export class GameEvents {
 
 export class GameLogicState {
   event: GameEvent = GameEvent.START;
-  state: GameEventState = GameEventState.BEFORE;
+  state: GameState = GameState.BEFORE;
 }
 
 export interface GameRule {
   [key: string]: any;
 }
 
-export interface GameRules {
-  [GameEventState.BEFORE]: GameRule[];
-  [GameEventState.AT]: GameRule[];
-  [GameEventState.AFTER]: GameRule[];
+export interface GameRuleSet {
+  [GameState.BEFORE]: GameRule[];
+  [GameState.AT]: GameRule[];
+  [GameState.AFTER]: GameRule[];
+}
+
+export class GameRuleBook implements GameRuleSet {
+  [GameState.BEFORE]: GameRule[] = [];
+  [GameState.AT]: GameRule[] = [];
+  [GameState.AFTER]: GameRule[] = [];
+
+  game: Game;
+
+  constructor(game: Game) {
+    this.game = game;
+  }
+
+  addRule(state: GameState, rule: GameRule) {
+    this[state].push(rule);
+    // TODO: Add subscription
+  }
 }
 
 export class GamePlayer {
@@ -58,14 +75,15 @@ export class GamePlayer {
     // If no game instance, skip
     if (this.game == undefined) return;
     // Remove active listener
-    if (this._socket) this._socket.removeListener(SocketAction.GAME_SERVER, this.game.playerActionEventHandler);
+    if (this._socket) this._socket.removeListener(SocketAction.BACKEND, this.game.playerActionEventHandler);
     // Set active socket
     this._socket = value;
     // Set new listener
-    if (value)
-      value.on(SocketAction.GAME_SERVER, (event: any) =>
+    if (value) {
+      value.on(SocketAction.BACKEND, (event: any) =>
         this.game!.playerActionEventHandler(new GamePlayerEvent(this, event.action, event.args))
       );
+    }
   }
 
   /**
@@ -132,11 +150,13 @@ export class GamePlayer {
   setReady(state: boolean): boolean {
     if (this.isReady == state) return true;
     if (state && this.deck.length == 0) {
-      this.socket.emit(SocketAction.GAME_SOCKET, 'Please select a deck first!');
+      this.emit(FrontendAction.ERROR, { message: 'Please select a deck first!' });
       return false;
     }
     this.isReady = state;
-    this.event.emit(GameAction.PLAYER, new GamePlayerEvent(this, GameAction.PLAYER_READY, state));
+    // Emit state change
+    const event = { state: state };
+    this.emit(FrontendAction.PLAYER_READY, event, event);
     return true;
   }
 
@@ -148,16 +168,18 @@ export class GamePlayer {
    */
   async selectDeck(deckId: number): Promise<boolean> {
     if (this.isReady) {
-      this.socket.emit(SocketAction.GAME_SOCKET, `Deck cannot not be changed when ready!`);
+      this.emit(FrontendAction.ERROR, { message: `Deck cannot not be changed when ready!` });
       return false;
     }
     const deck: CardDeck | null = await CardDeck.scope(['gameDeck']).findByPk(deckId);
-    if (!deck || !deck.inventoryItems) {
-      this.socket.emit(SocketAction.GAME_SOCKET, `Deck ${deckId} could not be selected or was empty!`);
+    if (!deck || !deck.inventoryItems || !deck.inventoryItems.length) {
+      this.emit(FrontendAction.ERROR, { message: `Deck ${deckId} could not be selected or was empty!` });
       return false;
     }
     this.deck = deck.inventoryItems.map((x) => x.item?.card!);
-    this.socket.emit(SocketAction.GAME_SOCKET, `Deck ${deckId} selected.`);
+    // Emit selection of deck
+    const event = { deckId: deckId };
+    this.emit(FrontendAction.SELECT_DECK, event);
     return true;
   }
 
@@ -170,10 +192,12 @@ export class GamePlayer {
     // Initialize result set
     const cards: Card[] = [];
     while (amount-- > 0) {
-      // Remove card from deck and move it to the result set
-      cards.push(...this.deck.splice(this.deck.length, 1));
+      // Remove card from deck 
+      const card = this.deck.splice(this.deck.length, 1)[0];
+      // Move it to the result set
+      cards.push(card);
       // Emit drawn card
-      this.event.emit(GameAction.CARD, null); //TODO: emit drawing of card
+      this.emit(FrontendAction.DRAW_CARD, { card: card }, { card: {} });
     }
     // Add cards to hand
     this.cards.push(...cards);
@@ -195,7 +219,8 @@ export class GamePlayer {
     // Set removed card at fieldIndex
     this.field.set(fieldIndex, card);
     // Emit placed card
-    this.event.emit(GameAction.CARD, null); //TODO: emit placing of card
+    const event = { fieldIndex: fieldIndex, cardIndex: cardIndex };
+    this.emit(FrontendAction.PLACE_CARD, event, event);
     // Return true for success
     return true;
   }
@@ -214,7 +239,8 @@ export class GamePlayer {
     // Delete complete entry on field by fieldIndex
     this.field.delete(fieldIndex);
     // Emit deletion of card
-    this.event.emit(GameAction.CARD, null); //TODO: emit death of card
+    const event = { fieldIndex: fieldIndex };
+    this.emit(FrontendAction.REMOVE_CARD, event, event);
   }
 
   /**
@@ -230,7 +256,8 @@ export class GamePlayer {
     // Add up amount to health
     card.health += amount;
     // Emit change of health
-    this.event.emit(GameAction.CARD, null); //TODO: emit new health of card
+    const event = { fieldIndex: fieldIndex, card: card };
+    this.emit(FrontendAction.CARD_HEALTH, event, event);
     // If health less than 0, remove card
     if (card.health <= 0) this.removeCard(fieldIndex);
   }
@@ -244,9 +271,23 @@ export class GamePlayer {
     // Check for attacker card
     if (!attacker) return;
     // Emit attack of card
-    this.event.emit(GameAction.CARD, null); //TODO: emit card attack
+    const event = { fieldIndex: fieldIndex, card: attacker };
+    this.emit(FrontendAction.CARD_ATTACK, event, event);
     // Subtract health of field card by attacker damage
     this.cardHealth(fieldIndex, -attacker.damage);
+  }
+
+  /**
+   * Emit an event
+   * @param action The action identifier
+   * @param playerArgs Arguments send to the player directly
+   * @param allArgs Arguments send to everyone else (except the player)
+   */
+  emit(action: FrontendAction, playerArgs: any, allArgs?: any) {
+    // Emit directly to player
+    this.socket.emit(SocketAction.FRONTEND_PLAYER, { action: action, args: playerArgs } as GamePlayerEvent);
+    // (If set) emit to everyone else (except player itself)
+    if (allArgs) this.event.emit(SocketAction.INTERNAL, { action: action, args: allArgs } as GamePlayerEvent);
   }
 }
 
@@ -311,7 +352,7 @@ export class GamePlayerCollection {
     // Add game instance to player
     player.game = this.game;
     // Add listener to player events
-    player.event.addListener(GameAction.PLAYER, (event) => this.eventHandler(GameAction.PLAYER, event));
+    player.event.addListener(SocketAction.INTERNAL, (event) => this.eventHandler(player, event));
     // Add player to set (if player already exist, fetch id)
     this.map.set(this.find(player) ?? this.map.size + 1, player);
   }
@@ -397,7 +438,8 @@ export class GamePlayerCollection {
     // Increment player turn index
     ++this.index;
     // Emit turn change
-    this.events.emit(GameAction.GAME, null); //TODO: emit next player turn
+    const event = { action: FrontendAction.TURN_CHANGE, args: { playerIndex: this.index } } as GamePlayerEvent;
+    this.events.emit(SocketAction.INTERNAL, event);
     // Return current player turn index
     return this.index;
   }
@@ -422,22 +464,24 @@ export class GamePlayerCollection {
   /**
    * Bubble events from players
    * @param player Initiator
-   * @param event Event symbol
-   * @param args Event data
+   * @param event Event data
    */
-  eventHandler(action: GameAction, event: GamePlayerEvent) {
-    this.events.emit(action, event);
+  eventHandler(player: GamePlayer, event: GamePlayerEvent) {
+    // Add player caller object
+    event.player = player;
+    // Emit internal event
+    this.events.emit(SocketAction.INTERNAL, event);
   }
 }
 
 export interface GamePlayerEvent {
   player: GamePlayer;
-  action: GameAction | GameActionEvent;
+  action: FrontendAction;
   args: any | any[];
 }
 
 export class GamePlayerEvent implements GamePlayerEvent {
-  constructor(player: GamePlayer, action: GameAction | GameActionEvent, args?: any) {
+  constructor(player: GamePlayer, action: FrontendAction, args?: any) {
     this.player = player;
     this.action = action;
     this.args = args ?? {};

@@ -1,7 +1,7 @@
 import { BroadcastOperator } from 'socket.io';
 import { DefaultEventsMap } from 'socket.io/dist/typed-events';
-import { GameEvent, GameEvents, GameEventState, GamePlayerCollection, GamePlayerEvent, GameRules } from './game.model';
-import { GameAction, GameActionEvent, SocketAction } from './socket.model';
+import { GameEvent, GameEventSet, GameState, GamePlayerCollection, GamePlayerEvent, GameRuleSet } from './game.model';
+import { FrontendAction, SocketAction } from './socket.model';
 
 export class Game {
   /**
@@ -9,10 +9,12 @@ export class Game {
    */
   room: BroadcastOperator<DefaultEventsMap, any>;
 
+  roomName: string;
+
   /**
    * Rules for this game
    */
-  rules!: GameRules;
+  rules!: GameRuleSet;
 
   /**
    * Players of this game
@@ -22,7 +24,7 @@ export class Game {
   /**
    * Game events (with states)
    */
-  events: GameEvents = new GameEvents();
+  events: GameEventSet = new GameEventSet();
 
   /**
    * Ammount of cards possible to place on the field
@@ -34,37 +36,42 @@ export class Game {
    */
   active: boolean = false;
 
-  constructor(room: BroadcastOperator<DefaultEventsMap, any>) {
+  constructor(room: BroadcastOperator<DefaultEventsMap, any>, roomName: string) {
     this.players = new GamePlayerCollection(this);
     this.room = room;
+    this.roomName = roomName;
     // TODO: Combine rules with default rules
 
     this.registerEvents();
 
-    this.events[GameEvent.START].emit(GameEventState.BEFORE, null);
+    this.events[GameEvent.START].emit(GameState.BEFORE, null);
   }
 
   registerEvents() {
-    this.events[GameEvent.START].on(GameEventState.BEFORE, this.beforeStart.bind(this));
-    this.events[GameEvent.START].on(GameEventState.AT, this.atStart.bind(this));
-    this.events[GameEvent.START].on(GameEventState.AFTER, this.afterStart.bind(this));
-    this.events[GameEvent.TURN].on(GameEventState.BEFORE, this.beforeTurn.bind(this));
-    this.events[GameEvent.TURN].on(GameEventState.AT, this.atTurn.bind(this));
-    this.events[GameEvent.TURN].on(GameEventState.AFTER, this.afterTurn.bind(this));
-    this.events[GameEvent.END].on(GameEventState.BEFORE, this.beforeEnd.bind(this));
-    this.events[GameEvent.END].on(GameEventState.AT, this.atEnd.bind(this));
-    this.events[GameEvent.END].on(GameEventState.AFTER, this.afterEnd.bind(this));
+    this.events[GameEvent.START].on(GameState.BEFORE, this.beforeStart.bind(this));
+    this.events[GameEvent.START].on(GameState.AT, this.atStart.bind(this));
+    this.events[GameEvent.START].on(GameState.AFTER, this.afterStart.bind(this));
+    this.events[GameEvent.TURN].on(GameState.BEFORE, this.beforeTurn.bind(this));
+    this.events[GameEvent.TURN].on(GameState.AT, this.atTurn.bind(this));
+    this.events[GameEvent.TURN].on(GameState.AFTER, this.afterTurn.bind(this));
+    this.events[GameEvent.END].on(GameState.BEFORE, this.beforeEnd.bind(this));
+    this.events[GameEvent.END].on(GameState.AT, this.atEnd.bind(this));
+    this.events[GameEvent.END].on(GameState.AFTER, this.afterEnd.bind(this));
 
-    this.players.events.addListener(GameAction.PLAYER, this.playerEventHandler.bind(this));
+    this.players.events.addListener(SocketAction.INTERNAL, this.playerEventHandler.bind(this));
   }
 
   playerEventHandler(event: GamePlayerEvent) {
     // Handle global player events
     switch (event.action) {
-      case GameAction.PLAYER_READY:
-        this.room.emit(SocketAction.GAME_SOCKET, `${event.player?.user.name} is ${event.args ? 'ready' : 'not ready'}.`);
+      case FrontendAction.PLAYER_READY:
+        this.room.emit(SocketAction.FRONTEND_ALL, `${event.player?.user.name} is ${event.args.state ? 'ready' : 'not ready'}.`);
         if (!this.players.areReady()) break;
-        this.events[GameEvent.START].emit(GameEventState.AFTER, null);
+        this.events[GameEvent.START].emit(GameState.AFTER, null);
+        break;
+      case FrontendAction.DRAW_CARD:
+        // Emit to all in room, except the sender (the player that triggered this action)
+        event.player.socket.broadcast.to(this.roomName).emit(SocketAction.FRONTEND_ALL, event.args);
         break;
     }
   }
@@ -74,10 +81,10 @@ export class Game {
     if (!this.active) {
       // Handle basic events
       switch (event.action) {
-        case GameActionEvent.SELECT_DECK:
+        case FrontendAction.SELECT_DECK:
           event.player.selectDeck(event.args.deckId);
           break;
-        case GameActionEvent.SET_READY:
+        case FrontendAction.SET_READY:
           event.player.setReady(event.args.state);
           break;
       }
@@ -87,11 +94,14 @@ export class Game {
     if (this.players.current != event.player) {
       // Handle turn based events
       switch (event.action) {
-        case GameActionEvent.DRAW_CARD:
+        case FrontendAction.DRAW_CARD:
           event.player.drawCards(event.args.amount);
           break;
-        case GameActionEvent.PLACE_CARD:
+        case FrontendAction.PLACE_CARD:
           event.player.placeCard(event.args.card, event.args.field);
+          break;
+        case FrontendAction.TURN_END:
+          this.players.turn();
           break;
       }
     }
@@ -99,7 +109,7 @@ export class Game {
 
   beforeStart(event: any): void {
     console.log('BeforeStart');
-    this.events[GameEvent.START].emit(GameEventState.AT, null);
+    this.events[GameEvent.START].emit(GameState.AT, null);
   }
 
   atStart(event: any): void {
@@ -109,12 +119,12 @@ export class Game {
   afterStart(event: any): void {
     console.log('AfterStart');
     this.active = true;
-    this.events[GameEvent.TURN].emit(GameEventState.BEFORE, null);
+    this.events[GameEvent.TURN].emit(GameState.BEFORE, null);
   }
 
   beforeTurn(event: any): void {
     console.log('BeforeTurn');
-    this.events[GameEvent.TURN].emit(GameEventState.AT, null);
+    this.events[GameEvent.TURN].emit(GameState.AT, null);
   }
 
   atTurn(event: any): void {

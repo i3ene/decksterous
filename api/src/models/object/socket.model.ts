@@ -15,18 +15,18 @@ export class RoomSocketEvent {
   }
 }
 
-export enum GameAction {
-  GAME = 'game',
-  PLAYER = 'player',
-  PLAYER_READY = 'player_ready',
-  CARD = 'card',
-}
-
-export enum GameActionEvent {
-  SELECT_DECK = 'select_deck',
+export enum FrontendAction {
+  ERROR = 'error',
   SET_READY = 'set_ready',
+  PLAYER_READY = 'player_ready',
+  SELECT_DECK = 'select_deck',
   DRAW_CARD = 'draw_card',
   PLACE_CARD = 'place_card',
+  REMOVE_CARD = 'remove_card',
+  CARD_HEALTH = 'card_health',
+  CARD_ATTACK = 'card_attack',
+  TURN_CHANGE = 'turn_change',
+  TURN_END = 'turn_end',
 }
 
 export enum SocketAction {
@@ -46,4 +46,20 @@ export enum SocketAction {
   GAME_SOCKET = 'game_socket_event',
   GAME_SOCKET_JOIN = 'game_socket_join',
   GAME_SOCKET_LEAVE = 'game_socket_leave',
+  /**
+   * Response to frontend application (for everyone)
+   */
+  FRONTEND_ALL = 'frontend_all',
+  /**
+   * Response to frontend application (directly to player)
+   */
+  FRONTEND_PLAYER = 'frontend_player',
+  /**
+   * Result to backend from frontend (event from player)
+   */
+  BACKEND = 'backend',
+  /**
+   * Response to internal logic (backend to backend)
+   */
+  INTERNAL = 'internal',
 }

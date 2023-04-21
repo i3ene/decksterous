@@ -17,7 +17,7 @@ export namespace GameSocket {
   export function listener(io: Server) {
     io.sockets.adapter.on('create-room', async (room) => {
       if (!room.startsWith(SocketAction.GAME)) return;
-      GameController.games.set(room, new Game(io.to(room)));
+      GameController.games.set(room, new Game(io.to(room), room));
     });
 
     io.sockets.adapter.on('delete-room', async (room) => {
