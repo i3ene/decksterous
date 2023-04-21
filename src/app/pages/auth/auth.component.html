@@ -1,9 +1,9 @@
 <div class="center_vertical">
-    <div class="center_horizontal">
+    <div class="center_horizontal divider">
         <img src="/assets/logo_name.svg"/>
     </div>
     <div class="center_horizontal">
-        <div class="content">
+        <div class="content" [@routeAnimations]="getRouteAnimationData()">
             <router-outlet></router-outlet>
         </div>
     </div>

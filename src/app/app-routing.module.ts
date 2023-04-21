@@ -16,26 +16,26 @@ import { LobbyPage } from './pages/navigation/lobby/lobby.component';
 
 const routes: Routes = [
   { path: 'dev', component: DevComponent },
-  { path: 'about', component: AboutPage },
+  { path: 'about', component: AboutPage, data: { animation: 'bottom' }  },
   {
     path: 'auth',
     component: AuthPage,
     children: [
-      { path: 'login', component: LoginForm },
-      { path: 'register', component: RegisterForm },
-      { path: 'reset', component: ResetForm },
+      { path: 'login', component: LoginForm, data: { animation: 'left' } },
+      { path: 'register', component: RegisterForm, data: { animation: 'right' } },
+      { path: 'reset', component: ResetForm, data: { animation: 'right' } },
       { path: '**', redirectTo: 'login' },
-    ],
+    ]
   },
   {
     path: 'navigation',
     component: NavigationPage,
     canActivateChild: [AuthGuard],
     children: [
-      { path: 'home', component: HomePage },
-      { path: 'lobby', component: LobbyPage },
-      { path: 'inventory', component: UserInventoryPage },
-      { path: 'profile', component: ProfileComponent },
+      { path: 'home', component: HomePage, data: { animation: 'bottom' } },
+      { path: 'lobby', component: LobbyPage, data: { animation: 'left' } },
+      { path: 'inventory', component: UserInventoryPage, data: { animation: 'right' } },
+      { path: 'profile', component: ProfileComponent, data: { animation: 'top' } },
       { path: '**', redirectTo: 'home' },
     ],
   },
