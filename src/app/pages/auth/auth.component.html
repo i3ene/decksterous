@@ -1,6 +1,11 @@
 <div class="center_vertical">
+    <div class="center_horizontal divider">
+        <img src="/assets/logo_name.svg"/>
+    </div>
     <div class="center_horizontal">
-        <router-outlet></router-outlet>
+        <div class="content" [@routeAnimations]="getRouteAnimationData()">
+            <router-outlet></router-outlet>
+        </div>
     </div>
 </div>
 <footer>
