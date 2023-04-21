@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { SocketSubscriptionKey } from 'src/app/models/object/service.model';
+import { SocketKey } from 'src/app/models/object/service.model';
 import { GameService } from 'src/app/services/game.service';
 import { SocketService } from 'src/app/services/request/socket.service';
 
@@ -13,7 +13,7 @@ export class LobbyGameComponent {
   constructor(public game: GameService, public socket: SocketService) { }
 
   get SocketKey() {
-    return SocketSubscriptionKey;
+    return SocketKey;
   }
 
 }

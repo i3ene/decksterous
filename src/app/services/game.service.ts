@@ -8,7 +8,7 @@ export class GameService {
 
   event: string = 'game_event';
 
-  constructor(private socket: SocketService) { }
+  constructor(public socket: SocketService) { }
 
   selectDeck(id: number | string) {
     id = typeof id == 'string' ? Number(id) : id;

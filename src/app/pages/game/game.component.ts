@@ -2,6 +2,7 @@ import { AfterViewInit, Component, ElementRef, Input, ViewChild } from '@angular
 import { GameScene } from 'src/app/logic/scenes/game.scene';
 import { TestScene } from 'src/app/logic/scenes/test.scene';
 import { ThreeLogic } from 'src/app/logic/three.logic';
+import { GameService } from 'src/app/services/game.service';
 import { SocketConnection } from 'src/app/services/request/socket.connection';
 
 @Component({
@@ -13,12 +14,12 @@ export class GamePage implements AfterViewInit {
 
   threeLogic!: ThreeLogic;
 
-  constructor(private socket: SocketConnection) {}
+  constructor(private game: GameService) {}
 
   ngAfterViewInit(): void {
     this.threeLogic = new ThreeLogic(this.canvasRef);
     this.threeLogic.loadScene(new TestScene());
-    this.threeLogic.loadScene(new GameScene(this.socket));
+    this.threeLogic.loadScene(new GameScene(this.game));
   }
 
 }
