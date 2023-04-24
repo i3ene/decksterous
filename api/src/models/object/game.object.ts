@@ -74,7 +74,7 @@ export class Game {
         if (!this.players.areReady()) break;
         this.events[GameEvent.START].emit(GameState.AFTER, null);
         break;
-      case BackendAction.CARD_DRAWN:
+      default:
         // Emit to all in room, except the sender (the player that triggered this action)
         event.player.socket.broadcast.to(this.roomName).emit(SocketAction.FRONTEND_ALL, event.args);
         break;
@@ -122,11 +122,11 @@ export class Game {
 
   atStart(event: any): void {
     console.log('AtStart');
-    this.players.sync();
   }
 
   afterStart(event: any): void {
     console.log('AfterStart');
+    this.players.sync();
     this.active = true;
     this.events[GameEvent.TURN].emit(GameState.BEFORE, null);
   }
