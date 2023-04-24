@@ -4,7 +4,7 @@ import { Card } from '../data/card.model';
 import { CardDeck } from '../data/cardDeck.model';
 import { User } from '../data/user.model';
 import { Game } from './game.object';
-import { FrontendAction, SocketAction } from './socket.model';
+import { BackendAction, FrontendAction, SocketAction } from './socket.model';
 
 export enum GameEvent {
   START = 'start',
@@ -52,7 +52,7 @@ export class GameRuleBook implements GameRuleSet {
 
   addRule(state: GameState, rule: GameRule) {
     this[state].push(rule);
-    // TODO: Add subscription
+    // TODO: Add subscription/listener
   }
 }
 
@@ -150,13 +150,13 @@ export class GamePlayer {
   setReady(state: boolean): boolean {
     if (this.isReady == state) return true;
     if (state && this.deck.length == 0) {
-      this.emit(FrontendAction.ERROR, { message: 'Please select a deck first!' });
+      this.emit(BackendAction.ERROR, { message: 'Please select a deck first!' });
       return false;
     }
     this.isReady = state;
     // Emit state change
     const event = { state: state };
-    this.emit(FrontendAction.PLAYER_READY, event, event);
+    this.emit(BackendAction.READY_CHANGED, event, event);
     return true;
   }
 
@@ -168,18 +168,18 @@ export class GamePlayer {
    */
   async selectDeck(deckId: number): Promise<boolean> {
     if (this.isReady) {
-      this.emit(FrontendAction.ERROR, { message: `Deck cannot not be changed when ready!` });
+      this.emit(BackendAction.ERROR, { message: `Deck cannot not be changed when ready!` });
       return false;
     }
     const deck: CardDeck | null = await CardDeck.scope(['gameDeck']).findByPk(deckId);
     if (!deck || !deck.inventoryItems || !deck.inventoryItems.length) {
-      this.emit(FrontendAction.ERROR, { message: `Deck ${deckId} could not be selected or was empty!` });
+      this.emit(BackendAction.ERROR, { message: `Deck ${deckId} could not be selected or was empty!` });
       return false;
     }
     this.deck = deck.inventoryItems.map((x) => x.item?.card!);
     // Emit selection of deck
     const event = { deckId: deckId };
-    this.emit(FrontendAction.SELECT_DECK, event);
+    this.emit(BackendAction.DECK_SELECTED, event);
     return true;
   }
 
@@ -197,7 +197,7 @@ export class GamePlayer {
       // Move it to the result set
       cards.push(card);
       // Emit drawn card
-      this.emit(FrontendAction.DRAW_CARD, { card: card }, { card: {} });
+      this.emit(BackendAction.CARD_DRAWN, { card: card }, { card: {} });
     }
     // Add cards to hand
     this.cards.push(...cards);
@@ -220,7 +220,7 @@ export class GamePlayer {
     this.field.set(fieldIndex, card);
     // Emit placed card
     const event = { fieldIndex: fieldIndex, cardIndex: cardIndex };
-    this.emit(FrontendAction.PLACE_CARD, event, event);
+    this.emit(BackendAction.CARD_PLACED, event, event);
     // Return true for success
     return true;
   }
@@ -240,7 +240,7 @@ export class GamePlayer {
     this.field.delete(fieldIndex);
     // Emit deletion of card
     const event = { fieldIndex: fieldIndex };
-    this.emit(FrontendAction.REMOVE_CARD, event, event);
+    this.emit(BackendAction.CARD_REMOVED, event, event);
   }
 
   /**
@@ -257,7 +257,7 @@ export class GamePlayer {
     card.health += amount;
     // Emit change of health
     const event = { fieldIndex: fieldIndex, card: card };
-    this.emit(FrontendAction.CARD_HEALTH, event, event);
+    this.emit(BackendAction.CARD_HEALTH_CHANGED, event, event);
     // If health less than 0, remove card
     if (card.health <= 0) this.removeCard(fieldIndex);
   }
@@ -272,9 +272,23 @@ export class GamePlayer {
     if (!attacker) return;
     // Emit attack of card
     const event = { fieldIndex: fieldIndex, card: attacker };
-    this.emit(FrontendAction.CARD_ATTACK, event, event);
+    this.emit(BackendAction.CARD_ATTACKED, event, event);
     // Subtract health of field card by attacker damage
     this.cardHealth(fieldIndex, -attacker.damage);
+  }
+
+  /**
+   * Synchronize player data
+   * @returns Player data
+   */
+  sync() {
+    const event = {
+      playerId: this.game?.players.find(this),
+      cards: this.cards,
+      field: this.field
+    };
+    this.emit(BackendAction.SYNC, event, Object.assign(event, { cards: Array(event.cards.length) }));
+    return event;
   }
 
   /**
@@ -283,7 +297,7 @@ export class GamePlayer {
    * @param playerArgs Arguments send to the player directly
    * @param allArgs Arguments send to everyone else (except the player)
    */
-  emit(action: FrontendAction, playerArgs: any, allArgs?: any) {
+  emit(action: BackendAction, playerArgs: any, allArgs?: any) {
     // Emit directly to player
     this.socket.emit(SocketAction.FRONTEND_PLAYER, { action: action, args: playerArgs } as GamePlayerEvent);
     // (If set) emit to everyone else (except player itself)
@@ -438,7 +452,7 @@ export class GamePlayerCollection {
     // Increment player turn index
     ++this.index;
     // Emit turn change
-    const event = { action: FrontendAction.TURN_CHANGE, args: { playerIndex: this.index } } as GamePlayerEvent;
+    const event = { action: BackendAction.TURN_CHANGED, args: { playerIndex: this.index } } as GamePlayerEvent;
     this.events.emit(SocketAction.INTERNAL, event);
     // Return current player turn index
     return this.index;
@@ -462,6 +476,24 @@ export class GamePlayerCollection {
   }
 
   /**
+   * Do attack turn
+   * @param turnChange if a turn change should be done after attack
+   */
+  attack(turnChange: boolean = false): void {
+    for (const [index, card] of this.current.field) {
+      this.next.attackCard(card, index);
+    }
+    if (turnChange) this.turn();
+  }
+
+  /**
+   * Synchornize every player data
+   */
+  sync() {
+    this.map.forEach(x => x.sync());
+  }
+
+  /**
    * Bubble events from players
    * @param player Initiator
    * @param event Event data
@@ -476,7 +508,7 @@ export class GamePlayerCollection {
 
 export interface GamePlayerEvent {
   player: GamePlayer;
-  action: FrontendAction;
+  action: FrontendAction | BackendAction;
   args: any | any[];
 }
 

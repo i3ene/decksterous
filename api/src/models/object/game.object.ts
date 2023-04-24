@@ -1,7 +1,7 @@
 import { BroadcastOperator } from 'socket.io';
 import { DefaultEventsMap } from 'socket.io/dist/typed-events';
 import { GameEvent, GameEventSet, GameState, GamePlayerCollection, GamePlayerEvent, GameRuleSet } from './game.model';
-import { FrontendAction, SocketAction } from './socket.model';
+import { BackendAction, FrontendAction, SocketAction } from './socket.model';
 
 export class Game {
   /**
@@ -36,6 +36,11 @@ export class Game {
    */
   active: boolean = false;
 
+  /**
+   * If something is being executed
+   */
+  executing: boolean = false;
+
   constructor(room: BroadcastOperator<DefaultEventsMap, any>, roomName: string) {
     this.players = new GamePlayerCollection(this);
     this.room = room;
@@ -64,12 +69,12 @@ export class Game {
   playerEventHandler(event: GamePlayerEvent) {
     // Handle global player events
     switch (event.action) {
-      case FrontendAction.PLAYER_READY:
+      case BackendAction.READY_CHANGED:
         this.room.emit(SocketAction.FRONTEND_ALL, `${event.player?.user.name} is ${event.args.state ? 'ready' : 'not ready'}.`);
         if (!this.players.areReady()) break;
         this.events[GameEvent.START].emit(GameState.AFTER, null);
         break;
-      case FrontendAction.DRAW_CARD:
+      case BackendAction.CARD_DRAWN:
         // Emit to all in room, except the sender (the player that triggered this action)
         event.player.socket.broadcast.to(this.roomName).emit(SocketAction.FRONTEND_ALL, event.args);
         break;
@@ -77,6 +82,9 @@ export class Game {
   }
 
   playerActionEventHandler(event: GamePlayerEvent) {
+    // Check if something is being executed
+    if (this.executing) return;
+
     // Check if game is not running
     if (!this.active) {
       // Handle basic events
@@ -100,7 +108,7 @@ export class Game {
         case FrontendAction.PLACE_CARD:
           event.player.placeCard(event.args.card, event.args.field);
           break;
-        case FrontendAction.TURN_END:
+        case FrontendAction.END_TURN:
           this.players.turn();
           break;
       }
@@ -114,6 +122,7 @@ export class Game {
 
   atStart(event: any): void {
     console.log('AtStart');
+    this.players.sync();
   }
 
   afterStart(event: any): void {
@@ -129,16 +138,18 @@ export class Game {
 
   atTurn(event: any): void {
     console.log('AtTurn');
+    this.executing = false;
   }
 
   afterTurn(event: any): void {
     console.log('AfterTurn');
-    this.attack();
-    this.players.turn();
+    this.executing = true;
+    this.players.attack(true);
   }
 
   beforeEnd(event: any): void {
     console.log('BeforeEnd');
+    this.active = false;
   }
 
   atEnd(event: any): void {
@@ -148,19 +159,5 @@ export class Game {
   afterEnd(event: any): void {
     console.log('AfterEnd');
   }
-
-  /** ACTIONS **/
-
-  /**
-   * Do attack turn
-   */
-  attack(): void {
-    const next = this.players.next;
-    const current = this.players.current;
-    if (!current) return;
-    // TODO: Fix current.field undefined error
-    for (const [index, card] of current.field) {
-      next.attackCard(card, index);
-    }
-  }
+  
 }
