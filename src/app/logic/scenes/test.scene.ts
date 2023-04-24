@@ -47,7 +47,7 @@ export class TestScene implements IScene {
   }
 
   bind(threeLogic: ThreeLogic) {
-    threeLogic.loadObject(this, this.ambient, this.light, this.cube, this.plane);
+    threeLogic.loadObject(this, this.ambient, this.light, /*this.cube,*/ this.plane);
     this.camerSetup(threeLogic.camera);
   }
 

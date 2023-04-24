@@ -116,6 +116,10 @@ export class ThreeLogic {
     this.loadedScenes.delete(scene.constructor.name);
   }
 
+  public unloadScenes() {
+    this.loadedScenes.forEach(this.unloadScene.bind(this));
+  }
+
   public loadObject(ref: IScene, ...object: Object3D[]) {
     object.forEach(x => {
       this.loadedObjects.push({ scene: ref, object: x });

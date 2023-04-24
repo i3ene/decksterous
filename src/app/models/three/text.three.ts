@@ -2,7 +2,7 @@ import { EventEmitter } from '@angular/core';
 import * as THREE from 'three';
 import { Material, Mesh, MeshStandardMaterial } from 'three';
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry';
-import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
+import { Font, FontLoader } from 'three/examples/jsm/loaders/FontLoader';
 
 export class TextThree extends THREE.Group {
   material: Material = new THREE.MeshBasicMaterial( {
@@ -22,6 +22,9 @@ export class TextThree extends THREE.Group {
   }
   textChanged: EventEmitter<Mesh> = new EventEmitter<Mesh>();
 
+  static font?: Font;
+  static fetchingFont: boolean = false;
+
   constructor(material?: Material) {
     super();
     if (material) this.material = material;
@@ -30,19 +33,27 @@ export class TextThree extends THREE.Group {
   }
 
   async setText(text: string) {
-    const font = await new FontLoader().loadAsync('/assets/helvetiker_regular.typeface.json', );
+    while(TextThree.fetchingFont) {
+      await new Promise(res => setTimeout(res, 250));
+    }
+
+    if (!TextThree.font) {
+      TextThree.fetchingFont = true;
+      TextThree.font = await new FontLoader().loadAsync('/assets/helvetiker_regular.typeface.json');
+      TextThree.fetchingFont = false;
+    }
+
     this.geometry = new TextGeometry(text, {
-      font: font,
+      font: TextThree.font,
       size: 1,
       height: 1,
-      curveSegments: 20,
+      curveSegments: 2,
       bevelEnabled: true,
       bevelThickness: 0,
       bevelSize: 0,
       bevelOffset: 0,
-      bevelSegments: 5
+      bevelSegments: 1
     } as any);
-    this.geometry.computeBoundingBox();
     this.remove(this.mesh);
     this.mesh = new Mesh(this.geometry, this.material);
     this.textChanged.emit(this.mesh);

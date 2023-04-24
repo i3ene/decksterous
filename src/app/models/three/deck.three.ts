@@ -1,33 +1,39 @@
 import { Group } from "three"
-import { CardObject } from "./card.three";
-import { Card } from "../data/card.model";
+import { CardThree } from "./card.three";
+import * as THREE from "three";
 
 export class DeckThree extends Group {
 
-  private cards: CardObject[] = [];
+  private cards: CardThree[] = [];
 
   constructor() {
     super();
   }
 
-  addCards(cards: CardObject[]) {
+  addCards(cards: CardThree[]) {
     for(const card of cards) this.addCard(card);
   }
 
-  addCard(card: CardObject) {
+  addCard(card: CardThree) {
     this.cards.push(card);
     this.add(card);
-    for (const [index, child] of this.children.entries()) {
-      child.position.x = Math.sin((index / this.children.length) * 2 * Math.PI) * 2;
-    }
+    this.update();
   }
 
-  removeCard(card: CardObject | number): CardObject | undefined {
-    const ref = typeof card == "number" ? this.cards[card] : card;
-    if (ref == null) return undefined;
-    const index = this.cards.findIndex(x => x == ref);
-    if (index < 0) return undefined;
-    return this.cards.splice(index, 1)[0];
+  draw(amount: number): CardThree[] {
+    const cards = this.cards.splice(0, amount);
+    cards.forEach(card => this.remove(card));
+    this.update();
+    return cards;
+  }
+
+  update() {
+    for (const [index, child] of this.children.entries()) {
+      // Calculate positon based on index and card size
+      child.position.y = index * CardThree.size.z;
+      // Rotate to face down
+      child.rotation.x = THREE.MathUtils.degToRad(90);
+    }
   }
 
 }

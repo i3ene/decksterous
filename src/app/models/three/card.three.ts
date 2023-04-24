@@ -5,15 +5,21 @@ import { TextThree } from './text.three';
 import * as THREE from "three";
 
 
-export class CardObject extends Group {
+export class CardThree extends Group {
   cube: CubeThree = new CubeThree();
   plane: PlaneThree = new PlaneThree(new MeshStandardMaterial({ color: 0x006699 }));
   text: TextThree = new TextThree();
 
+  public static size = {
+    x: 1.0,
+    y: 297 / 210,
+    z: 0.1
+  }
+
   constructor() {
     super();
 
-    this.cube.scale.set(1, 297 / 210, 0.1);
+    this.cube.scale.set(CardThree.size.x, CardThree.size.y, CardThree.size.z);
 
     this.plane.scale.set(0.75, 1, 0.6);
     this.plane.position.set(0, 0.25, 0.06);
