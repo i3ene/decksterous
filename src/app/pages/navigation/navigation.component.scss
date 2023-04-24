@@ -16,3 +16,12 @@ mat-toolbar {
     max-height: 80%;
   }
 }
+
+.is-active {
+  font-weight: bold;
+  color: #4caf50;
+}
+
+.content {
+  overflow-x: hidden;
+}

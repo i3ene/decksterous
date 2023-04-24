@@ -7,11 +7,11 @@ import { MenuItem } from 'src/app/models/object/menu.model';
 })
 export class HomePage {
 
-  items: MenuItem[] = [
-    { name: "lobbies", link: ["/navigation/lobby"], icon: "list" },
-    { name: "ranking", link: ["/navigation/ranking"], icon: "leaderboard" },
-    { name: "solo", link: ["/game"], icon: "style" },
-    { name: "profile", link: ["/navigation/profile"], icon: "person" },
-    { name: "inventory", link: ["/navigation/inventory"], icon: "category" }
+  items: (MenuItem & { title: string; })[] = [
+    { name: "lobbies", link: ["/navigation/lobby"], icon: "list", title: "Lobbies" },
+    { name: "ranking", link: ["/navigation/ranking"], icon: "leaderboard", title: "Ranking" },
+    { name: "solo", link: ["/game"], icon: "style", title: "Solo" },
+    { name: "profile", link: ["/navigation/profile"], icon: "person", title: "Profile" },
+    { name: "inventory", link: ["/navigation/inventory"], icon: "category", title: "Inventory" }
   ];
 }

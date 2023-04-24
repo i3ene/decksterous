@@ -21,16 +21,16 @@ export class NavigationPage {
     {
       name: 'Community',
       items: [
-        { name: 'Marketplace', icon: 'storefront', link: [] },
+        { name: 'Marketplace', icon: 'storefront', link: ["/navigation/marketplace"] },
         { name: 'Lobbies', icon: 'list', link: ["/navigation/lobby"] },
       ],
     },
     {
       name: 'Profile',
       items: [
-        { name: 'Stats', icon: 'leaderboard', link: [] },
+        { name: 'Stats', icon: 'leaderboard', link: ["/navigation/leaderboard"] },
         { name: 'Inventory', icon: 'category', link: ['/navigation/inventory'] },
-        { name: 'Settings', icon: 'settings', link: [] },
+        { name: 'Settings', icon: 'settings', link: ["/navigation/settings"] },
       ],
     },
   ];

@@ -1,3 +1,17 @@
+::ng-deep:root {
+    --speed: 8s;
+}
+
+.container {
+    height: calc(100vh - 64px);
+}
+
+.title {
+    font-size: 26px;
+    font-weight: bold;
+    z-index: 1;
+}
+
 .grid {
     padding: 16px;
     display: grid;
@@ -16,9 +30,34 @@
 .grid > * {
     cursor: pointer;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
+    padding: 0 !important;
+    overflow: hidden;
+
+    & > div:nth-child(2) {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    & .header {
+        position: relative;
+        flex-basis: 100px;
+        align-self: stretch;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding-left: 16px;
+        padding-bottom: 32px;
+    }
+
+    &:hover .background {
+        animation-play-state: running;
+    }
 
     & mat-icon {
         font-size: 50px;
@@ -27,8 +66,93 @@
     }
 }
 
-.lobbies { grid-area: lobbies; }
-.ranking { grid-area: ranking; }
-.solo { grid-area: solo; }
-.profile { grid-area: profile; }
-.inventory { grid-area: inventory; }
+@keyframes scrollingBackground {
+    0% {
+        background-position-x: 0%;
+    }
+    100% {
+        background-position-x: 100%;
+        transform: translateX(-50%);
+    }
+}
+
+.background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: -100%;
+    bottom: 0;
+    background-size: 50%;
+
+    animation: scrollingBackground linear forwards infinite;
+    animation-duration: var(--speed);
+    animation-play-state: paused;
+
+    -webkit-mask: var(--mask);
+    mask: var(--mask);
+}
+
+.lobbies {
+    grid-area: lobbies;
+
+    & .background {
+        animation-duration: calc(var(--speed) * 3) !important;
+    }
+
+    & .background {
+        background-image: linear-gradient(45deg, #0D47A1, #4FC3F7);
+        --mask: conic-gradient(from -55deg at bottom,#0000,#000 1deg 109deg,#0000 110deg) 50%/42.84px 100%;
+    }
+}
+.ranking { 
+    grid-area: ranking;
+
+    & .background {
+        animation-duration: calc(var(--speed) * 1) !important;
+    }
+
+    & .background {
+        background-image: linear-gradient(45deg, #FB8C00, #FFEB3B);
+        --mask: linear-gradient(to top,#0000 15px,#000 0),
+                radial-gradient(15px,#000 98%,#0000) bottom/27.75px 30px;
+    }
+}
+.solo { 
+    grid-area: solo;
+
+    & .background {
+        animation-duration: calc(var(--speed) * 2) !important;
+    }
+
+    & .background {
+        background-image: linear-gradient(45deg, #512DA8, #AB47BC);
+        --mask:
+            radial-gradient(18.7px at calc(100% + 6.60px) 50%,#0000 calc(99% - 10px),#000 calc(101% - 10px) 99%,#0000 101%) calc(50% - 11px + .5px) calc(50% - 24px)/ 22px 48px  ,
+            radial-gradient(18.7px at -6.6px 50%,#0000 calc(99% - 10px),#000 calc(101% - 10px) 99%,#0000 101%) calc(50% + 11px) 50%/22px 48px  ;
+    }
+}
+.profile { 
+    grid-area: profile;
+
+    & .background {
+        animation-duration: calc(var(--speed) * 1) !important;
+    }
+
+    & .background {
+        background-image: linear-gradient(45deg, #006838, #96cf24);
+        --mask: radial-gradient(17.49px at 50% calc(100% - 24.00px),#000 99%,#0000 101%) calc(50% - 30px) 0/60px 100%,
+                radial-gradient(17.49px at 50% calc(100% + 9.00px),#0000 99%,#000 101%) 50% calc(100% - 15px)/60px 100% repeat-x;
+    }
+}
+.inventory { 
+    grid-area: inventory;
+
+    & .background {
+        animation-duration: calc(var(--speed) * 1) !important;
+    }
+
+    & .background {
+        background-image: linear-gradient(45deg, #B71C1C, #EF5350);
+        --mask: radial-gradient(10px at bottom,#0000 97%,#000) 50% / 18.50px 100%;
+    }
+}
