@@ -1,9 +1,6 @@
 <div class="container">
-  <mat-toolbar color="primary">
-    <button mat-icon-button (click)="drawer.toggle()">
-      <mat-icon>menu</mat-icon>
-    </button>
-    <span id="title">Decksterous</span>
+  <mat-toolbar>
+    <img src="/assets/logo_name.svg" (click)="drawer.toggle()">
     <span class="spacer"></span>
     <button mat-icon-button [matMenuTriggerFor]="menu">
       <mat-icon> more_vert </mat-icon>
@@ -30,7 +27,7 @@
         </ng-container>
       </mat-nav-list>
     </mat-sidenav>
-    <mat-sidenav-content>
+    <mat-sidenav-content class="content" [@routeAnimations]="getRouteAnimationData()">
       <router-outlet></router-outlet>
     </mat-sidenav-content>
   </mat-sidenav-container>

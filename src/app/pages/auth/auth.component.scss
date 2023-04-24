@@ -3,12 +3,63 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+    gap: 16px;
 }
 
 .center_horizontal {
+    position: relative;
     display: flex;
     flex-direction: row;
     justify-content: center;
+    flex-grow: 1;
+    overflow-x: hidden;
+    &:nth-child(1) {
+        flex-basis: 35%;
+    }
+    &:nth-child(2) {
+        flex-basis: 65%;
+    }
+}
+
+.content {
+    flex-grow: 1;
+    margin: 5vh 0;
+}
+
+@keyframes scrollingBackground {
+    0% {
+        background-position-x: 0%;
+    }
+    100% {
+        background-position-x: 100%;
+        transform: translateX(-50%);
+    }
+}
+
+.divider {
+    z-index: -1;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: -100%;
+    bottom: 0;
+    background-size: 50%;
+
+    animation: scrollingBackground 20s linear forwards infinite;
+
+    background-image: linear-gradient(45deg, #006838, #96cf24);
+    --mask:
+    radial-gradient(9.01vh at 50% calc(100% - 12.50vh),#000 99%,#0000 101%) calc(50% - 10vh) 0/20vh 100%,
+    radial-gradient(9.01vh at 50% calc(100% + 7.50vh),#0000 99%,#000 101%) 50% calc(100% - 5vh)/20vh 100% repeat-x;
+    -webkit-mask: var(--mask);
+          mask: var(--mask);
+}
+
+img {
+    max-width: 750px;
+    width: 90%;
+    margin-bottom: 10vh;
+    margin-top: 2vh;
 }
 
 footer {

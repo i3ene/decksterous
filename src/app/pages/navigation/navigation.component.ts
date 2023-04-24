@@ -1,11 +1,13 @@
 import { Component, isDevMode } from '@angular/core';
-import { Router } from '@angular/router';
+import { ChildrenOutletContexts, Router } from '@angular/router';
 import { Config } from 'src/app/config/config';
+import { slideInAnimation } from 'src/app/models/helper/animations';
 import { MenuCategory } from 'src/app/models/object/menu.model';
 
 @Component({
   templateUrl: './navigation.component.html',
   styleUrls: ['./navigation.component.scss'],
+  animations: [slideInAnimation]
 })
 export class NavigationPage {
   menuCategories: MenuCategory[] = [
@@ -19,26 +21,30 @@ export class NavigationPage {
     {
       name: 'Community',
       items: [
-        { name: 'Marketplace', icon: 'storefront', link: [] },
+        { name: 'Marketplace', icon: 'storefront', link: ["/navigation/marketplace"] },
         { name: 'Lobbies', icon: 'list', link: ["/navigation/lobby"] },
       ],
     },
     {
       name: 'Profile',
       items: [
-        { name: 'Stats', icon: 'leaderboard', link: [] },
+        { name: 'Stats', icon: 'leaderboard', link: ["/navigation/leaderboard"] },
         { name: 'Inventory', icon: 'category', link: ['/navigation/inventory'] },
-        { name: 'Settings', icon: 'settings', link: [] },
+        { name: 'Settings', icon: 'settings', link: ["/navigation/settings"] },
       ],
     },
   ];
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private contexts: ChildrenOutletContexts) {
     if (isDevMode())
       this.menuCategories.push({
         name: 'Development',
         items: [{ name: 'Test', icon: 'bug_report', link: ['/dev'] }],
       });
+  }
+
+  getRouteAnimationData() {
+    return this.contexts.getContext('primary')?.route?.snapshot?.data?.['animation'];
   }
 
   logout() {

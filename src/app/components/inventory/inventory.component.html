@@ -1,4 +1,4 @@
 <div class="content">
   <span *ngIf="!items.length">No Items in Inventory...</span>
-  <app-item *ngFor="let item of items" [item]="item" class="item" [selectable]="selectable" (clickedEvent)="itemClicked.emit($event)"></app-item>
+  <app-item *ngFor="let item of filteredItems" [item]="item" class="item" [selectable]="selectable" (clickedEvent)="itemClicked.emit($event)"></app-item>
 </div>

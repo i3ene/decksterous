@@ -8,3 +8,20 @@
 .sidenav {
   height: 100%;
 }
+
+mat-toolbar {
+  background: linear-gradient(45deg, #006838, #96cf24) !important;
+
+  & img {
+    max-height: 80%;
+  }
+}
+
+.is-active {
+  font-weight: bold;
+  color: #4caf50;
+}
+
+.content {
+  overflow-x: hidden;
+}

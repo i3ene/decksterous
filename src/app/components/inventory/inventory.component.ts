@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, Input, ViewChildren, Output, EventEmitter } from '@angular/core';
 import { CardDeck } from 'src/app/models/data/card.model';
 import { Inventory } from 'src/app/models/data/inventory.model';
-import { Item } from 'src/app/models/data/item.model';
+import { Item, ItemType } from 'src/app/models/data/item.model';
 import { RequestService } from 'src/app/services/request/request.service';
 import { ItemComponent } from '../item/item.component';
 
@@ -28,6 +28,8 @@ export class InventoryComponent {
     this.setId('user', value);
   }
 
+  @Input() filter: ItemType[] = [];
+
   @Input() selectable: boolean = false;
 
   @Output() itemClicked: EventEmitter<Item> = new EventEmitter<Item>();
@@ -38,7 +40,12 @@ export class InventoryComponent {
 
   inventory?: Inventory;
   deck?: CardDeck;
-  items: Item[] = new Array(14).fill({ name: 'Item', description: 'Description', image: 'Image' });
+  items: Item[] = []; //new Array(14).fill({ name: 'Item', description: 'Description', image: 'Image' });
+
+  get filteredItems(): Item[] {
+    if (!this.filter.length) return this.items;
+    else return this.items.filter(x => this.filter.includes(x.type));
+  }
 
   constructor(private request: RequestService) {}
 

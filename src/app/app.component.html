@@ -1,4 +1,6 @@
-<router-outlet></router-outlet>
+<div class="content" [@routeAnimations]="getRouteAnimationData()">
+  <router-outlet></router-outlet>
+</div>
 <div class="version">
   {{ version }}
 </div>

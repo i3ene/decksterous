@@ -1,15 +1,17 @@
-<mat-card class="align_column">
-  <div class="align_start">
-    <button mat-icon-button *ngIf="navigation" [routerLink]="navigation">
-      <mat-icon>
-        arrow_back
-      </mat-icon>
-    </button>
-    <h1 *ngIf="title">{{title}}</h1>
-    <ng-container *ngTemplateOutlet="header"></ng-container>
-  </div>
-  <ng-container *ngTemplateOutlet="content"></ng-container>
-  <div class="align_end">
-    <ng-container *ngTemplateOutlet="footer"></ng-container>
-  </div>
-</mat-card>
+<div class="container">
+  <mat-card class="align_column">
+    <div class="align_start">
+      <button mat-icon-button *ngIf="navigation" [routerLink]="navigation">
+        <mat-icon>
+          arrow_back
+        </mat-icon>
+      </button>
+      <h1 *ngIf="title">{{title}}</h1>
+      <ng-container *ngTemplateOutlet="header"></ng-container>
+    </div>
+    <ng-container *ngTemplateOutlet="content"></ng-container>
+    <div class="align_end">
+      <ng-container *ngTemplateOutlet="footer"></ng-container>
+    </div>
+  </mat-card>
+</div>
