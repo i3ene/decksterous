@@ -15,18 +15,31 @@ export class RoomSocketEvent {
   }
 }
 
-export enum FrontendAction {
+/**
+ * Actions from the backend (to the frontend)
+ */
+export enum BackendAction {
   ERROR = 'error',
+  SYNC = 'sync',
+  READY_CHANGED = 'ready_changed',
+  CARD_HEALTH_CHANGED = 'card_health_changed',
+  CARD_REMOVED = 'card_removed',
+  CARD_ATTACKED = 'card_attacked',
+  CARD_DRAWN = 'card_drawn',
+  CARD_PLACED = 'card_placed',
+  DECK_SELECTED = 'deck_selected',
+  TURN_CHANGED = 'turn_changed',
+}
+
+/**
+ * Actions from the frontend (to the backend)
+ */
+export enum FrontendAction {
   SET_READY = 'set_ready',
-  PLAYER_READY = 'player_ready',
   SELECT_DECK = 'select_deck',
   DRAW_CARD = 'draw_card',
   PLACE_CARD = 'place_card',
-  REMOVE_CARD = 'remove_card',
-  CARD_HEALTH = 'card_health',
-  CARD_ATTACK = 'card_attack',
-  TURN_CHANGE = 'turn_change',
-  TURN_END = 'turn_end',
+  END_TURN = 'end_turn',
 }
 
 export enum SocketAction {
