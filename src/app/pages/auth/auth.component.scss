@@ -13,9 +13,6 @@
     justify-content: center;
     flex-grow: 1;
     overflow-x: hidden;
-    &:has(> img) {
-        overflow: auto;
-    }
     &:nth-child(1) {
         flex-basis: 35%;
     }
