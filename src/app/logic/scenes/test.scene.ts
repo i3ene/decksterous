@@ -12,6 +12,11 @@ export class TestScene implements IScene {
   cube!: Mesh;
   plane!: Mesh;
 
+  functions = {
+    cubeRotation: this.cubeRotation.bind(this),
+    cubeCircle: this.cubeCircle.bind(this)
+  }
+
   constructor() {
     this.initLights();
     this.initObjects();
@@ -32,6 +37,7 @@ export class TestScene implements IScene {
     this.cube.scale.set(1, 1, 1);
 
     this.plane = new PlaneThree().mesh;
+    this.plane.scale.set(10, 10, 1);
     this.plane.position.set(0, 0, 0);
   }
 
@@ -41,14 +47,8 @@ export class TestScene implements IScene {
   }
 
   bind(threeLogic: ThreeLogic) {
-    threeLogic.scene.add(this.ambient);
-    threeLogic.scene.add(this.light);
-    threeLogic.scene.add(this.cube);
-    threeLogic.scene.add(this.plane);
+    threeLogic.loadObject(this, this.ambient, this.light, /*this.cube,*/ this.plane);
     this.camerSetup(threeLogic.camera);
-    threeLogic.loopFunctions.push(this.cubeRotation.bind(this));
-    threeLogic.loopFunctions.push(this.cubeCircle.bind(this));
-    //this.cubeMove(threeLogic);
   }
 
   cubeRotation(threeLogic: ThreeLogic) {
@@ -63,17 +63,4 @@ export class TestScene implements IScene {
     this.cube.position.z = Math.cos(threeLogic.time.current * 0.001) * 2;
   }
 
-  cubeMove(threeLogic: ThreeLogic) {
-    var move1 = threeLogic.move(this.cube, new Vector3(1, 1, 0), 20).easing(TWEEN.Easing.Cubic.Out);
-    var move2 = threeLogic.move(this.cube, new Vector3(0, -2, -1), 40).easing(TWEEN.Easing.Cubic.Out);
-    var move3 = threeLogic.move(this.cube, new Vector3(-2, 0, 2), 40).easing(TWEEN.Easing.Cubic.Out);
-    var move4 = threeLogic.move(this.cube, new Vector3(1, 1, -1), 20).easing(TWEEN.Easing.Cubic.Out);
-
-    move1.chain(move2);
-    move2.chain(move3);
-    move3.chain(move4);
-    move4.chain(move1);
-
-    move1.start();
-  }
 }

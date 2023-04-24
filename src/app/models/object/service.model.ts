@@ -3,7 +3,7 @@ export interface InputServiceEvent {
   data: any;
 }
 
-export enum SocketSubscriptionKey {
+export enum SocketKey {
   ROOM = 'room',
   GAME = 'game'
 }

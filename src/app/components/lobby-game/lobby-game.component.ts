@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { SocketKey } from 'src/app/models/object/service.model';
 import { Item, ItemType } from 'src/app/models/data/item.model';
-import { SocketSubscriptionKey } from 'src/app/models/object/service.model';
 import { TokenService } from 'src/app/services/auth/token.service';
 import { GameService } from 'src/app/services/game.service';
 import { SocketService } from 'src/app/services/request/socket.service';
@@ -19,7 +19,7 @@ export class LobbyGameComponent implements OnInit {
   constructor(public game: GameService, public socket: SocketService, private token: TokenService) { }
 
   get SocketKey() {
-    return SocketSubscriptionKey;
+    return SocketKey;
   }
 
   get ItemType() {

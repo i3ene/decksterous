@@ -2,7 +2,7 @@ import { Server, Socket } from 'socket.io';
 import { RoomSocket } from '../socket/room.socket';
 import { Game } from '../models/object/game.object';
 import { GamePlayer } from '../models/object/game.model';
-import { GameActionEvent, RoomAction, RoomSocketEvent, SocketAction } from '../models/object/socket.model';
+import { FrontendAction, RoomAction, RoomSocketEvent, SocketAction } from '../models/object/socket.model';
 
 export namespace GameController {
   export const games: Map<string, Game> = new Map();

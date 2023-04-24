@@ -1,11 +1,10 @@
 import EventEmitter from 'events';
-import { BroadcastOperator, Socket } from 'socket.io';
-import { DefaultEventsMap } from 'socket.io/dist/typed-events';
+import { Socket } from 'socket.io';
 import { Card } from '../data/card.model';
 import { CardDeck } from '../data/cardDeck.model';
 import { User } from '../data/user.model';
 import { Game } from './game.object';
-import { GameAction, GameActionEvent, SocketAction } from './socket.model';
+import { BackendAction, FrontendAction, SocketAction } from './socket.model';
 
 export enum GameEvent {
   START = 'start',
@@ -13,13 +12,13 @@ export enum GameEvent {
   END = 'end',
 }
 
-export enum GameEventState {
+export enum GameState {
   BEFORE = 'before',
   AT = 'at',
   AFTER = 'after',
 }
 
-export class GameEvents {
+export class GameEventSet {
   [GameEvent.START]: EventEmitter = new EventEmitter();
   [GameEvent.TURN]: EventEmitter = new EventEmitter();
   [GameEvent.END]: EventEmitter = new EventEmitter();
@@ -27,31 +26,64 @@ export class GameEvents {
 
 export class GameLogicState {
   event: GameEvent = GameEvent.START;
-  state: GameEventState = GameEventState.BEFORE;
+  state: GameState = GameState.BEFORE;
 }
 
 export interface GameRule {
   [key: string]: any;
 }
 
-export interface GameRules {
-  [GameEventState.BEFORE]: GameRule[];
-  [GameEventState.AT]: GameRule[];
-  [GameEventState.AFTER]: GameRule[];
+export interface GameRuleSet {
+  [GameState.BEFORE]: GameRule[];
+  [GameState.AT]: GameRule[];
+  [GameState.AFTER]: GameRule[];
+}
+
+export class GameRuleBook implements GameRuleSet {
+  [GameState.BEFORE]: GameRule[] = [];
+  [GameState.AT]: GameRule[] = [];
+  [GameState.AFTER]: GameRule[] = [];
+
+  game: Game;
+
+  constructor(game: Game) {
+    this.game = game;
+  }
+
+  addRule(state: GameState, rule: GameRule) {
+    this[state].push(rule);
+    // TODO: Add subscription/listener
+  }
 }
 
 export class GamePlayer {
   /**
-   * Socket connection of player
+   * Current socket (does not need to be same as the active {@link socket socket})
    */
+  _currentSocket!: Socket;
   _socket!: Socket;
+  /**
+   * (Active) socket connection of player
+   */
   get socket(): Socket {
     return this._socket;
   }
+
   set socket(value: Socket) {
-    if (this._socket) this._socket.removeListener(SocketAction.GAME_SERVER, this.handleEvent);
+    // Set current socket
+    this._currentSocket = value;
+    // If no game instance, skip
+    if (this.game == undefined) return;
+    // Remove active listener
+    if (this._socket) this._socket.removeListener(SocketAction.BACKEND, this.game.playerActionEventHandler);
+    // Set active socket
     this._socket = value;
-    value.on(SocketAction.GAME_SERVER, this.handleEvent.bind(this));
+    // Set new listener
+    if (value) {
+      value.on(SocketAction.BACKEND, (event: any) =>
+        this.game!.playerActionEventHandler(new GamePlayerEvent(this, event.action, event.args))
+      );
+    }
   }
 
   /**
@@ -84,10 +116,19 @@ export class GamePlayer {
    */
   event: EventEmitter = new EventEmitter();
 
+  _game?: Game;
   /**
-   * Reference to the game
+   * Reference to the {@link Game game}
    */
-  game?: Game;
+  set game(value: Game | undefined) {
+    this._game = value;
+    // Re-trigger socket change to subscribe to new game instance evennt handler
+    this.socket = this._currentSocket;
+  }
+
+  get game(): Game | undefined {
+    return this._game;
+  }
 
   /**
    * If player is ready
@@ -100,17 +141,6 @@ export class GamePlayer {
     this.deck = [];
   }
 
-  handleEvent(event: any) {
-    switch (event.action) {
-      case GameActionEvent.SELECT_DECK:
-        this.selectDeck(event.deckId);
-        break;
-      case GameActionEvent.SET_READY:
-        this.setReady(event.state);
-        break;
-    }
-  }
-
   /**
    * Set ready state of player.
    * (If deck is empty, it will not set the ready state)
@@ -120,11 +150,13 @@ export class GamePlayer {
   setReady(state: boolean): boolean {
     if (this.isReady == state) return true;
     if (state && this.deck.length == 0) {
-      this.socket.emit(SocketAction.GAME_SOCKET, "Please select a deck first!");
+      this.emit(BackendAction.ERROR, { message: 'Please select a deck first!' });
       return false;
     }
     this.isReady = state;
-    this.event.emit(GameAction.PLAYER, new GamePlayerEvent(this, GameAction.PLAYER_READY, state));
+    // Emit state change
+    const event = { state: state };
+    this.emit(BackendAction.READY_CHANGED, event, event);
     return true;
   }
 
@@ -136,16 +168,18 @@ export class GamePlayer {
    */
   async selectDeck(deckId: number): Promise<boolean> {
     if (this.isReady) {
-      this.socket.emit(SocketAction.GAME_SOCKET, `Deck cannot not be changed when ready!`);
+      this.emit(BackendAction.ERROR, { message: `Deck cannot not be changed when ready!` });
       return false;
     }
     const deck: CardDeck | null = await CardDeck.scope(['gameDeck']).findByPk(deckId);
-    if (!deck || !deck.inventoryItems) {
-      this.socket.emit(SocketAction.GAME_SOCKET, `Deck ${deckId} could not be selected or was empty!`);
+    if (!deck || !deck.inventoryItems || !deck.inventoryItems.length) {
+      this.emit(BackendAction.ERROR, { message: `Deck ${deckId} could not be selected or was empty!` });
       return false;
     }
-    this.deck = deck.inventoryItems.map(x => x.item?.card!);
-    this.socket.emit(SocketAction.GAME_SOCKET, `Deck ${deckId} selected.`);
+    this.deck = deck.inventoryItems.map((x) => x.item?.card!);
+    // Emit selection of deck
+    const event = { deckId: deckId };
+    this.emit(BackendAction.DECK_SELECTED, event);
     return true;
   }
 
@@ -155,12 +189,19 @@ export class GamePlayer {
    * @returns Array of drawn cards
    */
   drawCards(amount: number): Card[] {
+    // Initialize result set
     const cards: Card[] = [];
     while (amount-- > 0) {
-      cards.push(...this.deck.splice(this.deck.length, 1));
-      this.event.emit(GameAction.CARD, null); //TODO: emit drawing of card
+      // Remove card from deck 
+      const card = this.deck.splice(this.deck.length, 1)[0];
+      // Move it to the result set
+      cards.push(card);
+      // Emit drawn card
+      this.emit(BackendAction.CARD_DRAWN, { card: card }, { card: {} });
     }
+    // Add cards to hand
     this.cards.push(...cards);
+    // Return drawn cards
     return cards;
   }
 
@@ -171,10 +212,16 @@ export class GamePlayer {
    * @returns If `cardIndex` is out of bound or `fieldIndex` already has a card or is out of bound it will return `false` else `true`
    */
   placeCard(cardIndex: number, fieldIndex: number): boolean {
+    // Check cardIndex and fieldIndex for out-of-bound values (return false on error)
     if (cardIndex > this.cards.length || this.game!.fieldSize <= fieldIndex || this.field.get(fieldIndex)) return false;
+    // Remove card from hand at cardIndex
     const card = this.cards.splice(cardIndex, 1)[0];
+    // Set removed card at fieldIndex
     this.field.set(fieldIndex, card);
-    this.event.emit(GameAction.CARD, null); //TODO: emit placing of card
+    // Emit placed card
+    const event = { fieldIndex: fieldIndex, cardIndex: cardIndex };
+    this.emit(BackendAction.CARD_PLACED, event, event);
+    // Return true for success
     return true;
   }
 
@@ -183,11 +230,17 @@ export class GamePlayer {
    * @param fieldIndex Index of field
    */
   removeCard(fieldIndex: number): void {
+    // Remove card from field at fieldIndex
     const card = this.field.get(fieldIndex);
+    // Check for empty card
     if (!card) return;
+    // Add removed card to grave
     this.grave.push(card);
+    // Delete complete entry on field by fieldIndex
     this.field.delete(fieldIndex);
-    this.event.emit(GameAction.CARD, null); //TODO: emit death of card
+    // Emit deletion of card
+    const event = { fieldIndex: fieldIndex };
+    this.emit(BackendAction.CARD_REMOVED, event, event);
   }
 
   /**
@@ -196,10 +249,16 @@ export class GamePlayer {
    * @param amount Health to add/remove
    */
   cardHealth(fieldIndex: number, amount: number): void {
+    // Get card from field at fieldIndex
     const card = this.field.get(fieldIndex);
+    // Check for empty card
     if (!card) return;
+    // Add up amount to health
     card.health += amount;
-    this.event.emit(GameAction.CARD, null); //TODO: emit new health of card
+    // Emit change of health
+    const event = { fieldIndex: fieldIndex, card: card };
+    this.emit(BackendAction.CARD_HEALTH_CHANGED, event, event);
+    // If health less than 0, remove card
     if (card.health <= 0) this.removeCard(fieldIndex);
   }
 
@@ -209,9 +268,40 @@ export class GamePlayer {
    * @param fieldIndex Index of field
    */
   attackCard(attacker: Card | undefined, fieldIndex: number): void {
+    // Check for attacker card
     if (!attacker) return;
-    this.event.emit(GameAction.CARD, null); //TODO: emit card attack
+    // Emit attack of card
+    const event = { fieldIndex: fieldIndex, card: attacker };
+    this.emit(BackendAction.CARD_ATTACKED, event, event);
+    // Subtract health of field card by attacker damage
     this.cardHealth(fieldIndex, -attacker.damage);
+  }
+
+  /**
+   * Synchronize player data
+   * @returns Player data
+   */
+  sync() {
+    const event = {
+      playerId: this.game?.players.find(this),
+      cards: this.cards,
+      field: this.field
+    };
+    this.emit(BackendAction.SYNC, event, Object.assign(event, { cards: Array(event.cards.length) }));
+    return event;
+  }
+
+  /**
+   * Emit an event
+   * @param action The action identifier
+   * @param playerArgs Arguments send to the player directly
+   * @param allArgs Arguments send to everyone else (except the player)
+   */
+  emit(action: BackendAction, playerArgs: any, allArgs?: any) {
+    // Emit directly to player
+    this.socket.emit(SocketAction.FRONTEND_PLAYER, { action: action, args: playerArgs } as GamePlayerEvent);
+    // (If set) emit to everyone else (except player itself)
+    if (allArgs) this.event.emit(SocketAction.INTERNAL, { action: action, args: allArgs } as GamePlayerEvent);
   }
 }
 
@@ -224,7 +314,7 @@ export class GamePlayerCollection {
   /**
    * Player events
    */
-   events: EventEmitter = new EventEmitter();
+  events: EventEmitter = new EventEmitter();
 
   /**
    * Real index
@@ -237,6 +327,7 @@ export class GamePlayerCollection {
   get index(): number {
     return this._index;
   }
+
   set index(value: number) {
     this._index = this.bound(value);
   }
@@ -260,7 +351,7 @@ export class GamePlayerCollection {
   /**
    * Reference to the game
    */
-   game: Game;
+  game: Game;
 
   constructor(game: Game) {
     this.game = game;
@@ -272,8 +363,11 @@ export class GamePlayerCollection {
    * @param player Player to add
    */
   add(player: GamePlayer) {
+    // Add game instance to player
     player.game = this.game;
-    player.event.addListener(GameAction.PLAYER, (event) => this.eventHandler(GameAction.PLAYER, event));
+    // Add listener to player events
+    player.event.addListener(SocketAction.INTERNAL, (event) => this.eventHandler(player, event));
+    // Add player to set (if player already exist, fetch id)
     this.map.set(this.find(player) ?? this.map.size + 1, player);
   }
 
@@ -283,12 +377,17 @@ export class GamePlayerCollection {
    * @param player Player instance or map key
    */
   remove(player: number | GamePlayer): void {
+    // Remove player from map
     if (typeof player == 'number') this.map.delete(player);
     else this.map.delete(this.find(player)!);
 
+    // Initialize empty result
     const players = [];
-    for(const entry of this.map.values()) players.push(entry);
+    // Retrieve all players from old map
+    for (const entry of this.map.values()) players.push(entry);
+    // Create new map
     this.map = new Map();
+    // Add players
     for (const entry of players) this.add(entry);
   }
 
@@ -298,12 +397,18 @@ export class GamePlayerCollection {
    * @returns Found key number else `undefined`
    */
   find(player: GamePlayer | number): number | undefined {
-    const id = typeof player == "number" ? player : player.user.id;
-    for(const key of this.map.keys()) {
+    // Fetch an id if exists
+    const id = typeof player == 'number' ? player : player.user.id;
+    // Iterate through every key of map
+    for (const key of this.map.keys()) {
+      // Retrieve object from map by key
       const temp = this.map.get(key);
+      // Skip on no entry
       if (!temp) continue;
+      // Check id and return key on match
       if (temp.user.id == id) return key;
     }
+    // Return default undefined
     return undefined;
   }
 
@@ -313,8 +418,11 @@ export class GamePlayerCollection {
    * @returns Found player instance else `undefined`
    */
   get(id: number): GamePlayer | undefined {
+    // Get key by id
     const key = this.find(id);
+    // Return undefined on no key
     if (!key) return undefined;
+    // Return player instance on key
     else return this.map.get(key);
   }
 
@@ -341,8 +449,12 @@ export class GamePlayerCollection {
    * @returns current `index`
    */
   turn(): number {
+    // Increment player turn index
     ++this.index;
-    this.events.emit(GameAction.GAME, null); //TODO: emit next player turn
+    // Emit turn change
+    const event = { action: BackendAction.TURN_CHANGED, args: { playerIndex: this.index } } as GamePlayerEvent;
+    this.events.emit(SocketAction.INTERNAL, event);
+    // Return current player turn index
     return this.index;
   }
 
@@ -352,35 +464,58 @@ export class GamePlayerCollection {
    * @returns `true` if everyone is ready.
    */
   areReady(): boolean {
+    // Check if atleast two players
     if (this.map.size < 2) return false;
-    for(const player of this.map.values()) {
+    // Iterate through every player
+    for (const player of this.map.values()) {
+      // If player is not ready, return false
       if (!player.isReady) return false;
     }
+    // Return true for every player is ready
     return true;
+  }
+
+  /**
+   * Do attack turn
+   * @param turnChange if a turn change should be done after attack
+   */
+  attack(turnChange: boolean = false): void {
+    for (const [index, card] of this.current.field) {
+      this.next.attackCard(card, index);
+    }
+    if (turnChange) this.turn();
+  }
+
+  /**
+   * Synchornize every player data
+   */
+  sync() {
+    this.map.forEach(x => x.sync());
   }
 
   /**
    * Bubble events from players
    * @param player Initiator
-   * @param event Event symbol
-   * @param args Event data
+   * @param event Event data
    */
-  eventHandler(action: GameAction,  event: GamePlayerEvent) {
-    this.events.emit(action, event);
+  eventHandler(player: GamePlayer, event: GamePlayerEvent) {
+    // Add player caller object
+    event.player = player;
+    // Emit internal event
+    this.events.emit(SocketAction.INTERNAL, event);
   }
 }
 
 export interface GamePlayerEvent {
-  player?: GamePlayer;
-  action: GameAction;
-  args?: any | any[];
+  player: GamePlayer;
+  action: FrontendAction | BackendAction;
+  args: any | any[];
 }
 
-
 export class GamePlayerEvent implements GamePlayerEvent {
-  constructor(player: GamePlayer, action: GameAction, args?: any) {
+  constructor(player: GamePlayer, action: FrontendAction, args?: any) {
     this.player = player;
     this.action = action;
-    if (args) this.args = args;
+    this.args = args ?? {};
   }
 }

@@ -1,18 +1,53 @@
-import { Component, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Subscription } from 'rxjs';
 import { NewLobbyDialogue } from 'src/app/dialogues/new-lobby/new-lobby.component';
-import { SocketSubscriptionKey } from 'src/app/models/object/service.model';
+import { SocketKey } from 'src/app/models/object/service.model';
+import { GameService } from 'src/app/services/game.service';
 import { SocketService } from 'src/app/services/request/socket.service';
 
 @Component({
   templateUrl: './lobby.component.html',
   styleUrls: ['./lobby.component.scss']
 })
-export class LobbyPage {
+export class LobbyPage implements OnInit, OnDestroy {
 
-  constructor(public socket: SocketService) { }
+  all?: Subscription;
+  player?: Subscription;
+
+  constructor(public game: GameService, private snackBar: MatSnackBar) { }
 
   get SocketKey() {
-    return SocketSubscriptionKey;
+    return SocketKey;
+  }
+
+  ngOnInit(): void {
+    this.all = this.game.all.subscribe(this.handleEvent.bind(this));
+    this.player = this.game.player.subscribe(this.handleEvent.bind(this));
+  }
+
+  ngOnDestroy(): void {
+    this.all?.unsubscribe();
+    this.player?.unsubscribe();
+  }
+
+  handleEvent(event: any) {
+    console.log(event);
+    switch(event.action) {
+      case 'error':
+        this.error(event.args.message);
+        break;
+      case 'deck_selected':
+        this.message(`Deck ${event.args.deckId} selected.`);
+        break;
+    }
+  }
+
+  message(text: string) {
+    this.snackBar.open(text, undefined, { duration: 3000 });
+  }
+
+  error(text: string) {
+    this.snackBar.open(text, undefined, { duration: 3000, panelClass: 'error-message' });
   }
 }

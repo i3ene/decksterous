@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { SocketSubscriptionKey } from 'src/app/models/object/service.model';
+import { SocketKey } from 'src/app/models/object/service.model';
 import { SocketConnection } from 'src/app/services/request/socket.connection';
 import { SocketService } from 'src/app/services/request/socket.service';
 
@@ -13,6 +13,6 @@ export class DevSocketComponent {
   constructor(public socket: SocketService) { }
 
   get SocketKey() {
-    return SocketSubscriptionKey;
+    return SocketKey;
   }
 }

@@ -1,10 +1,10 @@
 <div class="container">
-  <ng-container *ngIf="socket.isIn(SocketKey.ROOM) else list">
-    <ng-container *ngIf="socket.isIn(SocketKey.GAME) else lobby">
+  <ng-container *ngIf="game.socket.isIn(SocketKey.ROOM) else list">
+    <ng-container *ngIf="game.socket.isIn(SocketKey.GAME) else lobby">
       <app-lobby-game></app-lobby-game>
     </ng-container>
     <ng-template #lobby>
-      <app-lobby-room [name]="socket.names.get(SocketKey.ROOM)"></app-lobby-room>
+      <app-lobby-room [name]="game.socket.names.get(SocketKey.ROOM)"></app-lobby-room>
     </ng-template>
   </ng-container>
   <ng-template #list>

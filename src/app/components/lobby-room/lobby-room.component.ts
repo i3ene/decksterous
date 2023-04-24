@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { SocketSubscriptionKey } from 'src/app/models/object/service.model';
+import { SocketKey } from 'src/app/models/object/service.model';
 import { SocketService } from 'src/app/services/request/socket.service';
 
 @Component({
@@ -14,6 +14,6 @@ export class LobbyRoomComponent {
   constructor(public socket: SocketService) { }
 
   get SocketKey() {
-    return SocketSubscriptionKey;
+    return SocketKey;
   }
 }
