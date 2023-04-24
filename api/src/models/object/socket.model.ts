@@ -1,6 +1,6 @@
 export enum RoomAction {
   JOIN = 'joined',
-  LEAVE = 'left'
+  LEAVE = 'left',
 }
 
 export class RoomSocketEvent {
@@ -15,20 +15,35 @@ export class RoomSocketEvent {
   }
 }
 
-export enum GameAction {
-  GAME = 'game',
-  PLAYER = 'player',
-  PLAYER_READY = 'player_ready',
-  CARD = 'card'
+/**
+ * Actions from the backend (to the frontend)
+ */
+export enum BackendAction {
+  ERROR = 'error',
+  SYNC = 'sync',
+  READY_CHANGED = 'ready_changed',
+  CARD_HEALTH_CHANGED = 'card_health_changed',
+  CARD_REMOVED = 'card_removed',
+  CARD_ATTACKED = 'card_attacked',
+  CARD_DRAWN = 'card_drawn',
+  CARD_PLACED = 'card_placed',
+  DECK_SELECTED = 'deck_selected',
+  TURN_CHANGED = 'turn_changed',
 }
 
-export enum GameActionEvent {
-  SELECT_DECK = "select_deck",
-  SET_READY = "set_ready"
+/**
+ * Actions from the frontend (to the backend)
+ */
+export enum FrontendAction {
+  SET_READY = 'set_ready',
+  SELECT_DECK = 'select_deck',
+  DRAW_CARD = 'draw_card',
+  PLACE_CARD = 'place_card',
+  END_TURN = 'end_turn',
 }
 
 export enum SocketAction {
-  ROOM = "room_",
+  ROOM = 'room_',
   ROOM_SERVER = 'room_event',
   ROOM_LIST = 'room_list',
   ROOM_JOIN = 'room_join',
@@ -37,11 +52,27 @@ export enum SocketAction {
   ROOM_SOCKET_LIST = 'room_socket_list',
   ROOM_SOCKET_JOIN = 'room_socket_join',
   ROOM_SOCKET_LEAVE = 'room_socket_leave',
-  GAME = "game_",
+  GAME = 'game_',
   GAME_SERVER = 'game_event',
   GAME_JOIN = 'game_join',
   GAME_LEAVE = 'game_leave',
   GAME_SOCKET = 'game_socket_event',
   GAME_SOCKET_JOIN = 'game_socket_join',
   GAME_SOCKET_LEAVE = 'game_socket_leave',
+  /**
+   * Response to frontend application (for everyone)
+   */
+  FRONTEND_ALL = 'frontend_all',
+  /**
+   * Response to frontend application (directly to player)
+   */
+  FRONTEND_PLAYER = 'frontend_player',
+  /**
+   * Result to backend from frontend (event from player)
+   */
+  BACKEND = 'backend',
+  /**
+   * Response to internal logic (backend to backend)
+   */
+  INTERNAL = 'internal',
 }
