@@ -25,3 +25,21 @@ mat-toolbar {
 .content {
   overflow-x: hidden;
 }
+
+
+
+.mat-drawer {
+  background-color: transparent !important;
+}
+
+.mat-drawer-side {
+  border-right: none;
+}
+
+::ng-deep.mat-drawer-inner-container {
+  direction: rtl !important;
+
+  & > * {
+    direction: ltr !important;
+  }
+}

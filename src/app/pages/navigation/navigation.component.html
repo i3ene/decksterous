@@ -18,10 +18,10 @@
     <mat-sidenav [mode]="'side'" opened #drawer>
       <mat-nav-list>
         <ng-container *ngFor="let category of menuCategories; let last = last">
-          <h2 matSubheader>{{ category.name }}</h2>
-          <mat-list-item *ngFor="let item of category.items" [routerLink]="item.link" [routerLinkActive]="['is-active']">
+          <h2 matSubheader class="card-background">{{ category.name }}</h2>
+          <mat-list-item *ngFor="let item of category.items" [routerLink]="item.link" [routerLinkActive]="['is-active']" class="card-background">
             <mat-icon matListIcon>{{ item.icon }}</mat-icon>
-            {{ item.name }}
+            <div>{{ item.name }}</div>
           </mat-list-item>
           <mat-divider *ngIf="!last"></mat-divider>
         </ng-container>
