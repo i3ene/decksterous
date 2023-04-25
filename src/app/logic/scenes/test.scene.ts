@@ -5,12 +5,14 @@ import * as THREE from 'three';
 import { Camera, DirectionalLight, HemisphereLight, Mesh, Vector3 } from 'three';
 import { ThreeLogic } from '../three.logic';
 import * as TWEEN from '@tweenjs/tween.js';
+import { SphereThree } from 'src/app/models/three/sphere.three';
 
 export class TestScene implements IScene {
   ambient!: HemisphereLight;
   light!: DirectionalLight;
   cube!: Mesh;
   plane!: Mesh;
+  sphere!: Mesh;
 
   functions = {
     cubeRotation: this.cubeRotation.bind(this),
@@ -39,6 +41,9 @@ export class TestScene implements IScene {
     this.plane = new PlaneThree().mesh;
     this.plane.scale.set(10, 10, 1);
     this.plane.position.set(0, 0, 0);
+
+    this.sphere = new SphereThree().mesh;
+    this.sphere.position.set(0, 4, 0);
   }
 
   camerSetup(camera: Camera) {
@@ -47,7 +52,7 @@ export class TestScene implements IScene {
   }
 
   bind(threeLogic: ThreeLogic) {
-    threeLogic.loadObject(this, this.ambient, this.light, /*this.cube,*/ this.plane);
+    threeLogic.loadObject(this, this.ambient, this.light, /*this.cube,*/ this.sphere, this.plane);
     this.camerSetup(threeLogic.camera);
   }
 
