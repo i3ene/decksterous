@@ -44,6 +44,7 @@ export class TestScene implements IScene {
 
     this.sphere = new SphereThree().mesh;
     this.sphere.position.set(0, 4, 0);
+    this.cube = this.sphere;
   }
 
   camerSetup(camera: Camera) {
@@ -57,9 +58,9 @@ export class TestScene implements IScene {
   }
 
   cubeRotation(threeLogic: ThreeLogic) {
-    this.cube.rotation.x += 0.003;
-    this.cube.rotation.y += 0.007;
-    this.cube.rotation.z += 0.001;
+    this.cube.rotation.x += 0.017;
+    this.cube.rotation.y += 0.014;
+    this.cube.rotation.z += 0.011;
   }
 
   cubeCircle(threeLogic: ThreeLogic) {
