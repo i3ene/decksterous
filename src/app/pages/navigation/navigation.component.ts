@@ -15,20 +15,21 @@ export class NavigationPage {
       name: 'Dashboard',
       items: [
         { name: 'Home', icon: 'home', link: ['/navigation/home'] },
-        { name: 'Game', icon: 'style', link: ['/game'] },
+        { name: 'Solo', icon: 'style', link: ['/navigation/solo'] },
       ],
     },
     {
       name: 'Community',
       items: [
-        { name: 'Marketplace', icon: 'storefront', link: ["/navigation/marketplace"] },
         { name: 'Lobbies', icon: 'list', link: ["/navigation/lobby"] },
+        { name: 'Marketplace', icon: 'storefront', link: ["/navigation/marketplace"] },
+        { name: 'Ranking', icon: 'leaderboard', link: ["/navigation/leaderboard"] },
       ],
     },
     {
-      name: 'Profile',
+      name: 'General',
       items: [
-        { name: 'Stats', icon: 'leaderboard', link: ["/navigation/leaderboard"] },
+        { name: 'Profile', icon: 'person', link: ['/navigation/profile'] },
         { name: 'Inventory', icon: 'category', link: ['/navigation/inventory'] },
         { name: 'Settings', icon: 'settings', link: ["/navigation/settings"] },
       ],
@@ -39,7 +40,10 @@ export class NavigationPage {
     if (isDevMode())
       this.menuCategories.push({
         name: 'Development',
-        items: [{ name: 'Test', icon: 'bug_report', link: ['/dev'] }],
+        items: [
+          { name: 'Test', icon: 'bug_report', link: ['/dev'] },
+          { name: 'Game', icon: 'sports_esports', link: ['/game'] }
+        ],
       });
   }
 

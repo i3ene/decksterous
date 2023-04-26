@@ -43,3 +43,101 @@ mat-toolbar {
     direction: ltr !important;
   }
 }
+
+
+
+.nav-list {
+  //direction: rtl;
+}
+
+.nav-list-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding-left: 16px;
+}
+
+.nav-list-group {
+  margin-top: 16px;
+}
+
+.nav-list-item {
+  height: 56px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  overflow: hidden;
+  //transition-duration: 0.3s;
+  overflow: hidden;
+}
+
+.nav-list-item-icon {
+  height: 56px;
+  width: 56px;
+  line-height: 56px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.nav-list-item-text {
+  height: 56px;
+  line-height: 56px;
+  text-align: center;
+  width: 0%;
+  overflow: hidden;
+  //transition-duration: 0.3s;
+  border-radius: 0 8px 8px 0;
+}
+
+.is-active .nav-list-item-text {
+  width: 100%;
+  padding: 0 16px;
+}
+
+.nav-list-group > .nav-list-item:nth-of-type(2) .nav-list-item-icon {
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+
+.nav-list-group > .nav-list-item:nth-last-of-type(1) .nav-list-item-icon {
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+
+.is-active .nav-list-item-icon {
+  border-top-right-radius: 0px !important;
+  border-bottom-right-radius: 0px !important;
+}
+
+.is-active .icon-Home {
+  background-image: linear-gradient(45deg, #37474F, #CFD8DC);
+}
+
+.is-active .icon-Lobbies {
+  background-image: linear-gradient(45deg, #0D47A1, #4FC3F7);
+}
+
+.is-active .icon-Inventory {
+  background-image: linear-gradient(45deg, #B71C1C, #FF8A80);
+}
+
+.is-active .icon-Profile {
+  background-image: linear-gradient(45deg, #006838, #96cf24);
+}
+
+.is-active .icon-Ranking {
+  background-image: linear-gradient(45deg, #FB8C00, #FFEB3B);
+}
+
+.is-active .icon-Solo {
+  background-image: linear-gradient(45deg, #512DA8, #AB47BC);
+}
+
+.is-active .icon-Marketplace {
+  background-image: linear-gradient(45deg, #37474F, #CFD8DC);
+}
+
+.is-active .icon-Settings {
+  background-image: linear-gradient(45deg, #37474F, #CFD8DC);
+}
