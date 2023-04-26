@@ -9,8 +9,8 @@ export class HomePage {
 
   items: (MenuItem & { title: string; })[] = [
     { name: "lobbies", link: ["/navigation/lobby"], icon: "list", title: "Lobbies" },
-    { name: "ranking", link: ["/navigation/ranking"], icon: "leaderboard", title: "Ranking" },
-    { name: "solo", link: ["/game"], icon: "style", title: "Solo" },
+    { name: "ranking", link: ["/navigation/leaderboard"], icon: "leaderboard", title: "Ranking" },
+    { name: "solo", link: ["/navigation/solo"], icon: "style", title: "Solo" },
     { name: "profile", link: ["/navigation/profile"], icon: "person", title: "Profile" },
     { name: "inventory", link: ["/navigation/inventory"], icon: "category", title: "Inventory" }
   ];

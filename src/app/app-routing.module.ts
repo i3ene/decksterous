@@ -13,6 +13,7 @@ import { UserInventoryPage } from './pages/navigation/inventory/inventory.compon
 import { ProfileComponent } from './components/profile/profile.component';
 import { HomePage } from './pages/navigation/home/home.component';
 import { LobbyPage } from './pages/navigation/lobby/lobby.component';
+import { DefaultComponent } from './components/default/default.component';
 
 const routes: Routes = [
   { path: 'dev', component: DevComponent },
@@ -36,6 +37,10 @@ const routes: Routes = [
       { path: 'lobby', component: LobbyPage, data: { animation: 'left' } },
       { path: 'inventory', component: UserInventoryPage, data: { animation: 'right' } },
       { path: 'profile', component: ProfileComponent, data: { animation: 'top' } },
+      { path: 'solo', component: DefaultComponent },
+      { path: 'marketplace', component: DefaultComponent },
+      { path: 'leaderboard', component: DefaultComponent },
+      { path: 'settings', component: DefaultComponent },
       { path: '**', redirectTo: 'home' },
     ],
   },

@@ -7,7 +7,7 @@
 }
 
 .title {
-    font-size: 26px;
+    font-size: 1.5rem;
     font-weight: bold;
     z-index: 1;
 }
@@ -45,14 +45,12 @@
 
     & .header {
         position: relative;
-        flex-basis: 100px;
         align-self: stretch;
 
         display: flex;
         flex-direction: column;
         justify-content: center;
-        padding-left: 16px;
-        padding-bottom: 32px;
+        padding: 1.25rem 0 2.5rem 1rem;
     }
 
     &:hover .background {
@@ -104,7 +102,7 @@
         --mask: conic-gradient(from -55deg at bottom,#0000,#000 1deg 109deg,#0000 110deg) 50%/42.84px 100%;
     }
 }
-.ranking { 
+.ranking {
     grid-area: ranking;
 
     & .background {
@@ -117,7 +115,7 @@
                 radial-gradient(15px,#000 98%,#0000) bottom/27.75px 30px;
     }
 }
-.solo { 
+.solo {
     grid-area: solo;
 
     & .background {
@@ -131,7 +129,7 @@
             radial-gradient(18.7px at -6.6px 50%,#0000 calc(99% - 10px),#000 calc(101% - 10px) 99%,#0000 101%) calc(50% + 11px) 50%/22px 48px  ;
     }
 }
-.profile { 
+.profile {
     grid-area: profile;
 
     & .background {
@@ -144,7 +142,7 @@
                 radial-gradient(17.49px at 50% calc(100% + 9.00px),#0000 99%,#000 101%) 50% calc(100% - 15px)/60px 100% repeat-x;
     }
 }
-.inventory { 
+.inventory {
     grid-area: inventory;
 
     & .background {
@@ -152,7 +150,7 @@
     }
 
     & .background {
-        background-image: linear-gradient(45deg, #B71C1C, #EF5350);
+        background-image: linear-gradient(45deg, #B71C1C, #FF8A80);
         --mask: radial-gradient(10px at bottom,#0000 97%,#000) 50% / 18.50px 100%;
     }
 }
