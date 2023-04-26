@@ -54,6 +54,7 @@ import { LobbyListComponent } from './components/lobby-list/lobby-list.component
 import { LobbyActionsComponent } from './components/lobby-actions/lobby-actions.component';
 import { LobbyRoomComponent } from './components/lobby-room/lobby-room.component';
 import { LobbyGameComponent } from './components/lobby-game/lobby-game.component';
+import { DefaultComponent } from './components/default/default.component';
 
 @NgModule({
   declarations: [
@@ -100,7 +101,8 @@ import { LobbyGameComponent } from './components/lobby-game/lobby-game.component
     LobbyListComponent,
     LobbyActionsComponent,
     LobbyRoomComponent,
-    LobbyGameComponent
+    LobbyGameComponent,
+    DefaultComponent
   ],
   imports: [
     BrowserModule,
