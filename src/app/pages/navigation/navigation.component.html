@@ -16,16 +16,17 @@
   </mat-toolbar>
   <mat-sidenav-container class="sidenav">
     <mat-sidenav [mode]="'side'" opened #drawer>
-      <mat-nav-list>
-        <ng-container *ngFor="let category of menuCategories; let last = last">
-          <h2 matSubheader>{{ category.name }}</h2>
-          <mat-list-item *ngFor="let item of category.items" [routerLink]="item.link" [routerLinkActive]="['is-active']">
-            <mat-icon matListIcon>{{ item.icon }}</mat-icon>
-            {{ item.name }}
-          </mat-list-item>
-          <mat-divider *ngIf="!last"></mat-divider>
-        </ng-container>
-      </mat-nav-list>
+      <div class="nav-list">
+        <div class="nav-list-container">
+          <span *ngFor="let category of menuCategories; let last = last" class="nav-list-group">
+            <span>{{ category.name }}</span>
+            <span *ngFor="let item of category.items" [routerLink]="item.link" [routerLinkActive]="['is-active']" class="nav-list-item">
+              <mat-icon class="nav-list-item-icon card-background" [class]="'icon-' + item.name">{{ item.icon }}</mat-icon>
+              <span class="nav-list-item-text card-background">{{ item.name }}</span>
+            </span>
+          </span>
+        </div>
+      </div>
     </mat-sidenav>
     <mat-sidenav-content class="content" [@routeAnimations]="getRouteAnimationData()">
       <router-outlet></router-outlet>
