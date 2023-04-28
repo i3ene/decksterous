@@ -1,7 +1,7 @@
-import { BroadcastOperator } from 'socket.io';
-import { DefaultEventsMap } from 'socket.io/dist/typed-events';
-import { GameEvent, GameEventSet, GameState, GamePlayerCollection, GamePlayerEvent, GameRuleSet } from './game.model';
-import { BackendAction, FrontendAction, SocketAction } from './socket.model';
+import {BroadcastOperator} from 'socket.io';
+import {DefaultEventsMap} from 'socket.io/dist/typed-events';
+import {GameEvent, GameEventSet, GamePlayerCollection, GamePlayerEvent, GameRuleSet, GameState} from './game.model';
+import {BackendAction, FrontendAction, SocketAction} from './socket.model';
 
 export class Game {
   /**
@@ -70,13 +70,12 @@ export class Game {
     // Handle global player events
     switch (event.action) {
       case BackendAction.READY_CHANGED:
-        this.room.emit(SocketAction.FRONTEND_ALL, `${event.player?.user.name} is ${event.args.state ? 'ready' : 'not ready'}.`);
+        this.broadcast(event);
         if (!this.players.areReady()) break;
         this.events[GameEvent.START].emit(GameState.AFTER, null);
         break;
       default:
-        // Emit to all in room, except the sender (the player that triggered this action)
-        event.player.socket.broadcast.to(this.roomName).emit(SocketAction.FRONTEND_ALL, event.args);
+        this.broadcast(event);
         break;
     }
   }
@@ -115,6 +114,11 @@ export class Game {
     }
   }
 
+  broadcast(event: GamePlayerEvent) {
+    // Emit to all in room, except the sender (the player that triggered this action)
+    event.player.socket.broadcast.to(this.roomName).emit(SocketAction.FRONTEND_ALL, Object.assign(event, {player: undefined}));
+  }
+
   beforeStart(event: any): void {
     console.log('BeforeStart');
     this.events[GameEvent.START].emit(GameState.AT, null);
@@ -126,6 +130,8 @@ export class Game {
 
   afterStart(event: any): void {
     console.log('AfterStart');
+    this.room.emit(SocketAction.FRONTEND_EVENT, {event: GameEvent.START, state: GameState.AFTER});
+    this.players.setFieldLength(5);
     this.players.sync();
     this.active = true;
     this.events[GameEvent.TURN].emit(GameState.BEFORE, null);
@@ -159,5 +165,5 @@ export class Game {
   afterEnd(event: any): void {
     console.log('AfterEnd');
   }
-  
+
 }
