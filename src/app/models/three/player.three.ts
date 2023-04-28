@@ -10,31 +10,23 @@ export class PlayerThree extends Group {
   hand: HandThree;
   field: FieldThree;
 
-  constructor(fieldLength: number) {
-    super();
+  constructor(obj: any) {
+    super();    
 
-    this.deck = new DeckThree();
-    this.hand = new HandThree();
-    this.field = new FieldThree(fieldLength);
+    this.deck = new DeckThree(obj.deck ?? []);
+    this.hand = new HandThree(obj.cards ?? []);
+    this.field = new FieldThree((obj.field ?? []).length);
     this.add(...[this.deck, this.hand, this.field]);
     
     
     this.hand.position.y = 2;
     this.hand.position.z = 3;
-    this.hand.addCards(new Array(5).fill(undefined).map(x => new CardThree()));
 
     this.deck.position.y = 2;
     this.deck.position.x = 3;
     this.deck.position.z = 2;
-    this.deck.addCards(new Array(5).fill(undefined).map(x => new CardThree()));
 
     this.field.position.y = 2;
-
-    setTimeout(() => this.hand.addCards(this.deck.draw(1)), 5000);
-    setTimeout(() => this.field.placeCard(this.hand.removeCard(0), 0), 6000);
-    setTimeout(() => this.field.placeCard(this.hand.removeCard(0), 1), 7000);
-
-    setTimeout(() => this.field.setLength(4), 8000);
   }
 
 }

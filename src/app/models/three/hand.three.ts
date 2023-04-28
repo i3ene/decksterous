@@ -1,13 +1,16 @@
 import { Group } from "three";
 import { CardThree } from "./card.three";
 import * as THREE from "three";
+import { Card } from "../data/card.model";
 
 export class HandThree extends Group {
 
   private cards: CardThree[] = [];
 
-  constructor() {
+  constructor(cards: (Card | undefined)[]) {
     super();
+
+    cards.forEach(x => this.addCard(new CardThree(x)));
   }
 
   addCards(cards: CardThree[]) {
