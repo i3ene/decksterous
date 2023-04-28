@@ -1,6 +1,6 @@
 import { ElementRef, isDevMode } from '@angular/core';
 import { IScene } from 'src/app/models/object/scene.model';
-import { Color, Mesh, Object3D, Path, PerspectiveCamera, Scene, TextureLoader, Vector3, WebGLRenderer } from 'three';
+import { Color, Intersection, Mesh, Object3D, Path, PerspectiveCamera, Raycaster, Scene, TextureLoader, Vector2, Vector3, WebGLRenderer } from 'three';
 import * as TWEEN from '@tweenjs/tween.js';
 import { Tween } from '@tweenjs/tween.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
@@ -39,12 +39,43 @@ export class ThreeLogic {
 
   public loadedObjects: { scene: IScene, object: Object3D }[] = [];
 
-  //public loopFunctions: { (threeLogic: ThreeLogic): void }[] = [];
+  public raycaster = new Raycaster();
+
+  /**
+   * If pointer actions are transitive
+   */
+  public transitive = false;
+
+  /**
+   * @param x Position X
+   * @param y Position Y
+   * @param z Button
+   */
+  public pointer = new Vector3();
+
+  private _intersects: Intersection<Object3D>[] = [];
+  public set intersects(value: Intersection<Object3D>[]) {
+    this._intersects = value;
+    // Update pointer
+    this.updateIntersections(this.pointer.z);
+    // Reset button
+    this.pointer.z = 0;
+  }
+  public get intersects(): Intersection<Object3D>[] {
+    return this._intersects;
+  }
+
+  /**
+   * Last clicked elements
+   */
+  public lastClick: { object: Object3D, button: number }[] = [];
 
   /** Constructor **/
 
   constructor(canvas: ElementRef | HTMLCanvasElement) {
     this.canvas = canvas instanceof ElementRef ? canvas.nativeElement : canvas;
+    document.addEventListener('pointermove', this.onPointerMove.bind(this));
+    document.addEventListener('pointerdown', this.onPointerDown.bind(this));
     if (isDevMode()) this.statsPanel();
     this.createScene();
     this.startRenderingLoop();
@@ -56,6 +87,18 @@ export class ThreeLogic {
     this.stats.dom.style.left = 'unset';
     this.stats.dom.style.right = '0px';
     this.canvas.parentElement?.appendChild(this.stats.dom);
+  }
+
+  /** Listener **/
+
+  public onPointerDown(event: any) {
+    this.pointer.z = event.buttons
+    this.onPointerMove(event);
+  }
+
+  public onPointerMove(event: any) {
+    this.pointer.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+    this.pointer.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
   }
 
   /** Scene Setup **/
@@ -91,6 +134,9 @@ export class ThreeLogic {
       component.time.delta = time - component.time.previous;
       component.time.previous = time;
 
+      component.raycaster.setFromCamera(component.pointer, component.camera);
+      component.intersects = component.raycaster.intersectObjects(component.scene.children, true);
+
       component.loadedScenes.forEach((sc) => Object.entries(sc.functions ?? {}).forEach((fn) => fn[1](component)));
       component.renderer.render(component.scene, component.camera);
 
@@ -101,6 +147,36 @@ export class ThreeLogic {
   }
 
   /** Engine Setup **/
+
+  public updateIntersections(button?: number) {
+    const exception = [];
+    // Selection
+    for (const intersection of this.intersects) {
+      if (intersection.object.selectable == true) {
+        intersection.object.selected = true;
+        // Add to exception list
+        exception.push(intersection.object);
+        if (!this.transitive) break;
+      }
+    }
+    // Click
+    for (const intersection of this.intersects) {
+      if (intersection.object.clickable == true && button) {
+        intersection.object.clicked = button;
+        if (!this.transitive) break;
+      }
+    }
+
+    // Deselect
+    this.deselect([this.scene], exception);
+  }
+
+  public deselect(objects: Object3D[], exclude?: Object3D[]) {
+    for (const object of objects) {
+      if (!exclude?.some(x => x == object)) object.selected = false;
+      this.deselect(object.children, exclude);
+    }
+  }
 
   public loadScene(scene: IScene) {
     this.unloadScene(scene);
@@ -136,27 +212,6 @@ export class ThreeLogic {
 
   /** Functions **/
 
-  public move(position: Vector3 | Mesh, to: Vector3 | Path, speed: number, translate: boolean = true) {
-    const from = position instanceof Mesh ? position.position : position;
-    if (to instanceof Vector3) {
-      const duration = from.distanceTo(to) * 1000 / speed;
-      let origin = from.clone();
-      const tween = new TWEEN.Tween(translate ? new Vector3(0, 0, 0) : from);
-      if (translate) tween.to(to, duration).onUpdate(vec => {
-        from.x = vec.x + origin.x;
-        from.y = vec.y + origin.y;
-        from.z = vec.z + origin.z;
-      });
-      else tween.to(to, duration)
-      tween.onStart(vec => {
-        origin = from.clone();
-      });
-      tween.delay(0).repeatDelay(0);
-      return tween;
-    } else {
-      // TODO: Path Logic
-      return new TWEEN.Tween(from);
-    }
-  }
+  // TODO: Move/Animate
 
 }

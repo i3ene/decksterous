@@ -6,6 +6,7 @@ import { Camera, DirectionalLight, HemisphereLight, Mesh, Vector3 } from 'three'
 import { ThreeLogic } from '../three.logic';
 import * as TWEEN from '@tweenjs/tween.js';
 import { SphereThree } from 'src/app/models/three/sphere.three';
+import { CardThree } from 'src/app/models/three/card.three';
 
 export class TestScene implements IScene {
   ambient!: HemisphereLight;
@@ -53,7 +54,9 @@ export class TestScene implements IScene {
   }
 
   bind(threeLogic: ThreeLogic) {
-    threeLogic.loadObject(this, this.ambient, this.light, /*this.cube,*/ this.sphere, this.plane);
+    const card = new CardThree();
+    card.position.z = 3
+    threeLogic.loadObject(this, this.ambient, this.light, /*this.cube, this.sphere,*/ new CardThree(), card, this.plane);
     this.camerSetup(threeLogic.camera);
   }
 
