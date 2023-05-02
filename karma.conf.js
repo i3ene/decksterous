@@ -39,6 +39,12 @@ module.exports = function (config) {
     autoWatch: true,
     browsers: ['Chrome'],
     singleRun: false,
-    restartOnFileChange: true
+    restartOnFileChange: true,
+    proxies: {
+      '/api/': {
+        target: 'http://127.0.0.1:3030',
+        changeOrigin: true
+      }
+    },
   });
 };
