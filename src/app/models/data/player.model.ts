@@ -3,18 +3,19 @@ import { Card } from "./card.model";
 import { PlayerThree } from "../three/player.three";
 
 export class Player extends PlayerThree {
-  playerId: number = 0;
+  playerIndex: number = 0;
 
   constructor(obj: any) {
     super(obj);
-    this.playerId = obj.playerId ?? 0;
+    this.playerIndex = obj.playerIndex ?? 0;
   }
 
 }
 
 export class PlayerCollection {
   players: Map<number, Player> = new Map();
-  ownId: number = 0;
+  selfIndex: number = 0;
+  currentIndex: number = 0;
 
   playerAdded: EventEmitter<number> = new EventEmitter();
   playerUpdated: EventEmitter<number> = new EventEmitter();
@@ -33,6 +34,10 @@ export class PlayerCollection {
   }
 
   self() {
-    return this.players.get(this.ownId);
+    return this.players.get(this.selfIndex);
+  }
+
+  get atTurn(): boolean {
+    return this.currentIndex == this.selfIndex;
   }
 }

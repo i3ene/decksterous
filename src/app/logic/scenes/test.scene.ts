@@ -54,9 +54,7 @@ export class TestScene implements IScene {
   }
 
   bind(threeLogic: ThreeLogic) {
-    const card = new CardThree();
-    card.position.z = 3
-    threeLogic.loadObject(this, this.ambient, this.light, /*this.cube, this.sphere,*/ new CardThree(), card, this.plane);
+    threeLogic.loadObject(this, this.ambient, this.light, /*this.cube, this.sphere,*/ this.plane);
     this.camerSetup(threeLogic.camera);
   }
 
