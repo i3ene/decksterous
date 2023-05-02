@@ -19,6 +19,7 @@ export class HandThree extends Group {
 
   addCard(card: CardThree) {
     this.cards.push(card);
+    card.position.set(0, 0, 0);
     this.add(card);
     this.update();
   }
