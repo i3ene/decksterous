@@ -12,3 +12,12 @@ canvas {
   left: 8px;
   filter: invert(75%);
 }
+
+.actions {
+  background-color: rgba(255, 255, 255, 0.5);
+  border-radius: 4px;
+  position: absolute;
+  top: 50vh;
+  right: 8px;
+  padding: 8px;
+}
