@@ -74,6 +74,9 @@ export class Game {
         if (!this.players.areReady()) break;
         this.events[GameEvent.START].emit(GameState.AFTER, null);
         break;
+      case BackendAction.TURN_CHANGED:
+        this.broadcast(event);
+        this.events[GameEvent.TURN].emit(GameState.AFTER, null);
       default:
         this.broadcast(event);
         break;
@@ -98,14 +101,14 @@ export class Game {
     }
 
     // Check if player action is from current players turn
-    if (this.players.current != event.player) {
+    if (this.players.current == event.player) {
       // Handle turn based events
       switch (event.action) {
         case FrontendAction.DRAW_CARD:
           event.player.drawCards(event.args.amount);
           break;
         case FrontendAction.PLACE_CARD:
-          event.player.placeCard(event.args.card, event.args.field);
+          event.player.placeCard(event.args.cardIndex, event.args.fieldIndex);
           break;
         case FrontendAction.END_TURN:
           this.players.turn();
@@ -115,8 +118,9 @@ export class Game {
   }
 
   broadcast(event: GamePlayerEvent) {
+    const broadcaster = event.player?.socket.broadcast.to(this.roomName) ?? this.room;
     // Emit to all in room, except the sender (the player that triggered this action)
-    event.player.socket.broadcast.to(this.roomName).emit(SocketAction.FRONTEND_ALL, Object.assign(event, {player: undefined}));
+    broadcaster.emit(SocketAction.FRONTEND_ALL, Object.assign(event, {player: undefined}));
   }
 
   beforeStart(event: any): void {
@@ -131,8 +135,6 @@ export class Game {
   afterStart(event: any): void {
     console.log('AfterStart');
     this.room.emit(SocketAction.FRONTEND_EVENT, {event: GameEvent.START, state: GameState.AFTER});
-    this.players.setFieldLength(5);
-    this.players.sync();
     this.active = true;
     this.events[GameEvent.TURN].emit(GameState.BEFORE, null);
   }
@@ -150,7 +152,7 @@ export class Game {
   afterTurn(event: any): void {
     console.log('AfterTurn');
     this.executing = true;
-    this.players.attack(true);
+    this.events[GameEvent.TURN].emit(GameState.BEFORE, null);
   }
 
   beforeEnd(event: any): void {
