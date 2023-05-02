@@ -100,6 +100,7 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.spec.json",
             "karmaConfig": "karma.conf.js",
+            "codeCoverageExclude": ["src/testing/**/*", "src/app/extensions/*", "src/app/logic/*", "src/app/models/*"],
             "inlineStyleLanguage": "scss",
             "assets": [
               "src/favicon.ico",
