@@ -1,8 +1,7 @@
-import { ComponentFixture, TestBed, async } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { AppComponent } from './app.component';
-import { ChildrenOutletContexts } from '@angular/router';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { AppModule } from './app.module';
 
 describe('AppComponent', () => {
   let component: AppComponent;
@@ -10,9 +9,7 @@ describe('AppComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AppComponent ],
-      imports: [ BrowserAnimationsModule ],
-      providers: [ ChildrenOutletContexts ]
+      imports: [ AppModule ]
     })
     .compileComponents();
   });
@@ -27,7 +24,7 @@ describe('AppComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it(`should have as title 'Decksterous'`, async(() => {
+  it(`should have as title 'Decksterous'`, waitForAsync(() => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.debugElement.componentInstance;
     expect(app.title).toEqual('Decksterous');
