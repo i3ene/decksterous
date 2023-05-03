@@ -5,3 +5,4 @@ src/**
 dist/**
 package-lock.json
 .idea/**
+.ipynb_checkpoints
