@@ -22,4 +22,8 @@ describe('FriendListComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should filter the list', () => {
+    component.filterList();
+  });
 });
