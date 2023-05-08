@@ -13,7 +13,7 @@ export class ProfileMenuItemComponent implements OnInit {
 
   ngOnInit(): void {
     const data = this.token.getTokenData();
-    if (data.id) this.id = data.id;
+    if (data && data.id != undefined) this.id = data.id;
   }
 
 }

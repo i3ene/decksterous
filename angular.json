@@ -95,10 +95,12 @@
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
+            "codeCoverage": true,
             "main": "src/test.ts",
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.spec.json",
             "karmaConfig": "karma.conf.js",
+            "codeCoverageExclude": ["src/testing/**/*", "src/app/extensions/*", "src/app/logic/*", "src/app/models/*"],
             "inlineStyleLanguage": "scss",
             "assets": [
               "src/favicon.ico",
