@@ -60,6 +60,10 @@ export enum SocketAction {
   GAME_SOCKET_JOIN = 'game_socket_join',
   GAME_SOCKET_LEAVE = 'game_socket_leave',
   /**
+   * Event to frontend application (on event change)
+   */
+  FRONTEND_EVENT = 'frontend_event',
+  /**
    * Response to frontend application (for everyone)
    */
   FRONTEND_ALL = 'frontend_all',
