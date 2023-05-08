@@ -38,11 +38,9 @@ export class Glass3D extends Group {
       console.log(this.object);
     }
 
-    // Vertices gradient
-    var max = this.object.geometry.boundingBox?.max.y ?? 0;
-    var min = this.object.geometry.boundingBox?.min.y ?? 0;
-    GeometryHelper.linearGradient(this.object, new THREE.Color(0.8, 0.8, 1), new THREE.Color(0.5, 0.5, 1), min, max);
-    GeometryHelper.opacityGradient(this.object, 0.25, 0.9, min, max);
+    // Vertex gradient
+    GeometryHelper.linearGradient(this.object, new THREE.Color(0.8, 0.8, 1), new THREE.Color(0.5, 0.5, 1));
+    GeometryHelper.opacityGradient(this.object, 0.25, 0.9);
 
     this.add(this.object);
   }
