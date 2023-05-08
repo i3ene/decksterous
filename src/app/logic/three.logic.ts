@@ -76,6 +76,7 @@ export class ThreeLogic {
     this.canvas = canvas instanceof ElementRef ? canvas.nativeElement : canvas;
     document.addEventListener('pointermove', this.onPointerMove.bind(this));
     document.addEventListener('pointerdown', this.onPointerDown.bind(this));
+    window.addEventListener('resize', this.onWindowResize.bind(this), false);
     if (isDevMode()) this.statsPanel();
     this.createScene();
     this.startRenderingLoop();
@@ -99,6 +100,13 @@ export class ThreeLogic {
   public onPointerMove(event: any) {
     this.pointer.x = ( event.clientX / window.innerWidth ) * 2 - 1;
     this.pointer.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+  }
+
+  public onWindowResize(){
+    this.camera.aspect = window.innerWidth / window.innerHeight;
+    this.camera.updateProjectionMatrix();
+
+    this.renderer.setSize(window.innerWidth, window.innerHeight);
   }
 
   /** Scene Setup **/
