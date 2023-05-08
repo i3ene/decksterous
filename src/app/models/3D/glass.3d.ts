@@ -23,14 +23,19 @@ export class Glass3D extends Group {
     // Material setup
     this.object.castShadow = true;
     if(!Array.isArray(this.object.material)) {
-      this.object.material = new THREE.MeshPhongMaterial({
+      this.object.material = new THREE.MeshPhysicalMaterial({
         color: 0xffffff,
         vertexColors: true,
         transparent: true,
         side: THREE.DoubleSide,
-      });
+        transmission: 0.5,
+        roughness: 0.05,
+        reflectivity: 1,
+        thickness: 0.5,
+        flatShading: false
+      } as any);
 
-      console.log(this.object.geometry.getIndex());
+      console.log(this.object);
     }
 
     // Vertices gradient
