@@ -13,7 +13,7 @@ export class GamePage implements AfterViewInit, OnDestroy {
 
   threeLogic!: ThreeLogic;
 
-  constructor(private game: GameService) {}
+  constructor(public game: GameService) {}
 
   ngAfterViewInit(): void {
     this.threeLogic = new ThreeLogic(this.canvasRef);
