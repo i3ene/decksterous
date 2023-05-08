@@ -205,11 +205,11 @@ export class GamePlayer {
     const cards: Card[] = [];
     while (amount-- > 0) {
       // Remove card from deck
-      const card = this.deck.splice(this.deck.length, 1)[0];
+      const card = this.deck.splice(0, 1)[0];
       // Move it to the result set
       cards.push(card);
       // Emit drawn card
-      this.emit(BackendAction.CARD_DRAWN, {card: card}, {card: {}});
+      this.emit(BackendAction.CARD_DRAWN, { card: card }, {card: {}});
     }
     // Add cards to hand
     this.cards.push(...cards);
@@ -231,7 +231,7 @@ export class GamePlayer {
     // Set removed card at fieldIndex
     this.field.set(fieldIndex, card);
     // Emit placed card
-    const event = {fieldIndex: fieldIndex, cardIndex: cardIndex};
+    const event = {fieldIndex: fieldIndex, cardIndex: cardIndex, card: card};
     this.emit(BackendAction.CARD_PLACED, event, event);
     // Return true for success
     return true;
@@ -279,11 +279,11 @@ export class GamePlayer {
    * @param attacker Attacker card
    * @param fieldIndex Index of field
    */
-  attackCard(attacker: Card | undefined, fieldIndex: number): void {
+  attackCard(attacker: Card | undefined, fieldIndex: number, attackerIndex?: number): void {
     // Check for attacker card
     if (!attacker) return;
     // Emit attack of card
-    const event = {fieldIndex: fieldIndex, card: attacker};
+    const event = {fieldIndex: fieldIndex, attacker: attacker, attackerIndex: attackerIndex ?? fieldIndex};
     this.emit(BackendAction.CARD_ATTACKED, event, event);
     // Subtract health of field card by attacker damage
     this.cardHealth(fieldIndex, -attacker.damage);
@@ -295,7 +295,8 @@ export class GamePlayer {
    */
   sync() {
     const event = {
-      playerId: this.game?.players.find(this),
+      playerIndex: this.game?.players.find(this),
+      currentIndex: this.game?.players.index,
       cards: this.cards,
       field: Array(this.fieldLength),
       deck: Array(this.deck.length)
@@ -368,6 +369,17 @@ export class GamePlayerCollection {
 
   constructor(game: Game) {
     this.game = game;
+    this.addListeners(game);
+  }
+
+  addListeners(game: Game) {
+    game.events[GameEvent.START].on(GameState.AFTER, (event: any) => {
+      this.setFieldLength(5);
+      this.sync();
+    });
+    game.events[GameEvent.TURN].on(GameState.AFTER, (event: any) => {
+      this.attack(this.next, this.current);
+    });
   }
 
   setFieldLength(length: number) {
@@ -385,7 +397,7 @@ export class GamePlayerCollection {
     // Add listener to player events
     player.event.addListener(SocketAction.INTERNAL, (event) => this.eventHandler(player, event));
     // Add player to set (if player already exist, fetch id)
-    this.map.set(this.find(player) ?? this.map.size + 1, player);
+    this.map.set(this.find(player) ?? this.map.size, player);
   }
 
   /**
@@ -453,8 +465,8 @@ export class GamePlayerCollection {
     while (value != 0) {
       let increment = value > 0 ? -1 : 1;
       index -= increment;
-      if (index > this.map.size) index = 0;
-      else if (index < 0) index = this.map.size;
+      if (index >= this.map.size) index = 0;
+      else if (index < 0) index = this.map.size - 1;
       value += increment;
     }
     return index;
@@ -469,7 +481,7 @@ export class GamePlayerCollection {
     // Increment player turn index
     ++this.index;
     // Emit turn change
-    const event = {action: BackendAction.TURN_CHANGED, args: {playerIndex: this.index}} as GamePlayerEvent;
+    const event = {action: BackendAction.TURN_CHANGED, args: {currentIndex: this.index}} as GamePlayerEvent;
     this.events.emit(SocketAction.INTERNAL, event);
     // Return current player turn index
     return this.index;
@@ -494,13 +506,11 @@ export class GamePlayerCollection {
 
   /**
    * Do attack turn
-   * @param turnChange if a turn change should be done after attack
    */
-  attack(turnChange: boolean = false): void {
-    for (const [index, card] of this.current.field) {
-      this.next.attackCard(card, index);
+  attack(attacker: GamePlayer, target: GamePlayer): void {
+    for (const [index, card] of attacker.field) {
+      target.attackCard(card, target.fieldLength - index - 1);
     }
-    if (turnChange) this.turn();
   }
 
   /**
@@ -518,7 +528,7 @@ export class GamePlayerCollection {
   eventHandler(player: GamePlayer, event: GamePlayerEvent) {
     // Add player caller object
     event.player = player;
-    event.playerIndex = this.find(player);
+    event.args.playerIndex = this.find(player);
     // Emit internal event
     this.events.emit(SocketAction.INTERNAL, event);
   }
