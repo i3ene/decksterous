@@ -10,10 +10,24 @@
 }
 
 mat-toolbar {
-  background: linear-gradient(45deg, #006838, #96cf24) !important;
+  background: linear-gradient(45deg, #006838, #96cf24);
+  animation: fadeOut 3s cubic-bezier(0.5, 0, 1, 1) forwards;
 
   & img {
     max-height: 80%;
+  }
+}
+
+@keyframes fadeOut {
+  0% {
+    background: linear-gradient(45deg, #006838, #96cf24 50%, transparent 60%, transparent);
+    background-size: 400%;
+    background-position: 0%;
+  }
+  100% {
+    background: linear-gradient(45deg, #006838, #96cf24 50%, transparent 60%, transparent);
+    background-size: 400%;
+    background-position: 100%;
   }
 }
 
@@ -59,7 +73,7 @@ mat-toolbar {
 }
 
 .nav-list-group {
-  margin-top: 16px;
+  margin: 16px 0px;
 }
 
 .nav-list-item {
