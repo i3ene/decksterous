@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { ProfileMenuItemComponent } from './profile-menu-item.component';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {AppModule} from 'src/app/app.module';
+import {ProfileMenuItemComponent} from "./profile-menu-item.component";
 
 describe('ProfileMenuItemComponent', () => {
   let component: ProfileMenuItemComponent;
@@ -8,9 +8,9 @@ describe('ProfileMenuItemComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ProfileMenuItemComponent ]
+      imports: [AppModule]
     })
-    .compileComponents();
+      .compileComponents();
   });
 
   beforeEach(() => {

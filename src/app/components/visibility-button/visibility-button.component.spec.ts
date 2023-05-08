@@ -1,10 +1,10 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {AppModule} from 'src/app/app.module';
-import {ProfileAvatarComponent} from "./profile-avatar.component";
+import {VisibilityButtonComponent} from "./visibility-button.component";
 
-describe('ProfileAvatarComponent', () => {
-  let component: ProfileAvatarComponent;
-  let fixture: ComponentFixture<ProfileAvatarComponent>;
+describe('VisibilityButtonComponent', () => {
+  let component: VisibilityButtonComponent;
+  let fixture: ComponentFixture<VisibilityButtonComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -14,7 +14,7 @@ describe('ProfileAvatarComponent', () => {
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ProfileAvatarComponent);
+    fixture = TestBed.createComponent(VisibilityButtonComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

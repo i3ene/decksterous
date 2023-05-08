@@ -5,12 +5,15 @@ import * as THREE from 'three';
 import { Camera, DirectionalLight, HemisphereLight, Mesh, Vector3 } from 'three';
 import { ThreeLogic } from '../three.logic';
 import * as TWEEN from '@tweenjs/tween.js';
+import { SphereThree } from 'src/app/models/three/sphere.three';
+import { CardThree } from 'src/app/models/three/card.three';
 
 export class TestScene implements IScene {
   ambient!: HemisphereLight;
   light!: DirectionalLight;
   cube!: Mesh;
   plane!: Mesh;
+  sphere!: Mesh;
 
   functions = {
     cubeRotation: this.cubeRotation.bind(this),
@@ -39,6 +42,10 @@ export class TestScene implements IScene {
     this.plane = new PlaneThree().mesh;
     this.plane.scale.set(10, 10, 1);
     this.plane.position.set(0, 0, 0);
+
+    this.sphere = new SphereThree().mesh;
+    this.sphere.position.set(0, 4, 0);
+    this.cube = this.sphere;
   }
 
   camerSetup(camera: Camera) {
@@ -47,14 +54,16 @@ export class TestScene implements IScene {
   }
 
   bind(threeLogic: ThreeLogic) {
-    threeLogic.loadObject(this, this.ambient, this.light, /*this.cube,*/ this.plane);
+    const card = new CardThree();
+    card.position.z = 3
+    threeLogic.loadObject(this, this.ambient, this.light, /*this.cube, this.sphere,*/ new CardThree(), card, this.plane);
     this.camerSetup(threeLogic.camera);
   }
 
   cubeRotation(threeLogic: ThreeLogic) {
-    this.cube.rotation.x += 0.003;
-    this.cube.rotation.y += 0.007;
-    this.cube.rotation.z += 0.001;
+    this.cube.rotation.x += 0.017;
+    this.cube.rotation.y += 0.014;
+    this.cube.rotation.z += 0.011;
   }
 
   cubeCircle(threeLogic: ThreeLogic) {

@@ -30,7 +30,7 @@ export class ProfileComponent implements OnInit {
 
   loadToken(): void {
     const data = this.token.getTokenData();
-    if (data.id) this.loadUser(data.id);
+    if (data && data.id != undefined) this.loadUser(data.id);
   }
 
   async loadUser(id: number) {

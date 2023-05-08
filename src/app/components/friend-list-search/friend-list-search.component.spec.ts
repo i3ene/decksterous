@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { FriendListSearchComponent } from './friend-list-search.component';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {AppModule} from 'src/app/app.module';
+import {FriendListSearchComponent} from "./friend-list-search.component";
 
 describe('FriendListSearchComponent', () => {
   let component: FriendListSearchComponent;
@@ -8,9 +8,9 @@ describe('FriendListSearchComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ FriendListSearchComponent ]
+      imports: [AppModule]
     })
-    .compileComponents();
+      .compileComponents();
   });
 
   beforeEach(() => {

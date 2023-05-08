@@ -17,17 +17,21 @@ export class GameScene implements IScene {
     logger: this.logger.bind(this)
   };
 
-  players: PlayerThree[] = [];
-
   allEvent?: Subscription;
   playerEvent?: Subscription;
 
   constructor(private game: GameService) {
-    this.players[0] = new PlayerThree(5);
-    this.players[1] = new PlayerThree(5);
+    Array.from(this.game.collection.players.keys()).forEach(this.playerAdded.bind(this));
+  }
 
-    this.players[1].position.z = -3;
-    this.players[1].rotation.y = THREE.MathUtils.degToRad(180);
+  playerAdded(id: number) {
+    const player = this.game.collection.players.get(id);
+    if (!player) return;
+
+    if (this.game.collection.ownId != id) {
+      player.position.z = -3;
+      player.rotation.y = THREE.MathUtils.degToRad(180);
+    }
   }
 
   handleEvent(event: any) {
@@ -38,8 +42,7 @@ export class GameScene implements IScene {
     this.allEvent = this.game.all.subscribe(this.handleEvent.bind(this));
     this.playerEvent = this.game.player.subscribe(this.handleEvent.bind(this));
 
-    threeLogic.loadObject(this, ...this.players);
-    //setTimeout(() => threeLogic.unloadScene(this), 5000);
+    threeLogic.loadObject(this, ...this.game.collection.players.values());
   }
 
   unbind(threeLogic: ThreeLogic) {
@@ -48,6 +51,6 @@ export class GameScene implements IScene {
   }
 
   logger(threeLogic: ThreeLogic) {
-    //console.log("Active");
+    //console.log(threeLogic.intersects[0]);
   }
 }

@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { LobbyRoomComponent } from './lobby-room.component';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {AppModule} from 'src/app/app.module';
+import {LobbyRoomComponent} from "./lobby-room.component";
 
 describe('LobbyRoomComponent', () => {
   let component: LobbyRoomComponent;
@@ -8,9 +8,9 @@ describe('LobbyRoomComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ LobbyRoomComponent ]
+      imports: [AppModule]
     })
-    .compileComponents();
+      .compileComponents();
   });
 
   beforeEach(() => {

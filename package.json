@@ -12,6 +12,7 @@
   },
   "private": true,
   "dependencies": {
+    "@angular-builders/custom-webpack": "^15.0.0",
     "@angular/animations": "~13.3.0",
     "@angular/cdk": "^13.3.9",
     "@angular/common": "~13.3.0",
@@ -38,6 +39,7 @@
     "mariadb": "^3.0.1",
     "ngx-socket-io": "^4.3.1",
     "npx": "^10.2.2",
+    "raw-loader": "^4.0.2",
     "rxjs": "~7.5.0",
     "sequelize": "^6.25.2",
     "sequelize-typescript": "^2.1.4",
