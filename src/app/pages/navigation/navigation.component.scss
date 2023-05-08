@@ -47,7 +47,7 @@ mat-toolbar {
 
 
 .nav-list {
-  //direction: rtl;
+  padding-right: 16px;
 }
 
 .nav-list-container {
@@ -68,7 +68,7 @@ mat-toolbar {
   flex-direction: row;
   align-items: center;
   overflow: hidden;
-  //transition-duration: 0.3s;
+  transition-duration: 0.3s;
   overflow: hidden;
 }
 
@@ -86,7 +86,7 @@ mat-toolbar {
   text-align: center;
   width: 0%;
   overflow: hidden;
-  //transition-duration: 0.3s;
+  transition-duration: 0.3s;
   border-radius: 0 8px 8px 0;
 }
 

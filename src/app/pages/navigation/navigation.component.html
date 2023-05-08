@@ -3,7 +3,7 @@
     <img src="/assets/logo_name.svg" (click)="drawer.toggle()">
     <span class="spacer"></span>
     <button mat-icon-button [matMenuTriggerFor]="menu">
-      <mat-icon> more_vert </mat-icon>
+      <app-profile-avatar [border]="false"></app-profile-avatar>
     </button>
     <mat-menu #menu="matMenu">
       <app-profile-menu-item (click)="profile()"></app-profile-menu-item>
