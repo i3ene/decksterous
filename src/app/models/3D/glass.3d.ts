@@ -19,11 +19,42 @@ export class Glass3D extends Group {
   async loadObject() {
     this.object = (await this.loader.loadAsync('assets/models/glass.gltf', this.loadProgress.bind(this))).scene.children[0] as any;
     if(!this.object) return;
-
-    // Material setup
     this.object.castShadow = true;
-    if(!Array.isArray(this.object.material)) {
-      this.object.material = new THREE.MeshPhysicalMaterial({
+
+    this.setMaterial3(this.object);
+
+    this.add(this.object);
+  }
+
+  setMaterial1(object: THREE.Object3D & Mesh) {
+    if(!Array.isArray(object.material)) {
+      object.material = new THREE.MeshPhongMaterial({
+        color: 0xffffff,
+        vertexColors: true,
+        transparent: true,
+        side: THREE.DoubleSide
+      });
+    }
+    GeometryHelper.linearGradient(object, new THREE.Color(0.8, 0.8, 1), new THREE.Color(0.5, 0.5, 1));
+    GeometryHelper.opacityGradient(object, 0.25, 0.9);
+  }
+
+  setMaterial2(object: THREE.Object3D & Mesh) {
+    if(!Array.isArray(object.material)) {
+      object.material = new THREE.MeshBasicMaterial({
+        color: 0xffffff,
+        vertexColors: true,
+        transparent: true,
+        side: THREE.DoubleSide
+      });
+    }
+    GeometryHelper.linearGradient(object, new THREE.Color(0.8, 0.8, 1), new THREE.Color(0.5, 0.5, 1));
+    GeometryHelper.opacityGradient(object, 0.25, 0.9);
+  }
+
+  setMaterial3(object: THREE.Object3D & Mesh) {
+    if(!Array.isArray(object.material)) {
+      object.material = new THREE.MeshPhysicalMaterial({
         color: 0xffffff,
         vertexColors: true,
         transparent: true,
@@ -34,15 +65,8 @@ export class Glass3D extends Group {
         thickness: 0.5,
         flatShading: false
       } as any);
-
-      console.log(this.object);
     }
-
-    // Vertex gradient
-    GeometryHelper.linearGradient(this.object, new THREE.Color(0.8, 0.8, 1), new THREE.Color(0.5, 0.5, 1));
-    GeometryHelper.opacityGradient(this.object, 0.25, 0.9);
-
-    this.add(this.object);
+    GeometryHelper.linearGradient(object, new THREE.Color(0.8, 0.8, 1), new THREE.Color(0.5, 0.5, 1));
   }
 
   loadProgress(event: any) {
