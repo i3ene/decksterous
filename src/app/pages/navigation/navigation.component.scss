@@ -92,6 +92,8 @@ mat-toolbar {
   line-height: 56px;
   text-align: center;
   flex-shrink: 0;
+  transition: border-top-right-radius 0.4s linear 0.1s,
+    border-bottom-right-radius 0.4s linear 0.1s;
 }
 
 .nav-list-item-text {
@@ -122,6 +124,8 @@ mat-toolbar {
 .is-active .nav-list-item-icon {
   border-top-right-radius: 0px !important;
   border-bottom-right-radius: 0px !important;
+  transition: border-top-right-radius 0s linear 0s,
+    border-bottom-right-radius 0s linear 0s;
 }
 
 .is-active .icon-Home {
