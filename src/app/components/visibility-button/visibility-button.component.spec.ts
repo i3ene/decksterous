@@ -22,4 +22,14 @@ describe('VisibilityButtonComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should create', () => {
+    let element: any = null;
+    component.passwordVisibilityToggle(element);
+  });
+
+  it('should create', () => {
+    let element: any = null;
+    component.getVisibilityIcon(element);
+  });
 });

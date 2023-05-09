@@ -22,4 +22,24 @@ describe('InventoryComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should create', () => {
+    component.reload();
+  });
+
+  it('should create', () => {
+    let type: 'deck' | 'user' | 'inventory' = 'deck' ;
+    let id: number = 1;
+
+    component.setId(type, id);
+  });
+
+
+  it('should create', () => {
+    let type: 'deck' | 'user' | 'inventory' = 'deck' ;
+    let id: number = 1;
+
+    component.loadItems(id, type);
+  });
+
 });

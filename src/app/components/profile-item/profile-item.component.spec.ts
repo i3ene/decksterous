@@ -22,4 +22,10 @@ describe('ProfileItemComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+
+  it('should create', () => {
+    let id: number = 1;
+    component.loadUser( id);
+  });
 });

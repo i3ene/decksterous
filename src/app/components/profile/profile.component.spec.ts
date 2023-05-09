@@ -22,4 +22,13 @@ describe('ProfileComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should create', () => {
+    component.loadToken();
+  });
+
+  it('should create', () => {
+    let id: number = 1;
+    component.loadUser(id);
+  });
 });
