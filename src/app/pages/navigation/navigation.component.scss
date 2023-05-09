@@ -18,6 +18,10 @@ mat-toolbar {
   }
 }
 
+app-profile-avatar {
+  display: inline-flex;
+}
+
 @keyframes fadeOut {
   0% {
     background: linear-gradient(45deg, #006838, #96cf24 50%, transparent 60%, transparent);
