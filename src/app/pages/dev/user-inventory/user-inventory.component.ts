@@ -29,7 +29,7 @@ export class DevUserInventoryComponent {
       inventory: { id: this.ref.inventory?.id },
       item: { id: id },
     });
-    this.ref.realod();
+    this.ref.reload();
   }
 
   async removeItems() {
@@ -39,7 +39,7 @@ export class DevUserInventoryComponent {
       inventory: { id: this.ref.inventory?.id },
       items: ids,
     });
-    this.ref.realod();
+    this.ref.reload();
   }
 
   selectItems() {

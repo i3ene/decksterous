@@ -81,10 +81,10 @@ export class InventoryComponent {
 
   setId(type: 'deck' | 'user' | 'inventory', id: number) {
     this.id = { type: type, value: id };
-    this.realod();
+    this.reload();
   }
 
-  realod(): void {
+  reload(): void {
     this.deck = undefined;
     this.inventory = undefined;
 

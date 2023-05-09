@@ -51,12 +51,12 @@ export class UserInventoryPage implements OnInit {
         case 'Save':
           var deck = dialog.componentInstance.deck;
           var payload = await this.request.put('/self/deck', deck);
-          this.inventory.realod();
+          this.inventory.reload();
           break;
         case 'Delete':
           var deck = dialog.componentInstance.deck;
           var payload = await this.request.delete('/self/deck', deck);
-          this.inventory.realod();
+          this.inventory.reload();
           break;
       }
     });
@@ -72,7 +72,7 @@ export class UserInventoryPage implements OnInit {
       if (x != 'Save') return;
       const deck = dialog.componentInstance.deck;
       const payload = await this.request.post('/self/deck', deck);
-      this.inventory.realod();
+      this.inventory.reload();
     });
   }
 }
