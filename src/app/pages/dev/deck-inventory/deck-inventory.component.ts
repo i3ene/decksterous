@@ -23,7 +23,7 @@ export class DevDeckInventoryComponent {
       deck: { id: this.ref.id?.value },
       items: ids,
     });
-    this.ref.realod();
+    this.ref.reload();
   }
 
   async removeItems() {
@@ -32,6 +32,6 @@ export class DevDeckInventoryComponent {
       deck: { id: this.ref.id?.value },
       items: ids,
     });
-    this.ref.realod();
+    this.ref.reload();
   }
 }
