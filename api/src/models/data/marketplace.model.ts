@@ -25,7 +25,7 @@ export class Marketplace extends Model<Marketplace> {
   objectId!: number;
 
   @Default(0.0)
-  @Column(DataType.DECIMAL(10, 2))
+  @Column(DataType.INTEGER)
   price!: number;
 
   @BelongsTo(() => InventoryItem)
