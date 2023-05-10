@@ -6,6 +6,7 @@ import { InventoryRoutes } from '../routes/inventory.routes';
 import { RequestMiddleware } from '../middleware/request.middleware';
 import { ItemRoutes } from '../routes/item.routes';
 import { SelfRoutes } from '../routes/self.routes';
+import { MarketplaceRoutes } from '../routes/marketplace.routes';
 
 export const app = express();
 
@@ -21,3 +22,4 @@ app.use('/self', SelfRoutes);
 app.use('/user', UserRoutes);
 app.use('/item', ItemRoutes);
 app.use('/inventory', InventoryRoutes);
+app.use('/marketplace', MarketplaceRoutes);
