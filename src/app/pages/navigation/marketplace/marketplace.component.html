@@ -1,0 +1,19 @@
+<div class="container">
+  <mat-card>
+    <div class="header">
+      <mat-form-field>
+        <mat-label>Search</mat-label>
+        <input matInput type="text" />
+        <button mat-icon-button matPrefix>
+          <mat-icon>search</mat-icon>
+        </button>
+        <button mat-icon-button matSuffix>
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+    </div>
+    <div class="content">
+      <app-marketplace-item *ngFor="let item of items" [marketplace]="item" class="item"></app-marketplace-item>
+    </div>
+  </mat-card>
+</div>
