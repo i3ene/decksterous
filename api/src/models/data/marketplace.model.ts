@@ -19,7 +19,7 @@ import { User } from "./user.model";
 }))
 @Table
 export class Marketplace extends Model<Marketplace> {
-  @Unique
+  @PrimaryKey
   @ForeignKey(() => InventoryItem)
   @Column(DataType.INTEGER)
   objectId!: number;

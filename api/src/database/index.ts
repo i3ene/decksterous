@@ -13,6 +13,5 @@ import { InventoryItemCardDeck } from '../models/data/relations/inventoryItem_ca
 import { Marketplace } from '../models/data/marketplace.model';
 
 SequelizeDatabase.addModels([User, Friend, Inventory, Item, InventoryItem, Card, CardType, CardAbility, CardCardAbility, CardDeck, InventoryItemCardDeck, Marketplace]);
-Marketplace.removeAttribute('id');
 
 export const database = SequelizeDatabase;

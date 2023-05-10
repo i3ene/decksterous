@@ -29,6 +29,9 @@ export class InventoryItem extends Model<InventoryItem> {
   @BelongsTo(() => Item)
   item?: Item;
 
+  @BelongsTo(() => Inventory)
+  inventory?: Inventory;
+
   @BelongsToMany(() => CardDeck, () => InventoryItemCardDeck)
   decks?: CardDeck[];
 
