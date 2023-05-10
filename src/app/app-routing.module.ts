@@ -14,6 +14,7 @@ import { ProfileComponent } from './components/profile/profile.component';
 import { HomePage } from './pages/navigation/home/home.component';
 import { LobbyPage } from './pages/navigation/lobby/lobby.component';
 import { DefaultComponent } from './components/default/default.component';
+import { MarketplacePage } from './pages/navigation/marketplace/marketplace.component';
 
 const routes: Routes = [
   { path: 'dev', component: DevComponent },
@@ -38,7 +39,7 @@ const routes: Routes = [
       { path: 'inventory', component: UserInventoryPage, data: { animation: 'right' } },
       { path: 'profile', component: ProfileComponent, data: { animation: 'top' } },
       { path: 'solo', component: DefaultComponent },
-      { path: 'marketplace', component: DefaultComponent },
+      { path: 'marketplace', component: MarketplacePage, data: { animation: 'left' } },
       { path: 'leaderboard', component: DefaultComponent },
       { path: 'settings', component: DefaultComponent },
       { path: '**', redirectTo: 'home' },

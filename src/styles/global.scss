@@ -2,6 +2,25 @@
   flex: 1 1 auto;
 }
 
+.row {
+  display: flex;
+  flex-direction: row;
+}
+
+.col {
+  display: flex;
+  flex-direction: col;
+}
+
+.gap {
+  gap: 8px;
+}
+
+.center {
+  justify-content: center;
+  align-items: center;
+}
+
 .hidden {
   visibility: hidden;
   height: 0px;

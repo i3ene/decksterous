@@ -28,7 +28,7 @@ export class GameScene implements IScene {
     const player = this.game.collection.players.get(id);
     if (!player) return;
 
-    if (this.game.collection.ownId != id) {
+    if (this.game.collection.selfIndex != id) {
       player.position.z = -3;
       player.rotation.y = THREE.MathUtils.degToRad(180);
     }

@@ -4,3 +4,13 @@
     <mat-icon>arrow_back</mat-icon>
   </button>
 </div>
+<div class="actions">
+  <ng-container *ngIf="game.collection.atTurn; else actions">
+    <button mat-flat-button color="primary" (click)="game.endTurn()">
+      End Turn
+    </button>
+  </ng-container>
+  <ng-template #actions>
+    Waiting...
+  </ng-template>
+</div>

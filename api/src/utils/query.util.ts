@@ -28,7 +28,7 @@ export namespace QueryUtil {
   export function attributes(query: any, model: { new (...args: any[]): any } & any): any {
     const obj: { [key: string]: any } = {};
     for (const key of Object.keys(query)) {
-      if (model.primaryKeyAttributes.includes(key)) continue;
+      //if (model.primaryKeyAttributes.includes(key)) continue;
       obj[key] = query[key];
     }
     return obj;
