@@ -1,0 +1,14 @@
+<div>
+  <div class="header gap row">
+    <app-profile-avatar [src]="marketplace.inventoryItem?.inventory?.user?.avatar" [size]="24" [border]="false"></app-profile-avatar>
+    <div>{{ marketplace.inventoryItem?.inventory?.user?.name }}</div>
+  </div>
+  <app-item [item]="marketplace.inventoryItem?.item!"></app-item>
+  <div class="footer row gap">
+    <button mat-raised-button color="primary">Buy</button>
+    <span class="spacer"></span>
+    <div>
+      {{ marketplace.price | number:'.2' }}c
+    </div>
+  </div>
+</div>
