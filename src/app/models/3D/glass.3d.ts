@@ -32,7 +32,8 @@ export class Glass3D extends Group {
         color: 0xffffff,
         vertexColors: true,
         transparent: true,
-        side: THREE.DoubleSide
+        side: THREE.DoubleSide,
+        flatShading: true
       });
     }
     GeometryHelper.linearGradient(object, new THREE.Color(0.8, 0.8, 1), new THREE.Color(0.5, 0.5, 1));
