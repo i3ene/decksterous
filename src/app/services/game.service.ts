@@ -29,6 +29,15 @@ export class GameService {
     this.player.subscribe(x => this.handler(x, true));
     this.all.subscribe(this.handler.bind(this));
     this.event.subscribe(this.handleEvent.bind(this));
+
+    this.loadExampleData();
+  }
+
+  loadExampleData() {
+    this.collection.currentIndex = 0;
+    const cards = Array(5).fill({});
+    const players = Array(2).fill({}).map((v, i) => new Player({ playerIndex: i, field: cards, deck: cards, cards: cards }));
+    players.forEach(x => this.collection.set(x.playerIndex, x))
   }
 
   handler(event: any, self: boolean = false) {

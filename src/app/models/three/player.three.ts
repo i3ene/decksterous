@@ -11,7 +11,7 @@ export class PlayerThree extends Group {
   field: FieldThree;
 
   constructor(obj: any) {
-    super();    
+    super();
 
     this.deck = new DeckThree(obj.deck ?? []);
     this.hand = new HandThree(obj.cards ?? []);
@@ -19,7 +19,7 @@ export class PlayerThree extends Group {
     this.add(...[this.deck, this.hand, this.field]);
     
     
-    this.hand.position.y = 2;
+    this.hand.position.y = 2.75;
     this.hand.position.z = 3;
 
     this.deck.position.y = 2;

@@ -5,15 +5,16 @@ export class InteractionThree extends Mesh {
   padding: number = 0.05;
 
   constructor(vec?: Vector3, padding?: number) {
-    super(new BoxGeometry(1, 1, 1), new MeshStandardMaterial({ color: 0xff6600, opacity: 0, transparent: true }));
+    super(new BoxGeometry(1, 1, 1), new MeshStandardMaterial({ color: 0xff6600, opacity: 0.3, transparent: true }));
 
     if (padding) this.padding = padding;
     if (vec) this.setSize(vec);
 
     this.selectable = true;
     this.clickable = true;
+    this.visible = false;
     
-    this.selecting.subscribe(x => (this.material as Material).opacity = x ? 0.3 : 0);
+    this.selecting.subscribe(x => this.visible = x);
   }
 
   setSize(vec: Vector3) {
