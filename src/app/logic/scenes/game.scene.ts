@@ -32,6 +32,9 @@ export class GameScene implements IScene {
       player.position.z = -3;
       player.rotation.y = THREE.MathUtils.degToRad(180);
     }
+
+    player.position.z += 1.5;
+    player.position.y -= 1.75;
   }
 
   handleEvent(event: any) {
