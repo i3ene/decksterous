@@ -21,7 +21,7 @@ export class Glass3D extends Group {
     if(!this.object) return;
     this.object.castShadow = true;
 
-    this.setMaterial3(this.object);
+    this.setMaterial1(this.object);
 
     this.add(this.object);
   }
