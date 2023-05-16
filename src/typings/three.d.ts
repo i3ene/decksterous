@@ -36,5 +36,10 @@ declare module 'three' {
      * Event on click
      */
     clicking: Subject<number>;
+
+    /**
+     * If events should propagate to parent objects
+     */
+    propagation: boolean;
   }
 }
