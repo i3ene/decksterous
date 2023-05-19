@@ -13,7 +13,19 @@
       </mat-form-field>
     </div>
     <div class="content">
-      <app-marketplace-item *ngFor="let item of items" [marketplace]="item" class="item"></app-marketplace-item>
+      <div class="section">
+        <h2>Shop</h2>
+        <div class="display">
+          Items
+        </div>
+      </div>
+      <mat-divider></mat-divider>
+      <div class="section">
+        <h2>Community</h2>
+        <div class="display">
+          <app-marketplace-item *ngFor="let item of items" [marketplace]="item" class="item"></app-marketplace-item>
+        </div>
+      </div>
     </div>
   </mat-card>
 </div>
