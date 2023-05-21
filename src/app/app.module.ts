@@ -58,6 +58,7 @@ import { LobbyGameComponent } from './components/lobby-game/lobby-game.component
 import { DefaultComponent } from './components/default/default.component';
 import { MarketplacePage } from './pages/navigation/marketplace/marketplace.component';
 import { MarketplaceItemComponent } from './components/marketplace-item/marketplace-item.component';
+import { SettingsComponent } from './pages/navigation/settings/settings.component';
 
 @NgModule({
   declarations: [
@@ -107,7 +108,8 @@ import { MarketplaceItemComponent } from './components/marketplace-item/marketpl
     LobbyGameComponent,
     DefaultComponent,
     MarketplacePage,
-    MarketplaceItemComponent
+    MarketplaceItemComponent,
+    SettingsComponent
   ],
   imports: [
     BrowserModule,

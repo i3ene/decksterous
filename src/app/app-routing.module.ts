@@ -15,6 +15,7 @@ import { HomePage } from './pages/navigation/home/home.component';
 import { LobbyPage } from './pages/navigation/lobby/lobby.component';
 import { DefaultComponent } from './components/default/default.component';
 import { MarketplacePage } from './pages/navigation/marketplace/marketplace.component';
+import { SettingsComponent } from './pages/navigation/settings/settings.component';
 
 const routes: Routes = [
   { path: 'dev', component: DevComponent },
@@ -41,7 +42,7 @@ const routes: Routes = [
       { path: 'solo', component: DefaultComponent },
       { path: 'marketplace', component: MarketplacePage, data: { animation: 'left' } },
       { path: 'leaderboard', component: DefaultComponent },
-      { path: 'settings', component: DefaultComponent },
+      { path: 'settings', component: SettingsComponent },
       { path: '**', redirectTo: 'home' },
     ],
   },
