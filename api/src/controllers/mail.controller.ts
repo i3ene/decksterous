@@ -2,6 +2,8 @@ import { createTransport } from "nodemailer";
 import IMAP from 'imap';
 import { simpleParser } from "mailparser";
 import { Config } from "../config";
+import { Register } from "../models/data/register.model";
+import { Subject } from 'rxjs';
 
 export namespace MailController {
   export const sender = createTransport({
@@ -31,10 +33,31 @@ export namespace MailController {
     //debug: console.log
   });
 
+  export const signup: Subject<{ address: string, subject: string }> = new Subject();
+
+  export async function receiveSignup() {
+    // TODO: get all unseen mails, retrieve subject, and mark them as seen
+    const mail: { address: string, subject: string }[] = [];
+    mail.forEach(x => signup.next(x));
+  }
+
+  export async function sendRegister(register: Register) {
+    const link = `https://game.decksterous.digital/auth/register?token=${register.token}`;
+    const info = await sender.sendMail({
+      from: `"Decksterous" <${Config.Mail.ADDRESS}>`,
+      to: register.mail,
+      subject: "Signup",
+      text: `Finish signup here: ${link}`,
+      html: `Finish signup <a href="${link}">here</a>!`
+    });
+
+    return info.accepted.length > 0;
+  }
+
   export async function testSend() {
     const info = await sender.sendMail({
       from: `"Decksterous" <${Config.Mail.ADDRESS}>`,
-      to: "benedikt.muell@t-online.de",
+      to: "benedikt.muell@gmail.com",
       subject: "Hello from node",
       text: "Hello world?",
       html: "<strong>Hello world?</strong>",
