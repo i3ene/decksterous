@@ -43,6 +43,8 @@ export namespace AuthMiddleware {
   }
 
   export async function checkDuplicateName(req: Request, res: Response, next: NextFunction): Promise<any> {
+    if (!req.body.name) next();
+
     const user: User | null = await User.findOne({
       where: {
         name: req.body.name,
@@ -54,6 +56,8 @@ export namespace AuthMiddleware {
   }
 
   export async function checkDuplicateMail(req: Request, res: Response, next: NextFunction): Promise<any> {
+    if (!req.body.mail) next();
+
     const user: User | null = await User.findOne({
       where: {
         mail: req.body.mail,

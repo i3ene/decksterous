@@ -10,7 +10,8 @@ import { CardCardAbility } from '../models/data/relations/card_cardAbility.model
 import { Friend } from '../models/data/friend.model';
 import { CardDeck } from '../models/data/cardDeck.model';
 import { InventoryItemCardDeck } from '../models/data/relations/inventoryItem_cardDeck.model';
+import { Register } from '../models/data/register.model';
 
-SequelizeDatabase.addModels([User, Friend, Inventory, Item, InventoryItem, Card, CardType, CardAbility, CardCardAbility, CardDeck, InventoryItemCardDeck]);
+SequelizeDatabase.addModels([User, Friend, Inventory, Item, InventoryItem, Card, CardType, CardAbility, CardCardAbility, CardDeck, InventoryItemCardDeck, Register]);
 
 export const database = SequelizeDatabase;
