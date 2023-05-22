@@ -25,9 +25,9 @@ export interface SettingSelection<T, E = (T extends never ? true : false) extend
   multi?: boolean;
 }
 
-export type SettingCombined<T> = SettingMinMax<T> & SettingSelection<T>;
+export type SettingCombined<T> = SettingMinMax<number> & SettingSelection<T>;
 
-export type SettingOptions<T> = (T extends never ? true : false) extends false ? (SettingCombined<T>) : (T extends (infer U)[] ? (SettingMinMax<never> | SettingSelection<T>) : (SettingMinMax<T> | SettingSelection<never>) | (SettingMinMax<never> | SettingSelection<T>));
+export type SettingOptions<T> = (T extends never ? true : false) extends false ? (SettingCombined<T>) : (T extends (infer U)[] ? (SettingMinMax<never> | SettingSelection<T>) : (SettingMinMax<number> | SettingSelection<never>) | (SettingMinMax<never> | SettingSelection<T>));
 
 
 export class Setting<T> implements Setting<T> {
@@ -39,9 +39,13 @@ export class Setting<T> implements Setting<T> {
 
 export enum Settings {
   // @ts-ignore
-  Test = new Setting<number>([1,2,3], { selection: [1, 2, 3, 4, 5], multi: true }),
+  Test_1 = new Setting<number>(5, { min: 3, max: 10 }),
   // @ts-ignore
-  DarkTheme = new Setting<boolean>(true)
+  Test_2 = new Setting<string>('test', { min: 4, max: 10 }),
+  // @ts-ignore
+  Test_3 = new Setting<string>(['test1','test2','test3'], { selection: ['test1', 'test2', 'test3', 'test4', 'test5'], multi: true }),
+  // @ts-ignore
+  Dark_Theme = new Setting<boolean>(true)
 }
 
 export type SettingsProperty<T = typeof Settings> = {
