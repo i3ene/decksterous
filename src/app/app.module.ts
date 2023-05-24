@@ -9,13 +9,13 @@ import { MaterialModule } from './modules/material.module';
 import { LoginForm } from './pages/auth/forms/login-form/login-form.component';
 import { AuthPage } from './pages/auth/auth.component';
 import { RegisterForm } from './pages/auth/forms/register-form/register-form.component';
-import { ResetForm } from './pages/auth/forms/reset-form/reset-form.component';
+import { PasswordForm } from './pages/auth/forms/password-form/password-form.component';
 import { VisibilityButtonComponent } from './components/visibility-button/visibility-button.component';
 import { FormCardTemplate } from './templates/form-card/form-card.component';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './services/auth/auth.interceptor';
 import { REQUEST_CONFIG } from './config/request.config';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AboutPage } from './pages/about/about.component';
 import { SocketIoModule } from 'ngx-socket-io';
 import { SocketConnection } from './services/request/socket.connection';
@@ -55,6 +55,8 @@ import { LobbyActionsComponent } from './components/lobby-actions/lobby-actions.
 import { LobbyRoomComponent } from './components/lobby-room/lobby-room.component';
 import { LobbyGameComponent } from './components/lobby-game/lobby-game.component';
 import { DefaultComponent } from './components/default/default.component';
+import { EmailForm } from './pages/auth/forms/email-form/email-form.component';
+import { FallbackForm } from './pages/auth/forms/fallback-form/fallback-form.component';
 
 @NgModule({
   declarations: [
@@ -63,7 +65,7 @@ import { DefaultComponent } from './components/default/default.component';
     AuthPage,
     LoginForm,
     RegisterForm,
-    ResetForm,
+    PasswordForm,
     VisibilityButtonComponent,
     FormCardTemplate,
     AboutPage,
@@ -102,7 +104,9 @@ import { DefaultComponent } from './components/default/default.component';
     LobbyActionsComponent,
     LobbyRoomComponent,
     LobbyGameComponent,
-    DefaultComponent
+    DefaultComponent,
+    EmailForm,
+    FallbackForm
   ],
   imports: [
     BrowserModule,
@@ -111,6 +115,7 @@ import { DefaultComponent } from './components/default/default.component';
     MaterialModule,
     HttpClientModule,
     FormsModule,
+    ReactiveFormsModule,
     SocketIoModule
   ],
   providers: [

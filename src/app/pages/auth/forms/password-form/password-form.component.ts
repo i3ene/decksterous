@@ -4,12 +4,11 @@ import { User } from 'src/app/models/data/user.model';
 import { RequestService } from 'src/app/services/request/request.service';
 
 @Component({
-  selector: 'app-reset-form',
-  templateUrl: './reset-form.component.html',
-  styleUrls: ['./reset-form.component.scss'],
+  templateUrl: './password-form.component.html',
+  styleUrls: ['./password-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ResetForm {
+export class PasswordForm {
 
   credentials: User = new User();
 
