@@ -10,13 +10,13 @@ import { MaterialModule } from './modules/material.module';
 import { LoginForm } from './pages/auth/forms/login-form/login-form.component';
 import { AuthPage } from './pages/auth/auth.component';
 import { RegisterForm } from './pages/auth/forms/register-form/register-form.component';
-import { ResetForm } from './pages/auth/forms/reset-form/reset-form.component';
+import { PasswordForm } from './pages/auth/forms/password-form/password-form.component';
 import { VisibilityButtonComponent } from './components/visibility-button/visibility-button.component';
 import { FormCardTemplate } from './templates/form-card/form-card.component';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './services/auth/auth.interceptor';
 import { REQUEST_CONFIG } from './config/request.config';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AboutPage } from './pages/about/about.component';
 import { SocketIoModule } from 'ngx-socket-io';
 import { SocketConnection } from './services/request/socket.connection';
@@ -59,6 +59,8 @@ import { DefaultComponent } from './components/default/default.component';
 import { MarketplacePage } from './pages/navigation/marketplace/marketplace.component';
 import { MarketplaceItemComponent } from './components/marketplace-item/marketplace-item.component';
 import { SettingsComponent } from './pages/navigation/settings/settings.component';
+import { EmailForm } from './pages/auth/forms/email-form/email-form.component';
+import { FallbackForm } from './pages/auth/forms/fallback-form/fallback-form.component';
 
 @NgModule({
   declarations: [
@@ -67,7 +69,7 @@ import { SettingsComponent } from './pages/navigation/settings/settings.componen
     AuthPage,
     LoginForm,
     RegisterForm,
-    ResetForm,
+    PasswordForm,
     VisibilityButtonComponent,
     FormCardTemplate,
     AboutPage,
@@ -109,7 +111,9 @@ import { SettingsComponent } from './pages/navigation/settings/settings.componen
     DefaultComponent,
     MarketplacePage,
     MarketplaceItemComponent,
-    SettingsComponent
+    SettingsComponent,
+    EmailForm,
+    FallbackForm
   ],
   imports: [
     BrowserModule,
@@ -118,6 +122,7 @@ import { SettingsComponent } from './pages/navigation/settings/settings.componen
     MaterialModule,
     HttpClientModule,
     FormsModule,
+    ReactiveFormsModule,
     SocketIoModule
   ],
   providers: [

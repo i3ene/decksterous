@@ -1,5 +1,6 @@
 ::ng-deep:root {
     --speed: 8s;
+    --width: 1;
 }
 
 .container {
@@ -86,16 +87,15 @@
     animation-duration: var(--speed);
     animation-play-state: paused;
 
+    animation-duration: calc(var(--speed) * var(--width)) !important;
+
     -webkit-mask: var(--mask);
     mask: var(--mask);
 }
 
 .lobbies {
     grid-area: lobbies;
-
-    & .background {
-        animation-duration: calc(var(--speed) * 3) !important;
-    }
+    --width: 3;
 
     & .background {
         background-image: linear-gradient(45deg, #0D47A1, #4FC3F7);
@@ -104,10 +104,7 @@
 }
 .ranking {
     grid-area: ranking;
-
-    & .background {
-        animation-duration: calc(var(--speed) * 1) !important;
-    }
+    --width: 1;
 
     & .background {
         background-image: linear-gradient(45deg, #FB8C00, #FFEB3B);
@@ -117,10 +114,7 @@
 }
 .solo {
     grid-area: solo;
-
-    & .background {
-        animation-duration: calc(var(--speed) * 2) !important;
-    }
+    --width: 2;
 
     & .background {
         background-image: linear-gradient(45deg, #512DA8, #AB47BC);
@@ -131,10 +125,7 @@
 }
 .profile {
     grid-area: profile;
-
-    & .background {
-        animation-duration: calc(var(--speed) * 1) !important;
-    }
+    --width: 1;
 
     & .background {
         background-image: linear-gradient(45deg, #006838, #96cf24);
@@ -144,10 +135,7 @@
 }
 .inventory {
     grid-area: inventory;
-
-    & .background {
-        animation-duration: calc(var(--speed) * 1) !important;
-    }
+    --width: 1;
 
     & .background {
         background-image: linear-gradient(45deg, #B71C1C, #FF8A80);

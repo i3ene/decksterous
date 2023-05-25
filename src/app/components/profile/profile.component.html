@@ -1,7 +1,7 @@
 <div class="container">
   <div class="header">
     <div class="row">
-      <app-profile-avatar [src]="user.avatar" [size]="64"></app-profile-avatar>
+      <app-profile-avatar [src]="user.avatar" [size]="64" [border]="false"></app-profile-avatar>
       <h1>{{ user.name }}</h1>
       <span class="level">{{ stats.user(user.xp).level }}</span>
     </div>

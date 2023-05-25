@@ -4,7 +4,7 @@ import { NavigationPage } from './pages/navigation/navigation.component';
 import { AuthPage } from './pages/auth/auth.component';
 import { LoginForm } from './pages/auth/forms/login-form/login-form.component';
 import { RegisterForm } from './pages/auth/forms/register-form/register-form.component';
-import { ResetForm } from './pages/auth/forms/reset-form/reset-form.component';
+import { PasswordForm } from './pages/auth/forms/password-form/password-form.component';
 import { AuthGuard } from './services/auth/auth.guard';
 import { AboutPage } from './pages/about/about.component';
 import { DevComponent } from './pages/dev/dev.component';
@@ -16,6 +16,7 @@ import { LobbyPage } from './pages/navigation/lobby/lobby.component';
 import { DefaultComponent } from './components/default/default.component';
 import { MarketplacePage } from './pages/navigation/marketplace/marketplace.component';
 import { SettingsComponent } from './pages/navigation/settings/settings.component';
+import { EmailForm, EmailFormType } from './pages/auth/forms/email-form/email-form.component';
 
 const routes: Routes = [
   { path: 'dev', component: DevComponent },
@@ -25,8 +26,10 @@ const routes: Routes = [
     component: AuthPage,
     children: [
       { path: 'login', component: LoginForm, data: { animation: 'left' } },
-      { path: 'register', component: RegisterForm, data: { animation: 'right' } },
-      { path: 'reset', component: ResetForm, data: { animation: 'right' } },
+      { path: 'signup', component: EmailForm, data: { animation: 'right', type: EmailFormType.REGISTER } },
+      { path: 'reset', component: EmailForm, data: { animation: 'right', type: EmailFormType.PASSWORD } },
+      { path: EmailFormType.PASSWORD, component: PasswordForm, data: { animation: 'right' } },
+      { path: EmailFormType.REGISTER, component: RegisterForm, data: { animation: 'right' } },
       { path: '**', redirectTo: 'login' },
     ]
   },

@@ -1,0 +1,14 @@
+<div>
+  <p><strong>1.</strong> Copy token below:</p>
+  <div class="token">
+    <mat-form-field appearance="outline">
+      <mat-label>Token</mat-label>
+      <input type="text" matInput disabled [(ngModel)]="token"/>
+      <button mat-icon-button matSuffix>
+        <mat-icon>content_copy</mat-icon>
+      </button>
+    </mat-form-field>
+  </div>
+  <p><strong>2.</strong> Send an email to <a href="mailto:{{emailAddress}}">{{emailAddress}}</a> and paste the token into the subject.</p>
+  <p><strong>3.</strong> Keep this page open until we receive your mail to progress you to the {{ text }}.</p>
+</div>
