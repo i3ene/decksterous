@@ -5,10 +5,31 @@
   </div>
   <app-item [item]="marketplace.inventoryItem?.item!"></app-item>
   <div class="footer row gap">
-    <button mat-raised-button color="primary">Buy</button>
-    <span class="spacer"></span>
-    <div>
-      {{ marketplace.price }}c
-    </div>
+    <ng-container *ngIf="isSelf && editing; else actions">
+      <button mat-raised-button color="warn" (click)="remove()">Remove</button>
+      <span class="spacer"></span>
+      <mat-form-field>
+        <mat-label>Price</mat-label>
+        <input matInput [value]="marketplace.price" #input/>
+        <button mat-icon-button matSuffix (click)="update(input.value)">
+          <mat-icon>done</mat-icon>
+        </button>
+        <button mat-icon-button matSuffix (click)="reset()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+    </ng-container>
+    <ng-template #actions>
+      <ng-container *ngIf="isSelf; else buyAction">
+        <button mat-raised-button color="accent" (click)="edit()">Edit</button>
+      </ng-container>
+      <ng-template #buyAction>
+        <button mat-raised-button color="primary" (click)="buy()">Buy</button>
+      </ng-template>
+      <span class="spacer"></span>
+      <div>
+        {{ marketplace.price }}c
+      </div>
+    </ng-template>
   </div>
 </div>
