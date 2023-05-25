@@ -38,8 +38,8 @@ declare module 'three' {
     clicking: Subject<number>;
 
     /**
-     * If events should propagate to parent objects
+     * If events are disabled (affects all children as well)
      */
-    propagation: boolean;
+    disabled: boolean;
   }
 }

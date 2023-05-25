@@ -4,7 +4,7 @@ import { Event } from 'three';
 
 declare module "three" {}
 
-Object3D.prototype.propagation = true;
+Object3D.prototype.disabled = false;
 Object3D.prototype._selected = false;
 Object3D.prototype.selectable = false;
 Object3D.prototype.clickable = false;
