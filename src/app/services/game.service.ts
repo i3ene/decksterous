@@ -37,7 +37,7 @@ export class GameService {
     this.collection.currentIndex = 0;
     const cards = Array(5).fill({});
     const players = Array(2).fill({}).map((v, i) => new Player({ playerIndex: i, field: cards, deck: cards, cards: cards }));
-    players.forEach(x => this.collection.set(x.playerIndex, x))
+    players.forEach(x => this.collection.set(x.playerIndex, x));
   }
 
   handler(event: any, self: boolean = false) {
@@ -94,7 +94,12 @@ export class GameService {
 
   addPlayerListener(player: Player) {
     const drawCard = player.deck.interaction.clicking.subscribe(x => this.drawCard(1));
-    const placeCard = player.field.fieldSelected.subscribe(x => this.placeCard(0, x));
+    const placeCard = player.field.fieldSelected.subscribe(x => {
+      const index = player.hand.active;
+      if (index == undefined) return;
+      this.placeCard(index, x);
+      player.hand.active = undefined;
+    });
     this.listeners.push(...[drawCard, placeCard]);
   }
 

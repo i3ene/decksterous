@@ -1,3 +1,4 @@
+import { ThreeLayer } from "src/app/logic/three.logic";
 import { BoxGeometry, Material, Mesh, MeshStandardMaterial, Object3D, Vector3 } from "three";
 
 export class InteractionThree extends Mesh {
@@ -13,6 +14,8 @@ export class InteractionThree extends Mesh {
     this.selectable = true;
     this.clickable = true;
     this.visible = false;
+
+    this.layers.enable(ThreeLayer.BLOOM);
     
     this.selecting.subscribe(x => this.visible = x);
   }
