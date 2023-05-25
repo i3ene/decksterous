@@ -31,6 +31,8 @@ export class GameScene implements IScene {
     if (this.game.collection.selfIndex != id) {
       player.position.z = -3;
       player.rotation.y = THREE.MathUtils.degToRad(180);
+      player.deck.disabled = true;
+      player.hand.disabled = true;
     }
 
     player.position.z += 1.5;
