@@ -1,0 +1,28 @@
+<div class="container">
+  <div *ngFor="let key of keys">
+    <ng-container [ngSwitch]="getType($any(Settings)[key].value)">
+      <mat-form-field *ngSwitchCase="'string'">
+        <mat-label>{{ key }}</mat-label>
+        <input matInput [value]="$any(settings)[key]" (change)="$any(settings)[key] = $any($event.target).value" type="text"/>
+      </mat-form-field>
+      <mat-form-field *ngSwitchCase="'number'">
+        <mat-label>{{ key }}</mat-label>
+        <input matInput [value]="$any(settings)[key]" (change)="$any(settings)[key] = +($any($event.target).value)" type="number"/>
+      </mat-form-field>
+      <mat-form-field *ngSwitchCase="'array'">
+        <mat-label>{{ key }}</mat-label>
+        <mat-select [value]="$any(settings)[key]" (valueChange)="$any(settings)[key] = $event" [multiple]="$any(Settings)[key].options?.multi ?? false">
+          <mat-option *ngFor="let option of $any(Settings)[key].options?.selection ?? []" [value]="option">
+            {{ option }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-slide-toggle *ngSwitchCase="'boolean'" [checked]="$any(settings)[key]" (change)="$any(settings)[key] = $event.checked">
+        {{ key }}
+      </mat-slide-toggle>
+      <div *ngSwitchDefault>
+        {{ $any(settings)[key] | json }}
+      </div>
+    </ng-container>
+  </div>
+</div>
