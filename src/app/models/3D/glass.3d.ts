@@ -19,27 +19,55 @@ export class Glass3D extends Group {
   async loadObject() {
     this.object = (await this.loader.loadAsync('assets/models/glass.gltf', this.loadProgress.bind(this))).scene.children[0] as any;
     if(!this.object) return;
-
-    // Material setup
     this.object.castShadow = true;
-    if(!Array.isArray(this.object.material)) {
-      this.object.material = new THREE.MeshPhongMaterial({
+
+    this.setMaterial1(this.object);
+
+    this.add(this.object);
+  }
+
+  setMaterial1(object: THREE.Object3D & Mesh) {
+    if(!Array.isArray(object.material)) {
+      object.material = new THREE.MeshPhongMaterial({
         color: 0xffffff,
         vertexColors: true,
         transparent: true,
         side: THREE.DoubleSide,
+        flatShading: true
       });
-
-      console.log(this.object.geometry.getIndex());
     }
+    GeometryHelper.linearGradient(object, new THREE.Color(0.8, 0.8, 1), new THREE.Color(0.5, 0.5, 1));
+    GeometryHelper.opacityGradient(object, 0.25, 0.9);
+  }
 
-    // Vertices gradient
-    var max = this.object.geometry.boundingBox?.max.y ?? 0;
-    var min = this.object.geometry.boundingBox?.min.y ?? 0;
-    GeometryHelper.linearGradient(this.object, new THREE.Color(0.8, 0.8, 1), new THREE.Color(0.5, 0.5, 1), min, max);
-    GeometryHelper.opacityGradient(this.object, 0.25, 0.9, min, max);
+  setMaterial2(object: THREE.Object3D & Mesh) {
+    if(!Array.isArray(object.material)) {
+      object.material = new THREE.MeshBasicMaterial({
+        color: 0xffffff,
+        vertexColors: true,
+        transparent: true,
+        side: THREE.DoubleSide
+      });
+    }
+    GeometryHelper.linearGradient(object, new THREE.Color(0.8, 0.8, 1), new THREE.Color(0.5, 0.5, 1));
+    GeometryHelper.opacityGradient(object, 0.25, 0.9);
+  }
 
-    this.add(this.object);
+  setMaterial3(object: THREE.Object3D & Mesh) {
+    if(!Array.isArray(object.material)) {
+      object.material = new THREE.MeshPhysicalMaterial({
+        color: 0xffffff,
+        vertexColors: true,
+        transparent: true,
+        side: THREE.DoubleSide,
+        transmission: 0.5,
+        roughness: 0.05,
+        reflectivity: 1,
+        thickness: 0.5,
+        flatShading: false
+      } as any);
+    }
+    GeometryHelper.linearGradient(object, new THREE.Color(0.8, 0.8, 1), new THREE.Color(0.5, 0.5, 1));
   }
 
   loadProgress(event: any) {

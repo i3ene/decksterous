@@ -36,5 +36,10 @@ declare module 'three' {
      * Event on click
      */
     clicking: Subject<number>;
+
+    /**
+     * If events are disabled (affects all children as well)
+     */
+    disabled: boolean;
   }
 }

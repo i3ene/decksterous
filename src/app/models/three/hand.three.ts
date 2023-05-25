@@ -6,6 +6,7 @@ import { Card } from "../data/card.model";
 export class HandThree extends Group {
 
   private cards: CardThree[] = [];
+  public active?: number;
 
   constructor(cards: (Card | undefined)[]) {
     super();
@@ -19,6 +20,11 @@ export class HandThree extends Group {
 
   addCard(card: CardThree) {
     this.cards.push(card);
+    card.interaction.clicking.subscribe(x => {
+      const index = this.cards.findIndex(y => y == card);
+      this.active = index == this.active ? undefined : index;
+      this.update();
+    });
     card.position.set(0, 0, 0);
     this.add(card);
     this.update();
@@ -46,6 +52,9 @@ export class HandThree extends Group {
       
       // Rotate to face player
       child.rotation.x = THREE.MathUtils.degToRad(0);
+
+      child.position.y = 0;
+      if(this.active == index) child.position.y += 0.5;
     }
   }
 

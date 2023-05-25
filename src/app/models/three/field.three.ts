@@ -91,6 +91,8 @@ export class FieldThree extends Group {
       
       // Rotate to face up
       child.rotation.x = THREE.MathUtils.degToRad(-90);
+
+      child.position.y = 0;
     }
   }
 

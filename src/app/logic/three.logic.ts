@@ -1,10 +1,20 @@
 import { ElementRef, isDevMode } from '@angular/core';
 import { IScene } from 'src/app/models/object/scene.model';
-import { Color, Intersection, Mesh, Object3D, Path, PerspectiveCamera, Raycaster, Scene, TextureLoader, Vector2, Vector3, WebGLRenderer } from 'three';
+import { Color, Intersection, Layers, Material, Mesh, MeshBasicMaterial, MeshStandardMaterial, Object3D, Path, PerspectiveCamera, Raycaster, Scene, ShaderMaterial, TextureLoader, Vector2, Vector3, WebGLRenderer } from 'three';
 import * as TWEEN from '@tweenjs/tween.js';
 import { Tween } from '@tweenjs/tween.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import * as Stats from 'stats.js';
+import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
+import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
+import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass';
+import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass';
+import { CustomShader } from '../models/three/shaders/shader.materials';
+
+export enum ThreeLayer {
+  ALL,
+  BLOOM
+}
 
 export class ThreeLogic {
   private canvas!: HTMLCanvasElement;
@@ -31,7 +41,29 @@ export class ThreeLogic {
 
   private loader = new TextureLoader();
 
-  private renderer!: WebGLRenderer;
+  private render: { 
+    renderer: WebGLRenderer;
+    pass: RenderPass;
+    final: {
+      pass: ShaderPass;
+      composer: EffectComposer;
+    };
+    bloom: {
+      pass: UnrealBloomPass;
+      composer: EffectComposer;
+      layer: Layers;
+      material: Material;
+      materials: {
+        [key: string]: Material;
+      };
+    };
+  } = {
+    final: {},
+    bloom: {
+      material: new MeshBasicMaterial({ color: 0x000 }),
+      materials: {}
+    }
+  } as any;
 
   public scene!: Scene;
 
@@ -74,12 +106,16 @@ export class ThreeLogic {
 
   constructor(canvas: ElementRef | HTMLCanvasElement) {
     this.canvas = canvas instanceof ElementRef ? canvas.nativeElement : canvas;
+
     document.addEventListener('pointermove', this.onPointerMove.bind(this));
     document.addEventListener('pointerdown', this.onPointerDown.bind(this));
     window.addEventListener('resize', this.onWindowResize.bind(this), false);
-    if (isDevMode()) this.statsPanel();
+
     this.createScene();
     this.startRenderingLoop();
+
+    if (isDevMode()) this.statsPanel();
+    if (isDevMode()) this.controls = new OrbitControls(this.camera, this.render.renderer.domElement);
   }
 
   private statsPanel() {
@@ -106,7 +142,10 @@ export class ThreeLogic {
     this.camera.aspect = window.innerWidth / window.innerHeight;
     this.camera.updateProjectionMatrix();
 
-    this.renderer.setSize(window.innerWidth, window.innerHeight);
+    this.render.renderer.setSize(window.innerWidth, window.innerHeight);
+    this.render.bloom.pass.setSize(window.innerWidth, window.innerHeight);
+    this.render.bloom.composer.setSize(window.innerWidth, window.innerHeight);
+    this.render.final.composer.setSize(window.innerWidth, window.innerHeight);
   }
 
   /** Scene Setup **/
@@ -128,16 +167,37 @@ export class ThreeLogic {
   /** Render Setup **/
 
   public startRenderingLoop() {
-    this.renderer = new WebGLRenderer({ canvas: this.canvas, antialias: false });
-    this.renderer.shadowMap.enabled = true;
-    this.renderer.setPixelRatio(devicePixelRatio);
-    this.renderer.setSize(this.canvas.clientWidth, this.canvas.clientHeight);
+    this.render.renderer = new WebGLRenderer({ canvas: this.canvas, antialias: false });
+    this.render.renderer.shadowMap.enabled = true;
+    this.render.renderer.setPixelRatio(devicePixelRatio);
+    this.render.renderer.setSize(this.canvas.clientWidth, this.canvas.clientHeight);
 
-    if (isDevMode()) this.controls = new OrbitControls(this.camera, this.renderer.domElement);
+    this.render.pass = new RenderPass(this.scene, this.camera);
+
+    this.render.bloom.layer = new Layers();
+    this.render.bloom.layer.set(ThreeLayer.BLOOM);
+    this.render.bloom.pass = new UnrealBloomPass(new Vector2(window.innerWidth, window.innerHeight), 1.6, 0.9, 0.1);
+
+    this.render.bloom.composer = new EffectComposer(this.render.renderer);
+    this.render.bloom.composer.renderToScreen = false;
+    this.render.bloom.composer.addPass(this.render.pass);
+    this.render.bloom.composer.addPass(this.render.bloom.pass);
+
+    this.render.final.pass = new ShaderPass(
+      CustomShader.Bloom(this.render.bloom.composer.renderTarget2.texture),
+      'baseTexture'
+    );
+    this.render.final.pass.needsSwap = true;
+
+    this.render.final.composer = new EffectComposer(this.render.renderer);
+    this.render.final.composer.addPass(this.render.pass);
+    this.render.final.composer.addPass(this.render.final.pass);
+
+    this.scene.traverse(this.disposeMaterial);
 
     let component: ThreeLogic = this;
     (function render(time: number) {
-      component.stats.begin();
+      component.stats?.begin();
       component.time.current = time;
       component.time.delta = time - component.time.previous;
       component.time.previous = time;
@@ -146,12 +206,49 @@ export class ThreeLogic {
       component.intersects = component.raycaster.intersectObjects(component.scene.children, true);
 
       component.loadedScenes.forEach((sc) => Object.entries(sc.functions ?? {}).forEach((fn) => fn[1](component)));
-      component.renderer.render(component.scene, component.camera);
 
-      component.stats.end();
+      // render scene with bloom
+      component.renderBloom(true);
+      // render the entire scene, then render bloom scene on top
+      component.render.final.composer.render();
+
+      component.stats?.end();
       TWEEN.update(time * 0.1);
       requestAnimationFrame(render);
     })(component.time.previous);
+  }
+
+  private renderBloom(mask: boolean) {
+    if (mask == true) {
+      this.scene.traverse(this.darkenNonBloomed.bind(this));
+      this.render.bloom.composer.render();
+      this.scene.traverse(this.restoreMaterial.bind(this));
+    } else {
+      this.camera.layers.set(ThreeLayer.BLOOM);
+      this.render.bloom.composer.render();
+      this.camera.layers.set(ThreeLayer.ALL);
+    }
+  }
+
+  private darkenNonBloomed(obj: any) {
+    if (obj.isMesh && this.render.bloom.layer.test(obj.layers) == false) {
+      this.render.bloom.materials[obj.uuid] = obj.material;
+      obj.material = this.render.bloom.material;
+      obj.material.opacity = this.render.bloom.materials[obj.uuid].opacity;
+    }
+  }
+
+  private restoreMaterial(obj: any) {
+    if (this.render.bloom.materials[ obj.uuid ]) {
+      obj.material = this.render.bloom.materials[obj.uuid];
+      delete this.render.bloom.materials[obj.uuid];
+    }
+  }
+
+  private disposeMaterial(obj: any) {
+    if (obj.material) {
+      obj.material.dispose();
+    }
   }
 
   /** Engine Setup **/
@@ -161,16 +258,20 @@ export class ThreeLogic {
     // Selection
     for (const intersection of this.intersects) {
       if (intersection.object.selectable == true) {
-        intersection.object.selected = true;
-        // Add to exception list
-        exception.push(intersection.object);
+        if (!this.recurseParentDisabled(intersection.object)) {
+          intersection.object.selected = true;
+          // Add to exception list
+          exception.push(intersection.object);
+        }
         if (!this.transitive) break;
       }
     }
     // Click
     for (const intersection of this.intersects) {
       if (intersection.object.clickable == true && button) {
-        intersection.object.clicked = button;
+        if (!this.recurseParentDisabled(intersection.object)) {
+          intersection.object.clicked = button;
+        }
         if (!this.transitive) break;
       }
     }
@@ -184,6 +285,14 @@ export class ThreeLogic {
       if (!exclude?.some(x => x == object)) object.selected = false;
       this.deselect(object.children, exclude);
     }
+  }
+
+  public recurseParentDisabled(object: Object3D): boolean {
+    if (object.disabled) return true;
+    if (object.parent) {
+      return this.recurseParentDisabled(object.parent);
+    }
+    return false;
   }
 
   public loadScene(scene: IScene) {
