@@ -1,7 +1,7 @@
 import EventEmitter from 'events';
 import {Socket} from 'socket.io';
 import {Card} from '../data/card.model';
-import {CardDeck} from '../data/cardDeck.model';
+import {Deck} from '../data/deck.model';
 import {User} from '../data/user.model';
 import {Game} from './game.object';
 import {BackendAction, FrontendAction, SocketAction} from './socket.model';
@@ -183,12 +183,12 @@ export class GamePlayer {
       this.emit(BackendAction.ERROR, {message: `Deck cannot not be changed when ready!`});
       return false;
     }
-    const deck: CardDeck | null = await CardDeck.scope(['gameDeck']).findByPk(deckId);
-    if (!deck || !deck.inventoryItems || !deck.inventoryItems.length) {
+    const deck: Deck | null = await Deck.scope(['gameDeck']).findByPk(deckId);
+    if (!deck || !deck.objects || !deck.objects.length) {
       this.emit(BackendAction.ERROR, {message: `Deck ${deckId} could not be selected or was empty!`});
       return false;
     }
-    this.deck = deck.inventoryItems.map((x) => x.item?.card!);
+    this.deck = deck.objects.map((x) => x.item?.card!);
     // Emit selection of deck
     const event = {deckId: deckId};
     this.emit(BackendAction.DECK_SELECTED, event);

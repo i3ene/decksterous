@@ -1,22 +1,30 @@
-export interface RequestOptions {
+export type RequestDifference = 'left' | 'right' | 'intersection' | 'symmetric';
+
+export type RequestOptions = RequestOptionsModel & RequestOptionsAssociation & RequestOptionsData & RequestOptionsBody & RequestOptionsList & RequestOptionsPage;
+
+export interface RequestOptionsScope {
+  /**
+     * Additional Scopes
+     */
+  scopes?: any[];
+}
+
+export interface RequestOptionsModel extends RequestOptionsScope {
   /**
    * The instance Model
    */
   model: { new (...args: any[]): any } & any;
+}
 
-  /**
-   * Additional Scopes
-   */
-  scopes?: any[];
-
+export interface RequestOptionsAssociation {
   /**
    * Specific association options
    */
-  association?: {
+  association: {
     /**
      * Association name
      */
-    name?: string;
+    name: string;
     /**
      * Key(path) to save data to relative from `data.name`
      */
@@ -27,7 +35,9 @@ export interface RequestOptions {
      */
     data?: string | string[] | any | any[];
   }
-  
+}
+
+export interface RequestOptionsData {
   /**
    * Specifc data options.
    * (This affects `req.data`.)
@@ -44,7 +54,9 @@ export interface RequestOptions {
      */
     name?: string | string[];
   }
+}
 
+export interface RequestOptionsBody {
   /**
    * Specific body options
    */
@@ -55,7 +67,9 @@ export interface RequestOptions {
      */
     key?: string | string[];
   }
+}
 
+export interface RequestOptionsList {
   /**
    * Specific list options
    */
@@ -68,5 +82,21 @@ export interface RequestOptions {
      * Key(path) to an entry id value
      */
     id?: string | string[];
+  }
+}
+
+export interface RequestOptionsPage {
+  /**
+   * Pagination for big data results
+   */
+  page?: {
+    /**
+     * How many elements are inside a page
+     */
+    size: number;
+    /**
+     * Key(path) to pagination
+     */
+    key: string | string[];
   }
 }

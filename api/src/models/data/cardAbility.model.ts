@@ -1,30 +1,32 @@
-import {AllowNull, AutoIncrement, BelongsTo, BelongsToMany, Column, DataType, ForeignKey, Model, PrimaryKey, Scopes, Table} from "sequelize-typescript";
-import {QueryUtil} from "../../utils/query.util";
-import { Card } from "./card.model";
-import { CardCardAbility } from "./relations/card_cardAbility.model";
+import { BelongsTo, Column, DataType, ForeignKey, Model, Scopes, Table } from 'sequelize-typescript';
+import { Card } from './card.model';
+import { Ability } from './ability.model';
+import { QueryUtil } from '../../utils/query.util';
 
 @Scopes(() => ({
-  query: QueryUtil.query(['id', 'key', 'name', 'description']),
-  cards: {
+  query: QueryUtil.query(['cardId', 'abilityId']),
+  card: {
     include: [Card]
+  },
+  ability: {
+    include: [Ability]
   }
 }))
 @Table
 export class CardAbility extends Model<CardAbility> {
-  @PrimaryKey
-  @AutoIncrement
+  @ForeignKey(() => Card)
   @Column(DataType.INTEGER)
-  id!: number;
+  cardId!: string;
 
-  @Column(DataType.STRING(64))
-  key!: string;
+  @ForeignKey(() => Ability)
+  @Column(DataType.STRING(32))
+  abilityKey!: number;
 
-  @Column(DataType.STRING(64))
-  name!: string;
+  /* Relations */
 
-  @Column(DataType.STRING(255))
-  description!: string;
+  @BelongsTo(() => Card)
+  card?: Card;
 
-  @BelongsToMany(() => Card, () => CardCardAbility)
-  cards?: Card[];
+  @BelongsTo(() => Ability)
+  ability?: Ability;
 }
