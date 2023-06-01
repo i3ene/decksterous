@@ -1,29 +1,26 @@
-import { Router } from 'express';
-
-import { AuthMiddleware as auth } from '../middleware/auth.middleware';
-import { RequestMiddleware as middleware } from '../middleware/request.middleware';
-import { RequestController as controller } from '../controllers/request.controller';
-import { Card } from '../models/data/card.model';
-import { CardTypeRoutes } from './cardType.routes';
-import { CardDeckRoutes } from './cardDeck.routes';
-import { CardAbilityRoutes } from './cardAbility.routes';
-import { Item } from '../models/data/item.model';
-import { CardAbility } from '../models/data/cardAbility.model';
+import { Router } from "express";
+import { AuthMiddleware as auth } from "../middleware/auth.middleware";
+import { RequestMiddleware as middleware } from "../middleware/request.middleware";
+import { RequestController as controller } from "../controllers/request.controller";
+import { Card } from "../models/data/card.model";
 
 export const CardRoutes = Router();
 
-CardRoutes.get('/all', [middleware.findAll({ model: Card, scopes: ['item', 'abilities']})], controller.result(Card));
+CardRoutes.get(["/all", "/all/:page"], [middleware.findAll({ model: Card, page: { size: 100, key: "page" } })], controller.result(Card));
 
-CardRoutes.get('/', [middleware.find({ model: Card, scopes: ['item', 'abilities']})], controller.result(Card));
+CardRoutes.post("/", [auth.isAdmin, middleware.add({ model: Card })], controller.result(Card));
 
-CardRoutes.post('/', [auth.isAdmin, middleware.add({ model: Card}), middleware.getAll({ model: CardAbility, list: { key: 'abilities', id: 'id'}}), middleware.setAssociation({ model: Card, association: { name: "abilities", data: CardAbility}})], controller.message('success'));
 
-CardRoutes.put('/', [auth.isAdmin, middleware.get({ model: Card}), middleware.edit({ model: Card}), middleware.getAll({ model: CardAbility, list: { key: 'abilities', id: 'id'}}), middleware.setAssociation({ model: Card, association: { name: "abilities", data: CardAbility}})], controller.message('success'));
+export const CardIdRoutes = Router();
 
-CardRoutes.delete('/', [auth.isAdmin, middleware.get({ model: Card}), middleware.remove({ model: Card})], controller.message('last'));
+CardRoutes.use("/:id", [middleware.get({ model: Card, body: { key: 'id' } })], CardIdRoutes);
 
-CardRoutes.use('/type', CardTypeRoutes);
+CardIdRoutes.get("/", controller.result(Card));
 
-CardRoutes.use('/deck', CardDeckRoutes);
+CardIdRoutes.put("/", [auth.isAdmin, middleware.edit({ model: Card })], controller.result(Card));
 
-CardRoutes.use('/ability', CardAbilityRoutes);
+CardIdRoutes.delete("/", [auth.isAdmin, middleware.remove({ model: Card })], controller.message("last"));
+
+CardIdRoutes.get("/type", [middleware.getAssociation({ model: Card, association: { name: "type" } })], controller.result([Card, "type"]));
+
+CardIdRoutes.get("/ability", [middleware.getAssociation({ model: Card, association: { name: "abilities" } })], controller.result([Card, "abilities"]));

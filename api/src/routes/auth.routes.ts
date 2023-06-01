@@ -1,15 +1,34 @@
 import { Router } from "express";
+import { AuthMiddleware as authMiddleware } from "../middleware/auth.middleware";
 import { AuthController as auth } from "../controllers/auth.controller";
+import { RequestMiddleware as middleware } from "../middleware/request.middleware";
 import { RequestController as controller } from "../controllers/request.controller";
-import { AuthMiddleware as middleware } from "../middleware/auth.middleware";
-import { RequestMiddleware as request } from "../middleware/request.middleware";
-import { Inventory } from "../models/data/inventory.model";
+import { Validation } from "../models/data/validation.model";
+import { MailController } from "../controllers/mail.controller";
 import { User } from "../models/data/user.model";
+import { Inventory } from "../models/data/inventory.model";
 
 export const AuthRoutes = Router();
 
-AuthRoutes.post("/signin", [middleware.verifyUser, middleware.verifyPassword], auth.generateToken);
+AuthRoutes.post("/signup", [
+  authMiddleware.checkDuplicateMail,
+  authMiddleware.setValidation("registration"),
+  middleware.add({ model: Validation })
+], MailController.sendMail({ data: { key: Validation } }));
 
-AuthRoutes.post("/signup", [middleware.checkDuplicateName, middleware.checkDuplicateMail, request.add({ model: User}), request.add({ model: Inventory}), request.setAssociation({ model: User, association: { name: 'inventory', data: Inventory}})], controller.message(0));
+AuthRoutes.post("/register", [
+  middleware.get({ model: Validation, body: { key: "token" } }),
+  authMiddleware.checkValidation({ data: { key: Validation } }),
+  authMiddleware.checkDuplicateName,
+  authMiddleware.checkPassword,
+  middleware.add({ model: User }),
+  middleware.add({ model: Inventory }),
+  middleware.setAssociation({ model: User, association: { name: "inventory", data: Inventory } }),
+  middleware.remove({ model: Validation })
+], controller.result(User));
 
-AuthRoutes.post("/passwordreset", [middleware.verifyUser], auth.resetPassword);
+AuthRoutes.post("/reset", [authMiddleware.setValidation("password")], /* TODO: Add validation, send mail with link */);
+
+AuthRoutes.post("/password", /* TODO: Get validation, update password */)
+
+AuthRoutes.post("/signin", [authMiddleware.verifyUser, authMiddleware.verifyPassword], auth.generateToken);

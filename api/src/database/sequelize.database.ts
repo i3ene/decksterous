@@ -17,5 +17,9 @@ export const SequelizeDatabase = new Sequelize(
       acquire: Config.Database.pool.acquire,
       idle: Config.Database.pool.idle,
     },
+    define: {
+      freezeTableName: true,
+      timestamps: false
+    }
   }
 );
