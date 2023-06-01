@@ -4,7 +4,7 @@ import { Server, Socket } from 'socket.io';
 import { Config } from '../config';
 import { User } from '../models/data/user.model';
 import { FunctionUtil } from '../utils/function.util';
-import { Register } from '../models/data/register.model';
+import { Validation } from '../models/data/validation.model';
 import { MailController } from './mail.controller';
 import { Inventory } from '../models/data/inventory.model';
 
@@ -38,7 +38,7 @@ export namespace AuthController {
     if (!req.body.mail) return res.status(400).send({ message: "No mail provided!" });
 
     const token = FunctionUtil.randomToken();
-    const register = await Register.create({
+    const register = await Validation.create({
       token: token,
       mail: req.body.mail
     } as any)
@@ -52,7 +52,7 @@ export namespace AuthController {
 
   export async function signupToken(io: Server, socket: Socket) {
     const token = FunctionUtil.randomToken();
-    const register = await Register.create({ token: token } as any);
+    const register = await Validation.create({ token: token } as any);
     if (register == null) return socket.emit('error', { message: 'Registration failed!' });
 
     MailController.signup.subscribe(async (x) => {
@@ -71,7 +71,7 @@ export namespace AuthController {
 
     // TODO: Check Mail and Username for duplicates
 
-    const register = await Register.findOne({ mail: socket.user.mail } as any);
+    const register = await Validation.findOne({ mail: socket.user.mail } as any);
     if (!register) return socket.emit('error', { message: `No registration found for mail ${socket.user.mail}!` });
 
     const user: User = await User.create({
