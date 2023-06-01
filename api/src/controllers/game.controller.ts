@@ -1,8 +1,7 @@
-import { Server, Socket } from 'socket.io';
-import { RoomSocket } from '../socket/room.socket';
-import { Game } from '../models/object/game.object';
-import { GamePlayer } from '../models/object/game.model';
-import { FrontendAction, RoomAction, RoomSocketEvent, SocketAction } from '../models/object/socket.model';
+import {Server, Socket} from 'socket.io';
+import {Game} from '../models/object/game.object';
+import {GamePlayer} from '../models/object/game.model';
+import {RoomAction, RoomSocketEvent, SocketAction} from '../models/object/socket.model';
 
 export namespace GameController {
   export const games: Map<string, Game> = new Map();
@@ -53,7 +52,7 @@ export namespace GameController {
 
     switch (event.action) {
       case 'test':
-        socket.emit(SocketAction.GAME_SOCKET, { players: games.get(room)?.players.map.size });
+        socket.emit(SocketAction.GAME_SOCKET, {players: games.get(room)?.players.map.size});
         break;
     }
   }

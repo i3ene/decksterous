@@ -1,11 +1,18 @@
-import { NextFunction, Request, Response } from 'express';
-import { Op } from 'sequelize';
-import { Config } from '../config';
-import { User } from '../models/data/user.model';
-import { Data } from '../models/object/data.express';
-import { RequestDifference, RequestOptions, RequestOptionsAssociation, RequestOptionsBody, RequestOptionsData, RequestOptionsList, RequestOptionsModel, RequestOptionsPage } from '../models/object/request.model';
-import { QueryUtil } from '../utils/query.util';
-import { RequestUtils } from '../utils/request.util';
+import {NextFunction, Request, Response} from 'express';
+import {Op} from 'sequelize';
+import {Config} from '../config';
+import {Data} from '../models/object/data.express';
+import {
+  RequestDifference,
+  RequestOptionsAssociation,
+  RequestOptionsBody,
+  RequestOptionsData,
+  RequestOptionsList,
+  RequestOptionsModel,
+  RequestOptionsPage
+} from '../models/object/request.model';
+import {QueryUtil} from '../utils/query.util';
+import {RequestUtils} from '../utils/request.util';
 
 export namespace RequestMiddleware {
   export function handler(req: Request, res: Response, next: NextFunction) {
@@ -22,7 +29,7 @@ export namespace RequestMiddleware {
     return async (req: Request, res: Response, next: NextFunction) => {
       const key = options.data?.key ?? options.model.name;
       const query = QueryUtil.isEmpty(req.body) ? req.query : req.body;
-      const data = await options.model.scope(['defaultScope', { method: ['query', query, Op.and] }].concat(options.scopes ?? [])).findOne();
+      const data = await options.model.scope(['defaultScope', {method: ['query', query, Op.and]}].concat(options.scopes ?? [])).findOne();
       if (data == null) req.data.addMessage('No ' + key + ' found!', 404);
       req.data[key] = data;
 
@@ -43,7 +50,7 @@ export namespace RequestMiddleware {
         if (!QueryUtil.isZeroOrGreater(page.offset)) page.offset = 0;
         page.offset *= page.limit;
       }
-      const data = await options.model.scope(['defaultScope', { method: ['query', query, Op.or, true] }].concat(options.scopes ?? [])).findAll(page);
+      const data = await options.model.scope(['defaultScope', {method: ['query', query, Op.or, true]}].concat(options.scopes ?? [])).findAll(page);
       if (data == null) req.data.addMessage('No ' + key + ' found!', 404);
       req.data[key] = data;
 
@@ -147,7 +154,7 @@ export namespace RequestMiddleware {
       }
       const data = RequestUtils.byAttribute(req.data, key);
       if (data == undefined) return res.status(500).send('No ' + key + ' data available!');
-      const scope = { scope: (options.scopes ?? [])[0] };
+      const scope = {scope: (options.scopes ?? [])[0]};
       const association = RequestUtils.byAttribute(req.data, key);
       association[options.association?.key ?? options.association?.name!] = await data.$get(options.association?.name, Object.assign(scope, page));
 
@@ -160,7 +167,7 @@ export namespace RequestMiddleware {
       const key = options.data?.key ?? options.model.name;
       const data = RequestUtils.byAttribute(req.data, key);
       if (data == undefined) return res.status(500).send('No ' + key + ' data available!');
-      await data.$set(options.association?.name,  RequestUtils.byAttribute(req.data, options.association?.data));
+      await data.$set(options.association?.name, RequestUtils.byAttribute(req.data, options.association?.data));
       req.data.addMessage(options.association?.name + ' successfully set for ' + key + '!', 200);
 
       next();
@@ -172,7 +179,7 @@ export namespace RequestMiddleware {
       const key = options.data?.key ?? options.model.name;
       const data = RequestUtils.byAttribute(req.data, key);
       if (data == undefined) return res.status(500).send('No ' + key + ' data available!');
-      await data.$add(options.association?.name,  RequestUtils.byAttribute(req.data, options.association?.data));
+      await data.$add(options.association?.name, RequestUtils.byAttribute(req.data, options.association?.data));
       req.data.addMessage(options.association?.name + ' successfully added for ' + key + '!', 200);
 
       next();
@@ -184,7 +191,7 @@ export namespace RequestMiddleware {
       const key = options.data?.key ?? options.model.name;
       const data = RequestUtils.byAttribute(req.data, key);
       if (data == undefined) return res.status(500).send('No ' + key + ' data available!');
-      await data.$remove(options.association?.name,  RequestUtils.byAttribute(req.data, options.association?.data));
+      await data.$remove(options.association?.name, RequestUtils.byAttribute(req.data, options.association?.data));
       req.data.addMessage(options.association?.name + ' successfully removed for ' + key + '!', 200);
 
       next();
@@ -224,7 +231,7 @@ export namespace RequestMiddleware {
     return (req: Request, res: Response, next: NextFunction) => {
       const key = options.data?.key;
       const data = RequestUtils.byAttribute(req.data, key);
-      if ((value == data) == equal) return res.status(400).send({ message: message });
+      if ((value == data) == equal) return res.status(400).send({message: message});
 
       next();
     }

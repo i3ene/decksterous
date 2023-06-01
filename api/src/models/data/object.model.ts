@@ -1,9 +1,9 @@
-import { BelongsTo, Column, DataType, Default, ForeignKey, HasOne, Model, PrimaryKey, Scopes, Table, Unique } from "sequelize-typescript";
-import { Inventory } from "./inventory.model";
-import { Item } from "./item.model";
-import { SubInventory } from "./subInventory.model";
-import { Marketplace } from "./marketplace.model";
-import { QueryUtil } from "../../utils/query.util";
+import {BelongsTo, Column, DataType, Default, ForeignKey, HasOne, Model, PrimaryKey, Scopes, Table} from "sequelize-typescript";
+import {Inventory} from "./inventory.model";
+import {Item} from "./item.model";
+import {SubInventory} from "./subInventory.model";
+import {Marketplace} from "./marketplace.model";
+import {QueryUtil} from "../../utils/query.util";
 
 @Scopes(() => ({
   query: QueryUtil.query(['hash', 'itemId', 'inventoryId']),
@@ -20,7 +20,7 @@ import { QueryUtil } from "../../utils/query.util";
     include: [Marketplace]
   }
 }))
-@Table({ tableName: "Object", timestamps: true })
+@Table({tableName: "Object", timestamps: true})
 export class _Object extends Model<_Object> {
   @PrimaryKey
   @Default(DataType.UUIDV4)

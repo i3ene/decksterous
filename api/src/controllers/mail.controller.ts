@@ -1,13 +1,12 @@
-import { createTransport } from "nodemailer";
+import {createTransport} from "nodemailer";
 import IMAP from 'imap';
-import { simpleParser } from "mailparser";
-import { Config } from "../config";
-import { Validation } from "../models/data/validation.model";
-import { Subject } from 'rxjs';
-import { RequestUtils } from "../utils/request.util";
-import { Request, Response } from "express";
-import { ValidationType } from "../models/object/validation.object";
-import { RequestOptionsData } from "../models/object/request.model";
+import {Config} from "../config";
+import {Validation} from "../models/data/validation.model";
+import {Subject} from 'rxjs';
+import {RequestUtils} from "../utils/request.util";
+import {Request, Response} from "express";
+import {ValidationType} from "../models/object/validation.object";
+import {RequestOptionsData} from "../models/object/request.model";
 
 export namespace MailController {
   export const sender = createTransport({
@@ -63,14 +62,18 @@ export namespace MailController {
       const key = options.data?.key;
       const data = RequestUtils.byAttribute(req.data, key) as Validation;
       var result;
-      switch(data.type as ValidationType) {
-        case "registration": result = sendRegister(data); break;
+      switch (data.type as ValidationType) {
+        case "registration":
+          result = sendRegister(data);
+          break;
         // TODO: Password reset mail
-        case "password": result = false; break;
+        case "password":
+          result = false;
+          break;
       }
 
-      if (result) return res.status(200).send({ message: `Mail send to ${data.mail}!` });
-      res.status(500).send({ message: 'Something went wrong!' });
+      if (result) return res.status(200).send({message: `Mail send to ${data.mail}!`});
+      res.status(500).send({message: 'Something went wrong!'});
     }
   }
 
@@ -85,7 +88,7 @@ export namespace MailController {
   //     html: "<strong>Hello world?</strong>",
   //     headers: { 'x-myheader': 'test header' }
   //   });
-  
+
   //   console.log("Message sent: %s", info.response);
   // }
 

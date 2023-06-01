@@ -1,7 +1,7 @@
-import { AutoIncrement, BelongsToMany, Column, DataType, HasMany, Model, PrimaryKey, Scopes, Table } from "sequelize-typescript";
-import { User } from "./user.model";
-import { GameHistory } from "./gameHistory.model";
-import { QueryUtil } from "../../utils/query.util";
+import {AutoIncrement, BelongsToMany, Column, DataType, Model, PrimaryKey, Scopes, Table} from "sequelize-typescript";
+import {User} from "./user.model";
+import {GameHistory} from "./gameHistory.model";
+import {QueryUtil} from "../../utils/query.util";
 
 @Scopes(() => ({
   query: QueryUtil.query(['id']),

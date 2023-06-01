@@ -1,7 +1,17 @@
-import { AutoIncrement, BelongsTo, BelongsToMany, Column, DataType, Default, ForeignKey, Model, PrimaryKey, Scopes, Table } from "sequelize-typescript";
-import { Item } from "./item.model";
-import { _Object } from "./object.model";
-import { QueryUtil } from "../../utils/query.util";
+import {
+  AutoIncrement,
+  BelongsTo,
+  Column,
+  DataType,
+  Default,
+  ForeignKey,
+  Model,
+  PrimaryKey,
+  Scopes,
+  Table
+} from "sequelize-typescript";
+import {Item} from "./item.model";
+import {QueryUtil} from "../../utils/query.util";
 
 @Scopes(() => ({
   query: QueryUtil.query(['id', 'itemId', 'rarity']),

@@ -1,10 +1,8 @@
-import { AutoIncrement, Column, DataType, Model, PrimaryKey, Table, Scopes, HasMany, BelongsToMany, HasOne, ForeignKey, AllowNull } from "sequelize-typescript";
-import { QueryUtil } from "../../utils/query.util";
-import { Inventory } from "./inventory.model";
-import { Card } from "./card.model";
-import { _Object } from "./object.model";
-import { Deck } from "./deck.model";
-import { Pack } from "./pack.model";
+import {AllowNull, AutoIncrement, Column, DataType, HasOne, Model, PrimaryKey, Scopes, Table} from "sequelize-typescript";
+import {QueryUtil} from "../../utils/query.util";
+import {Card} from "./card.model";
+import {Deck} from "./deck.model";
+import {Pack} from "./pack.model";
 
 @Scopes(() => ({
   query: QueryUtil.query(['id', 'name', 'description']),
@@ -30,6 +28,14 @@ export class Item extends Model<Item> {
 
   @Column(DataType.STRING(255))
   description?: string;
+  @HasOne(() => Card)
+  card?: Card;
+  @HasOne(() => Deck)
+  deck?: Deck;
+
+  /* Relations */
+  @HasOne(() => Pack)
+  pack?: Pack;
 
   @AllowNull
   @Column(DataType.BLOB('long'))
@@ -37,18 +43,8 @@ export class Item extends Model<Item> {
     const data = this.getDataValue('image');
     return data ? data.toString('utf8') : '';
   }
+
   set image(value: any) {
     this.setDataValue('image', value);
   }
-
-  /* Relations */
-
-  @HasOne(() => Card)
-  card?: Card;
-
-  @HasOne(() => Deck)
-  deck?: Deck;
-
-  @HasOne(() => Pack)
-  pack?: Pack;
 }

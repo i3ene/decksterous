@@ -1,7 +1,7 @@
-import {AllowNull, AutoIncrement, BelongsTo, BelongsToMany, Column, DataType, ForeignKey, Model, PrimaryKey, Scopes, Table} from "sequelize-typescript";
+import {BelongsToMany, Column, DataType, Model, PrimaryKey, Scopes, Table} from "sequelize-typescript";
 import {QueryUtil} from "../../utils/query.util";
-import { Card } from "./card.model";
-import { CardAbility } from "./cardAbility.model";
+import {Card} from "./card.model";
+import {CardAbility} from "./cardAbility.model";
 
 @Scopes(() => ({
   query: QueryUtil.query(['key', 'name', 'description']),
