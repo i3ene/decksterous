@@ -44,7 +44,6 @@ import { FriendMenuListComponent } from './components/friend-menu-list/friend-me
 import { FriendListSearchComponent } from './components/friend-list-search/friend-list-search.component';
 import { FormSearchTemplate } from './templates/form-search/form-search.component';
 import { DevCardDeckComponent } from './pages/dev/card-deck/card-deck.component';
-import { DevDeckInventoryComponent } from './pages/dev/deck-inventory/deck-inventory.component';
 import { DevUserInventoryComponent } from './pages/dev/user-inventory/user-inventory.component';
 import { EditCardDeckDialogue } from './dialogues/edit-card-deck/edit-card-deck.component';
 import { HomePage } from './pages/navigation/home/home.component';
@@ -61,6 +60,8 @@ import { MarketplaceItemComponent } from './components/marketplace-item/marketpl
 import { SettingsComponent } from './pages/navigation/settings/settings.component';
 import { EmailForm } from './pages/auth/forms/email-form/email-form.component';
 import { FallbackForm } from './pages/auth/forms/fallback-form/fallback-form.component';
+import { DevSubInventoryComponent } from './pages/dev/sub-inventory/sub-inventory.component';
+import { DevSubObjectInventoryComponent } from './pages/dev/sub-object-inventory/sub-object-inventory.component';
 
 @NgModule({
   declarations: [
@@ -97,7 +98,6 @@ import { FallbackForm } from './pages/auth/forms/fallback-form/fallback-form.com
     FriendListSearchComponent,
     FormSearchTemplate,
     DevCardDeckComponent,
-    DevDeckInventoryComponent,
     DevUserInventoryComponent,
     EditCardDeckDialogue,
     HomePage,
@@ -113,7 +113,9 @@ import { FallbackForm } from './pages/auth/forms/fallback-form/fallback-form.com
     MarketplaceItemComponent,
     SettingsComponent,
     EmailForm,
-    FallbackForm
+    FallbackForm,
+    DevSubInventoryComponent,
+    DevSubObjectInventoryComponent
   ],
   imports: [
     BrowserModule,
