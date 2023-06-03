@@ -28,7 +28,7 @@ describe('InventoryComponent', () => {
   });
 
   it('should create', () => {
-    let type: 'deck' | 'user' | 'inventory' = 'deck' ;
+    let type: 'subInventory' | 'user' | 'inventory' = 'subInventory' ;
     let id: number = 1;
 
     component.setId(type, id);
@@ -36,7 +36,7 @@ describe('InventoryComponent', () => {
 
 
   it('should create', () => {
-    let type: 'deck' | 'user' | 'inventory' = 'deck' ;
+    let type: 'subInventory' | 'user' | 'inventory' = 'subInventory' ;
     let id: number = 1;
 
     component.loadItems(id, type);
