@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { User } from 'src/app/models/data/user.model';
+import { DataService } from 'src/app/services/data.service';
 import { RequestService } from 'src/app/services/request/request.service';
 import { StatsService } from 'src/app/services/stats.service';
 
@@ -9,21 +10,16 @@ import { StatsService } from 'src/app/services/stats.service';
   styleUrls: ['./friend-list.component.scss'],
 })
 export class FriendListComponent {
-  _userId!: number;
-  @Input() set userId(value: number | undefined) {
-    if (!value) return;
-    this._userId = value;
-    this.loadFriends(value);
-    this.loadInvites(value);
-    this.loadRequests(value);
-  }
-  @Input() onlyFriends: boolean = true;
   @Input() search: boolean = false;
   searching: boolean = false;
-  searches: User[];
+  searches: User[] = [];
   filter?: string;
 
-  _requests!: User[];
+  get onlyFriends(): boolean {
+    return !(this._requests?.length || this._invites?.length);
+  }
+
+  _requests: User[] = [];
   set requests(value: User[]) {
     this._requests = value;
   }
@@ -32,7 +28,7 @@ export class FriendListComponent {
     else return this._requests.filter(x => x.name.toLowerCase().includes(this.filter!.toLowerCase()));
   }
 
-  _friends!: User[];
+  _friends: User[] = [];
   set friends(value: User[]) {
     this._friends = value;
   }
@@ -41,7 +37,7 @@ export class FriendListComponent {
     else return this._friends.filter(x => x.name.toLowerCase().includes(this.filter!.toLowerCase()));
   }
 
-  _invites!: User[];
+  _invites: User[] = [];
   set invites(value: User[]) {
     this._invites = value;
   }
@@ -50,33 +46,10 @@ export class FriendListComponent {
     else return this._invites.filter(x => x.name.toLowerCase().includes(this.filter!.toLowerCase()));
   }
 
-  constructor(private request: RequestService, public stats: StatsService) {
-    this.requests = new Array(2).fill({ name: 'Loading...' });
-    this.friends = new Array(14).fill({ name: 'Loading...' });
-    this.invites = new Array(2).fill({ name: 'Loading...' });
-    this.searches = new Array(2).fill({ name: 'Loading...' });
-  }
-
-  async loadInvites(id: number) {
-    const payload = await this.request.get(`/user/friend/invites?id=${id}`);
-    if (!payload) this.invites = [];
-    else this.invites = payload.map((x: any) => new User(x));
-  }
-
-  async loadRequests(id: number) {
-    const payload = await this.request.get(`/user/friend/requests?id=${id}`);
-    if (!payload) this.requests = [];
-    else this.requests = payload.map((x: any) => new User(x));
-  }
-
-  async loadFriends(id: number) {
-    const payload = await this.request.get(`/user/friend?id=${id}`);
-    if (!payload) this.friends = [];
-    else this.friends = payload.map((x: any) => new User(x));
-  }
+  constructor(private request: RequestService, public stats: StatsService, private data: DataService) { }
 
   async loadUsers(name: string) {
-    const payload = await this.request.get(`/user/all?name=${name}`);
+    const payload = await this.data.self.searchFriends(name);
     if (!payload) this.searches = [];
     else this.searches = payload.map((x: any) => new User(x));
     this.filterList();
@@ -84,7 +57,6 @@ export class FriendListComponent {
 
   filterList() {
     const filter = ([] as any[]).concat(this._friends.map(x => x.id)).concat(this._invites.map(x => x.id)).concat(this._requests.map(x => x.id));
-    filter.push(this._userId);
     this.searches = this.searches.filter(x => !filter.includes(x.id));
   }
 
@@ -107,7 +79,7 @@ export class FriendListComponent {
     const invite = this.searches.find(x => x.id == id);
     if (invite) this._invites.push(invite);
     this.filterList();
-    const result = await this.request.post(`/self/friend/invite`, { id });
+    await this.data.self.addFriend(id);
   }
 
   async acceptFriend(id: number) {
@@ -115,13 +87,13 @@ export class FriendListComponent {
     if (index < 0) return;
     const request = this._requests.splice(index, 1)[0];
     if (request) this._friends.push(request);
-    const result = await this.request.post(`/self/friend/invite`, { id });
+    await this.data.self.addFriend(id);
   }
 
   async declineFriend(id: number) {
     const index = this._requests.findIndex(x => x.id == id);
     if (index < 0) return;
-    const request = this._requests.splice(index, 1)[0];
-    const result = await this.request.post(`/self/friend/decline`, { id });
+    this._requests.splice(index, 1)[0];
+    this.data.self.removeFriend(id);
   }
 }

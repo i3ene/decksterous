@@ -24,7 +24,7 @@
     </div>
     <div mat-line>Level: {{ stats.user(friend.xp).level }}</div>
   </mat-list-item>
-  <mat-list-item *ngIf="_friends.length == 0 else info"> No friends... </mat-list-item>
+  <mat-list-item *ngIf="!_friends.length else info"> No friends... </mat-list-item>
   <ng-container *ngIf="!onlyFriends">
     <mat-divider *ngIf="invites.length != 0"></mat-divider>
     <mat-list-item *ngFor="let invite of invites" [routerLink]="['/navigation/profile']" [queryParams]="{id: invite.id}" class="translucent">
@@ -42,7 +42,7 @@
     <app-profile-avatar mat-list-icon [src]="search.avatar"></app-profile-avatar>
       <div mat-line>{{ search.name }}</div>
       <div mat-line class="actions">
-        <button mat-stroked-button color="primary" (click)="inviteUser(search.id!)">Invite</button>
+        <button mat-stroked-button color="primary" (click)="inviteUser(search.id)">Invite</button>
       </div>
   </mat-list-item>
   <mat-list-item *ngIf="searches.length == 0"> No Users found... </mat-list-item>
