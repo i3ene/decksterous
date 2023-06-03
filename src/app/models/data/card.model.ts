@@ -1,68 +1,53 @@
-import { InventoryItem } from "./inventory.model";
-import { Item } from "./item.model";
+/* Interfaces */
 
-export class Card {
-  id?: number;
-  itemId?: number;
-  typeId?: number;
-  health: number;
-  damage: number;
-  cost: number;
-  item?: Item;
-  type?: CardType;
-  abilities?: CardAbility[];  
-
-  constructor(obj?: any, item?: any) {
-    this.health = obj?.health ?? 0;
-    this.damage = obj?.damage ?? 0;
-    this.cost = obj?.cost ?? 0;
-    if (obj?.id) this.id = Number(obj.id);
-    if (obj?.itemId) this.itemId = Number(obj.itemId);
-    if (obj?.typeId) this.typeId = Number(obj.typeId);
-    if (item) this.item = item;
-    else if (obj?.item) this.item = new Item(obj.item);
-    if (obj?.type) this.type = new CardType(obj.type);
-    if (obj?.abilities) this.abilities = obj.abilities.map((x: any) => new CardAbility(x));
-  }
-}
-
-export class CardType {
-  id?: number;
-  type: string;
-  cards?: Card[];
-
-  constructor(obj?: any) {
-    this.type = obj?.type ?? '';
-    if (obj?.id) this.id = Number(obj.id);
-    if (obj?.cards && Array.isArray(obj?.cards)) this.cards = obj.cards.map((x: any) => new Card(x));
-  }
-}
-
-export class CardAbility {
-  id?: number;
-  key?: string;
+export interface IAbility {
+  key: string;
   name: string;
-  description: string;
-  
+  description?: string;
+}
+
+export interface IType {
+  id: number;
+  type: string;
+  description?: string;
+}
+
+/* Abstracts */
+
+export abstract class AAbility implements IAbility {
+  key: string;
+  name: string;
+  description?: string;
+
   constructor(obj?: any) {
+    this.key = obj?.key ?? '';
     this.name = obj?.name ?? '';
     this.description = obj?.description ?? '';
-    if (obj?.id) this.id = Number(obj.id);
-    if (obj?.key) this.key = obj.key;
   }
 }
 
-export class CardDeck {
-  id?: number;
-  itemId?: number;
-  item?: Item;
-  items?: Item[];
+export abstract class AType implements IType {
+  id: number;
+  type: string;
+  description?: string;
+  
+  constructor(obj?: any) {
+    this.id = Number(obj?.id ?? 0);
+    this.type = obj?.type ?? '';
+    this.description = obj?.description ?? '';
+  }
+}
 
-  constructor(obj?: any, item?: any) {
-    if (obj?.id) this.id = Number(obj.id);
-    if (obj?.itemId) this.itemId = Number(obj.itemId);
-    if (item) this.item = item;
-    else if (obj?.item) this.item = new Item(obj.item);
-    if (obj?.inventoryItems && Array.isArray(obj?.inventoryItems)) this.items = obj.inventoryItems.map((x: any) => new Item(x.item, x));
+/* Classes */
+
+export class Ability extends AAbility {
+  constructor(obj?: any) {
+    super(obj);
+  }
+}
+
+export class Type extends AType {
+  constructor(obj?: any) {
+    super(obj);
   }
 }

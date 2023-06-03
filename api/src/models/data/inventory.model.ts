@@ -1,22 +1,46 @@
-import { AutoIncrement, Column, DataType, Model, PrimaryKey, Table, Scopes, ForeignKey, BelongsTo, HasMany, BelongsToMany } from 'sequelize-typescript';
-import { Op } from 'sequelize';
-import { QueryUtil } from '../../utils/query.util';
-import { User } from './user.model';
+import {
+  AutoIncrement,
+  BelongsTo,
+  Column,
+  DataType,
+  ForeignKey,
+  HasMany,
+  Model,
+  PrimaryKey,
+  Scopes,
+  Table
+} from 'sequelize-typescript';
+import {QueryUtil} from '../../utils/query.util';
+import {User} from './user.model';
+import {_Object} from './object.model';
+import {Marketplace} from './marketplace.model';
 import { Item } from './item.model';
-import { InventoryItem } from './relations/inventory_item.model';
 import { Card } from './card.model';
-import { CardDeck } from './cardDeck.model';
+import { Deck } from './deck.model';
+import { Pack } from './pack.model';
 
 @Scopes(() => ({
   query: QueryUtil.query(['id', 'userId']),
-  items: {
-    include: [{
-      model: Item,
-      include: [Card, CardDeck]
-    }]
-  },
   user: {
     include: [User]
+  },
+  marketplace: {
+    include: [{
+      model: _Object,
+      include: [{
+        model: Marketplace,
+        required: true
+      }, Item]
+    }]
+  },
+  objects: {
+    include: [{
+      model: _Object,
+      include: [{
+        model: Item,
+        include: [Card, Deck, Pack]
+      }]
+    }]
   }
 }))
 @Table
@@ -30,9 +54,11 @@ export class Inventory extends Model<Inventory> {
   @Column(DataType.INTEGER)
   userId?: number;
 
+  /* Relations */
+
   @BelongsTo(() => User)
   user?: User;
 
-  @BelongsToMany(() => Item, () => InventoryItem)
-  items?: Item[];
+  @HasMany(() => _Object)
+  objects?: _Object[];
 }

@@ -104,4 +104,14 @@ export namespace QueryUtil {
     if (typeof obj == "number" && obj == 0) return true;
     return isEmpty(obj);
   }
+
+  /**
+   * Check if object is number and 0 or greater
+   * @param obj Object to check
+   * @returns `true` if zero or greater
+   */
+  export function isZeroOrGreater(obj: any) {
+    if (typeof obj == "number" && !isNaN(obj) && obj >= 0) return true;
+    return false;
+  }
 }

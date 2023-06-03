@@ -2,7 +2,7 @@ import { Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter
 import { MatSelect } from '@angular/material/select';
 import { InputServiceEvent } from 'src/app/models/object/service.model';
 import { IColumn, ITableActionEvent } from 'src/app/models/object/table.model';
-import { DataService } from 'src/app/services/data.service';
+import { ImageService } from 'src/app/services/image.service';
 
 @Component({
   selector: 'template-form-table-column',
@@ -17,8 +17,8 @@ export class FormTableColumnTemplate {
 
   @Output() actionEvent: EventEmitter<ITableActionEvent> = new EventEmitter<ITableActionEvent>();
 
-  constructor(public dataService: DataService) {
-    dataService.uploadEvent.subscribe((obj: InputServiceEvent) => {if (this.row == obj.source.row) this.row[obj.source.name] = obj.data});
+  constructor(public imageService: ImageService) {
+    imageService.uploadEvent.subscribe((obj: InputServiceEvent) => {if (this.row == obj.source.row) this.row[obj.source.name] = obj.data});
   }
 
   numberInput(obj: any, event: any) {

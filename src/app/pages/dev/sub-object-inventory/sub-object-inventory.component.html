@@ -1,0 +1,6 @@
+<mat-card>
+  <div class="actions">
+    <button mat-flat-button color="warn" [disabled]="!ref || !ref.selectedObjects.length" (click)="removeSelectedItems()">Remove</button>
+  </div>
+  <app-inventory [selectable]="true"></app-inventory>
+</mat-card>

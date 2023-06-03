@@ -1,9 +1,15 @@
-import { AutoIncrement, Column, DataType, Model, PrimaryKey, Table, Scopes, HasOne, BelongsToMany, DefaultScope } from 'sequelize-typescript';
+import { AutoIncrement, Column, DataType, Model, PrimaryKey, Table, Scopes, HasOne, BelongsToMany, DefaultScope, Default } from 'sequelize-typescript';
 import * as bcrypt from 'bcryptjs';
-import { Op } from 'sequelize';
 import { QueryUtil } from '../../utils/query.util';
 import { Inventory } from './inventory.model';
 import { Friend } from './friend.model';
+import { _Object } from './object.model';
+import { Item } from './item.model';
+import { RequestUtils } from '../../utils/request.util';
+import { RequestDifference } from '../object/request.model';
+import { Card } from './card.model';
+import { Deck } from './deck.model';
+import { Pack } from './pack.model';
 
 @DefaultScope(() => ({
   attributes: {
@@ -11,12 +17,30 @@ import { Friend } from './friend.model';
   }
 }))
 @Scopes(() => ({
-  query: QueryUtil.query(['id', 'name', 'mail', 'xp']),
+  query: QueryUtil.query(['id', 'name', 'mail', 'xp', 'coins']),
   inventory: {
     include: [Inventory],
   },
+  objects: {
+    include: [{
+      model: Inventory,
+      include: [{
+        model: _Object,
+        include: [{
+          model: Item,
+          include: [Card, Deck, Pack]
+        }]
+      }]
+    }],
+  },
   friend: {
-    include: [{model:User, as: 'friends'}],
+    include: [
+      {model:User, as: 'invites'},
+      {model:User, as: 'requests'}
+    ],
+  },
+  invite: {
+    include: [{model:User, as: 'invites'}],
   },
   request: {
     include: [{model:User, as: 'requests'}],
@@ -27,7 +51,7 @@ import { Friend } from './friend.model';
     }
   }
 }))
-@Table
+@Table({ timestamps: true })
 export class User extends Model<User> {
   @PrimaryKey
   @AutoIncrement
@@ -48,8 +72,13 @@ export class User extends Model<User> {
   @Column(DataType.STRING(128))
   mail!: string;
 
+  @Default(0)
   @Column(DataType.INTEGER)
   xp!: number;
+
+  @Default(0)
+  @Column(DataType.INTEGER)
+  coins!: number;
 
   @Column(DataType.BLOB('long'))
   get avatar(): any {
@@ -60,12 +89,45 @@ export class User extends Model<User> {
     this.setDataValue('avatar', Buffer.from(value));
   }
 
+  /* Relations */
+
   @HasOne(() => Inventory)
   inventory?: Inventory;
 
   @BelongsToMany(() => User, () => Friend, 'userId', 'friendsId')
-  friends?: User[];
+  invites?: User[];
 
   @BelongsToMany(() => User, () => Friend, 'friendsId', 'userId')
   requests?: User[];
+
+  get friends() {
+    return {
+      accepted: this.friendAccepted,
+      invites: this.friendInvites,
+      requests: this.friendRequests
+    };
+  }
+
+  get friendAccepted(): User[] | undefined {
+    return this.friend("accepted");
+  }
+
+  get friendInvites(): User[] | undefined {
+    return this.friend("invites");
+  }
+  
+  get friendRequests(): User[] | undefined {
+    return this.friend("requests");
+  }
+
+  friend(type: "requests" | "invites" | "accepted") {
+    var diff: RequestDifference;
+    switch(type) {
+      case "accepted": diff = "intersection"; break;
+      case "invites": diff = "left"; break;
+      case "requests": diff = "right"; break;
+    }
+    if (!this.invites || !this.requests) return undefined;
+    return RequestUtils.difference(diff!, this.invites, this.requests, "id");
+  }
 }

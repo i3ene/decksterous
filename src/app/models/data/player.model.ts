@@ -1,5 +1,4 @@
 import { EventEmitter } from "@angular/core";
-import { Card } from "./card.model";
 import { PlayerThree } from "../three/player.three";
 
 export class Player extends PlayerThree {

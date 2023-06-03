@@ -1,72 +1,45 @@
-import { EventEmitter, Injectable } from '@angular/core';
-import { InputServiceEvent } from '../models/object/service.model';
+import { Injectable } from '@angular/core';
+import { RequestService } from './request/request.service';
+import { Inventory, User } from '../models/data/user.model';
+import { SelfService } from './self.service';
+import { ModelUtils } from '../utils/model.util';
+import { SubInventory, _Object } from '../models/data/object.model';
+import { Item, ItemAny } from '../models/data/item.model';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class DataService {
-  public maxSize: number = 400000;
-  public uploadEvent: EventEmitter<InputServiceEvent> = new EventEmitter<InputServiceEvent>();
 
-  maxImgHeight: number = 200;
-  maxImgWidth: number = 200;
-  imgType: 'jpeg' | 'png' = 'jpeg';
-  imgScale: number = 0.7;
+  constructor(private request: RequestService, public self: SelfService) { }
 
-  uploadImage(e: any, source: any): void {
-    const file: any = e.dataTransfer ? e.dataTransfer.files[0] : e.target.files[0];
-    const pattern: RegExp = /image-*/;
-    const reader: FileReader = new FileReader();
-    if (!file.type.match(pattern)) return alert('invalid format');
-    reader.onload = (re: ProgressEvent<FileReader>) => this._handleImageLoaded(re, source);
-    reader.readAsDataURL(file);
+  async getObject<T extends Item>(objectHash: string) {
+    const payload = await this.request.get(`/object/${objectHash}`);
+    return new _Object<T>(payload);
   }
 
-  _handleImageLoaded(e: ProgressEvent<FileReader>, source: any): void {
-    const reader: FileReader | null = e.target;
-
-    if (!reader?.result) {
-      console.warn('Cannot read!');
-    } else if (
-      (reader.result instanceof String && reader.result.length > this.maxSize) ||
-      (reader.result instanceof ArrayBuffer && reader.result.byteLength > this.maxSize)
-    ) {
-      console.warn(`File size should be less than ${this.maxSize / 1000} KB!`);
-    } else if (typeof reader.result == 'string') {
-      this._compressImage(source, reader.result);
-    }
+  async getUser(userId: number) {
+    const payload = await this.request.get(`/user/${userId}`);
+    return new User(payload);
   }
 
-  _compressImage(source: any, data: string): any {
-    const image = new Image();
-    image.src = data;
-    image.onload = () => {
-      const resized = this._resizeImage(image);
-      this.uploadEvent.emit({ source: source, data: resized });
-    };
+  async getFriends(userId: number) {
+    const payload = await this.request.get(`/user/${userId}/friend`);
+    return ModelUtils.parseArray(User, payload);
   }
 
-  _resizeImage(img: HTMLImageElement) {
-    const canvas: HTMLCanvasElement = document.createElement("canvas");
-    let width: number = img.width;
-    let height: number = img.height;
+  async getInventoryObjects(inventoryId: number) {
+    const payload = await this.request.get(`/inventory/${inventoryId}/object`);
+    return ModelUtils.parseArray(_Object, payload);
+  }
 
-    if ((width > height) && (width > this.maxImgWidth)) {
-        height = Math.round((height *= this.maxImgWidth / width));
-        width = this.maxImgWidth;
-    } else if (height > this.maxImgHeight) {
-        width = Math.round((width *= this.maxImgHeight / height));
-        height = this.maxImgHeight;
-    }
+  async getSubInventory(objectHash: string) {
+    const payload = await this.request.get(`/object/${objectHash}/subinventory`);
+    return new SubInventory(payload);
+  }
 
-    canvas.width = width;
-    canvas.height = height;
-    const ctx = canvas.getContext('2d');
-    ctx!.drawImage(img, 0, 0, width, height);
-
-    const preview: HTMLDivElement = document.createElement("div");
-    preview.appendChild(canvas);
-
-    return canvas.toDataURL('image/' + this.imgType, this.imgScale);
+  async getSubInventoryObjects(objectHash: string) {
+    const payload = await this.request.get(`/object/${objectHash}/subinventory/object`);
+    return ModelUtils.parseArray(_Object, payload);
   }
 }

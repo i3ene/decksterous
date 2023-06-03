@@ -13,24 +13,30 @@
 
     <dev-profile #profile></dev-profile>
     <div class="table-columns">
-      <dev-user (selectedEvent)="inventory.userId = $event.id; profile.id = $event.id"></dev-user>
-      <dev-item (selectedEvent)="inventory.addItem($event.id)"></dev-item>
+      <dev-user (selectedEvent)="inventory.inventoryId = $event.inventory.id; profile.id = $event.id"></dev-user>
+      <dev-item (selectedEvent)="inventory.addItem($event.hash)"></dev-item>
     </div>
     <div class="table-columns">
       <dev-inventory (selectedEvent)="inventory.inventoryId = $event.id"></dev-inventory>
-      <dev-user-inventory #inventory (selectedEvent)="deck.addItems($event)"></dev-user-inventory>
+      <dev-user-inventory #inventory (selectedEvent)="sub.addItems($event)"></dev-user-inventory>
     </div>
 
     <mat-divider></mat-divider>
 
     <div class="table-columns">
       <dev-card></dev-card>
+      <dev-card-deck></dev-card-deck>
+    </div>
+    <div class="table-columns">
       <dev-card-type></dev-card-type>
       <dev-card-ability></dev-card-ability>
     </div>
+
+    <mat-divider></mat-divider>
+
     <div class="table-columns">
-      <dev-card-deck (selectedEvent)="deck.deckId = $event.id"></dev-card-deck>
-      <dev-deck-inventory #deck></dev-deck-inventory>
+      <app-sub-inventory (selectedEvent)="sub.objectHash = $event.objectHash"></app-sub-inventory>
+      <app-sub-object-inventory #sub></app-sub-object-inventory>
     </div>
   </div>
 </div>

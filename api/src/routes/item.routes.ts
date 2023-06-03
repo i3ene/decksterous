@@ -1,21 +1,22 @@
-
-import { Router } from 'express';
-import { RequestController as controller } from "../controllers/request.controller";
+import { Router } from "express";
 import { AuthMiddleware as auth } from "../middleware/auth.middleware";
 import { RequestMiddleware as middleware } from "../middleware/request.middleware";
-import { Item } from '../models/data/item.model';
-import { CardRoutes } from './card.routes';
+import { RequestController as controller } from "../controllers/request.controller";
+import { Item } from "../models/data/item.model";
 
 export const ItemRoutes = Router();
 
-ItemRoutes.get("/all", [middleware.findAll({ model: Item})], controller.result(Item));
+ItemRoutes.get(["/all", "/all/:page"], [middleware.findAll({ model: Item, page: { size: 100, key: "page" } })], controller.result(Item));
 
-ItemRoutes.get("/", [middleware.find({ model: Item})], controller.result(Item));
+ItemRoutes.post("/", [auth.isAdmin, middleware.add({ model: Item })], controller.result(Item));
 
-ItemRoutes.post("/", [auth.isAdmin, middleware.add({ model: Item})], controller.message("last"));
 
-ItemRoutes.put("/", [auth.isAdmin, middleware.get({ model: Item}), middleware.edit({ model: Item})], controller.message("last"));
+export const ItemIdRoutes = Router();
 
-ItemRoutes.delete("/", [auth.isAdmin, middleware.get({ model: Item}), middleware.remove({ model: Item})], controller.message("last"));
+ItemRoutes.use("/:id", [middleware.get({ model: Item, body: { key: 'id' } })], ItemIdRoutes);
 
-ItemRoutes.use('/card', CardRoutes);
+ItemIdRoutes.get("/", controller.result(Item));
+
+ItemIdRoutes.put("/", [auth.isAdmin, middleware.edit({ model: Item })], controller.result(Item));
+
+ItemIdRoutes.delete("/", [auth.isAdmin, middleware.remove({ model: Item })], controller.message("last"));

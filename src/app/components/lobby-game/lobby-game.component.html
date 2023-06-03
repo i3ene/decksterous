@@ -7,15 +7,15 @@
   </div>
   <div class="row gap">
     <div class="col grow">
-      <app-inventory [userId]="id" (itemClicked)="game.selectDeck($event.cardDeck!.id!); selectedItem = $event" [filter]="[ItemType.DECK]"></app-inventory>
+      <app-inventory [objects]="[]" (itemClicked)="game.selectDeck($event.hash); selectedObject = $event" [filter]="[ItemType.DECK]"></app-inventory>
     </div>
     <mat-divider [vertical]="true"></mat-divider>
     <div class="col grow gap">
       <div class="row center">
-        <app-item *ngIf="selectedItem" [item]="selectedItem"></app-item>
+        <app-item *ngIf="selectedObject" [object]="selectedObject"></app-item>
       </div>
-      <div class="col" *ngIf="selectedItem?.cardDeck?.id">
-        <app-inventory [deckId]="selectedItem!.cardDeck!.id!"></app-inventory>
+      <div class="col" *ngIf="selectedObject">
+        <app-inventory #deckInventory></app-inventory>
       </div>
     </div>
   </div>
