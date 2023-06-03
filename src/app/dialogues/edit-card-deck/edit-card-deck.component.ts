@@ -1,8 +1,9 @@
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { InventoryComponent } from 'src/app/components/inventory/inventory.component';
-import { CardDeck } from 'src/app/models/data/card.model';
-import { Item, ItemType } from 'src/app/models/data/item.model';
+import { CardItem, DeckItem, Item, ItemAny, ItemType } from 'src/app/models/data/item.model';
+import { SubInventory, _Object } from 'src/app/models/data/object.model';
+import { DataService } from 'src/app/services/data.service';
 
 @Component({
   templateUrl: './edit-card-deck.component.html',
@@ -13,44 +14,39 @@ export class EditCardDeckDialogue implements OnInit {
   @ViewChild("inventoryDeck", { static: true }) inventoryDeck!: InventoryComponent;
   @ViewChild("inventoryCards", { static: true }) inventoryCards!: InventoryComponent;
 
-  deck!: CardDeck;
-  editMode!: boolean;
+  deck!: _Object<DeckItem>;
+  cards: _Object<CardItem>[] = [];
+  editMode: boolean = true;
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: any, public ref: MatDialogRef<EditCardDeckDialogue>,) {
-    this.ref.beforeClosed().subscribe(x => {
-      this.deck.items = this.inventoryDeck.items;
-      this.deck.items.forEach(x => x.card = undefined);
-      this.deck.item!.cardDeck = undefined;
-    });
+  constructor(@Inject(MAT_DIALOG_DATA) public data: { deck: _Object<DeckItem>, objects: _Object<ItemAny>[] }, public ref: MatDialogRef<EditCardDeckDialogue>, private dataService: DataService) {
+    this.deck = this.data.deck;
+    this.cards = this.data.objects.filter(x => ItemType.CARD == x.item.type) as _Object<CardItem>[];
   }
 
   ngOnInit(): void {
-    this.inventoryCards.items = (this.data.items as Item[]).filter(x => x.type == ItemType.CARD).map(x => Object.assign({}, x));
-    console.log(this.inventoryCards.items);
-    this.editMode = !!this.data.deck;
+    this.loadInventories();
+  }
 
-    if(this.editMode) {
-      this.deck = Object.assign({}, this.data.deck);
-      this.deck.item = Object.assign({}, this.deck.item);
-    } else {
-      this.deck = new CardDeck();
-      this.deck.item = new Item();
-      this.inventoryDeck.items = [];
+  async loadInventories() {
+    if (!this.deck.subInventory || !this.deck.subInventory.subObjects) {
+      this.deck.subInventory = await this.dataService.getSubInventory(this.deck.hash);
+      this.deck.subInventory.subObjects = await this.dataService.getSubInventoryObjects(this.deck.hash);
     }
+    this.inventoryDeck.objects = this.deck.subInventory.subObjects;
+    this.inventoryCards.objects = this.cards.filter(x => !this.inventoryDeck.objects.some(y => x.hash == y.hash));
   }
 
-  filterCards() {
-    this.inventoryCards.items = this.inventoryCards.items.filter(x => !this.inventoryDeck.items.some(y => y.id == x.id));
+  moveToDeck(object: _Object<ItemAny>) {
+    if (!this.deck.subInventory || !this.deck.subInventory.subObjects) return;
+    this.deck.subInventory.subObjects.push(object);
+    this.dataService.self.addCardToDeck(this.deck, object);
+    this.loadInventories();
   }
 
-  moveToDeck(item: Item) {
-    this.inventoryDeck.items.push(item);
-    this.filterCards();
-  }
-
-  moveToCards(item: Item) {
-    let index = this.inventoryDeck.items.findIndex(x => x.id == item.id);
-    let card = this.inventoryDeck.items.splice(index, 1);
-    this.inventoryCards.items.push(card[0]);
+  moveToCards(object: _Object<ItemAny>) {
+    if (!this.deck.subInventory || !this.deck.subInventory.subObjects) return;
+    this.deck.subInventory.subObjects = this.deck.subInventory.subObjects.filter(x => x.hash != object.hash);
+    this.dataService.self.removeCardFromDeck(this.deck, object);
+    this.loadInventories();
   }
 }

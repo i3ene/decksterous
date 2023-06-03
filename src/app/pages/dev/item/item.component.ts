@@ -50,12 +50,12 @@ export class DevItemComponent implements OnInit {
         break;
       case 'save':
         var payload = this.table.saveSelect();
-        var response = payload.id ? await this.request.put("/item", payload) : await this.request.post("/item", payload);
-        if (response.payload) Object.assign(payload, response.payload);
+        var response = payload.id ? await this.request.put(`/item/${payload.id}`, payload) : await this.request.post("/item", payload);
+        if (response) Object.assign(payload, response);
         break;
       case 'delete':
         var payload = event.row;
-        await this.request.delete("/item", payload);
+        await this.request.delete(`/item/${payload.id}`);
         this.table.deleteSelect(payload);
         break;
       case 'select':

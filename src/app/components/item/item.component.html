@@ -1,13 +1,13 @@
 <div class="container mat-elevation-z4 card-background">
-  <ng-container *ngIf="item">
-    <span class="header" (click)="clickedEvent.emit(item)">
-      <!--<img class="center" [src]="getTypeImage(item)" [width]="20" [height]="20" />-->
-      <h2>{{ item.name }}</h2>
-      <span class="center">&lt;{{ item.type }}&gt;</span>
+  <ng-container *ngIf="object">
+    <span class="header" (click)="clickedEvent.emit(object)">
+      <!--<img class="center" [src]="getTypeImage(object)" [width]="20" [height]="20" />-->
+      <h2>{{ object.item.name }}</h2>
+      <span class="center">&lt;{{ ItemType[object.item.type] }}&gt;</span>
       <span class="spacer"></span>
       <mat-checkbox *ngIf="selectable" [(ngModel)]="selected" (click)="$event.stopPropagation()"></mat-checkbox>
     </span>
-    <img #image class="center" [src]="item.image" [alt]="item.image" [width]="150" [height]="150" (error)="image.src = defaultSrc"/>
-    <p>{{ item.description }}</p>
+    <img #image class="center" [src]="object.item.image" [alt]="object.item.image" [width]="150" [height]="150" (error)="image.src = defaultSrc"/>
+    <p>{{ object.item.description }}</p>
   </ng-container>
 </div>

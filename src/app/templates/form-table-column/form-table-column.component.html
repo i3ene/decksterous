@@ -25,7 +25,7 @@
     <ng-container *ngIf="row == selected else display">
       <div>
         <img [src]="row[column.key]" />
-        <input type="file" id="imageupload" (change)="dataService.uploadImage($event, { name: column.key, row: row })" />
+        <input type="file" id="imageupload" (change)="imageService.upload($event, { name: column.key, row: row })" />
         <a #imagedownload id="imagedownload" [href]="row[column.key]" download="image">Download</a>
         <div class="image-actions">
           <label for="imageupload">
