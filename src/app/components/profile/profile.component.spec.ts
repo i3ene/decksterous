@@ -24,7 +24,7 @@ describe('ProfileComponent', () => {
   });
 
   it('should create', () => {
-    component.loadToken();
+    component.loadSelf();
   });
 
   it('should create', () => {

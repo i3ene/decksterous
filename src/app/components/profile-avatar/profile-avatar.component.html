@@ -1,1 +1,1 @@
-<img [src]="src ?? defaultSrc" [style.width.px]="size" [style.height.px]="size" [class.round]="appearance == 'circle'" [class.edge]="appearance == 'normal'" [class.border]="border"/>
+<img [src]="src ? src : defaultSrc" [style.width.px]="size" [style.height.px]="size" [class.round]="appearance == 'circle'" [class.edge]="appearance == 'normal'" [class.border]="border"/>
