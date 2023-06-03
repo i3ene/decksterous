@@ -3,8 +3,8 @@ import { CubeThree } from './cube.three';
 import { PlaneThree } from './plane.three';
 import { TextThree } from './text.three';
 import * as THREE from "three";
-import { Card } from "../data/card.model";
 import { InteractionThree } from "./interaction.three";
+import { Card } from "../data/item.model";
 
 
 export class CardThree extends Group {

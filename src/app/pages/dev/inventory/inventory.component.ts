@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
-import { Inventory } from 'src/app/models/data/inventory.model';
-import { User } from 'src/app/models/data/user.model';
+import { Inventory, User } from 'src/app/models/data/user.model';
 import { ColumnAction, IColumn, ITableActionEvent } from 'src/app/models/object/table.model';
 import { RequestService } from 'src/app/services/request/request.service';
 import { FormTableTemplate } from 'src/app/templates/form-table/form-table.component';
@@ -60,12 +59,12 @@ export class DevInventoryComponent {
         break;
       case 'save':
         var payload = this.table.saveSelect();
-        var response = payload.id ? await this.request.put("/inventory", payload) : await this.request.post("/inventory", payload);
-        if (response.payload) Object.assign(payload, response.payload);
+        var response = payload.id ? await this.request.put(`/inventory/${payload.id}`, payload) : await this.request.post("/inventory", payload);
+        if (response) Object.assign(payload, response);
         break;
       case 'delete':
         var payload = event.row;
-        await this.request.delete("/inventory", payload);
+        await this.request.delete(`/inventory/${payload.id}`);
         this.table.deleteSelect(payload);
         break;
       case 'select':
