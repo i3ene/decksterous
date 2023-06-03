@@ -1,16 +1,16 @@
 <div>
   <div class="header gap row">
-    <app-profile-avatar [src]="marketplace.inventoryItem?.inventory?.user?.avatar" [size]="24" [border]="false"></app-profile-avatar>
-    <div>{{ marketplace.inventoryItem?.inventory?.user?.name }}</div>
+    <app-profile-avatar [src]="object.inventory?.user?.avatar" [size]="24" [border]="false"></app-profile-avatar>
+    <div>{{ object.inventory?.user?.name }}</div>
   </div>
-  <app-item [item]="marketplace.inventoryItem?.item!"></app-item>
+  <app-item [object]="object"></app-item>
   <div class="footer row gap">
     <ng-container *ngIf="isSelf && editing; else actions">
       <button mat-raised-button color="warn" (click)="remove()">Remove</button>
       <span class="spacer"></span>
       <mat-form-field>
         <mat-label>Price</mat-label>
-        <input matInput [value]="marketplace.price" #input/>
+        <input matInput [value]="object.marketplace?.price" #input/>
         <button mat-icon-button matSuffix (click)="update(input.value)">
           <mat-icon>done</mat-icon>
         </button>
@@ -28,7 +28,7 @@
       </ng-template>
       <span class="spacer"></span>
       <div>
-        {{ marketplace.price }}c
+        {{ object.marketplace?.price }}c
       </div>
     </ng-template>
   </div>

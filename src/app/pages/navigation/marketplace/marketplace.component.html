@@ -21,9 +21,17 @@
       </div>
       <mat-divider></mat-divider>
       <div class="section">
-        <h2>Community</h2>
+        <div class="row">
+          <h2>Community</h2>
+          <span class="spacer"></span>
+          <mat-button-toggle-group [(ngModel)]="ownItems">
+            <mat-button-toggle [value]="false">Buy</mat-button-toggle>
+            <mat-button-toggle [value]="true">Sell</mat-button-toggle>
+          </mat-button-toggle-group>
+        </div>
         <div class="display">
-          <app-marketplace-item *ngFor="let item of items" [marketplace]="item" class="item"></app-marketplace-item>
+          <app-marketplace-item *ngFor="let item of items" [object]="item" [isSelf]="ownItems" class="item"></app-marketplace-item>
+          <div *ngIf="!items.length">No Items...</div>
         </div>
       </div>
     </div>
