@@ -4,11 +4,17 @@ import {Item} from "./item.model";
 import {SubInventory} from "./subInventory.model";
 import {Marketplace} from "./marketplace.model";
 import {QueryUtil} from "../../utils/query.util";
+import { Pack } from "./pack.model";
+import { Deck } from "./deck.model";
+import { Card } from "./card.model";
 
 @Scopes(() => ({
   query: QueryUtil.query(['hash', 'itemId', 'inventoryId']),
   item: {
-    include: [Item]
+    include: [{
+      model: Item,
+      include: [Card, Deck, Pack]
+    }]
   },
   inventory: {
     include: [Inventory]

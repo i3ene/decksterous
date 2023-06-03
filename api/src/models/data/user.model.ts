@@ -7,6 +7,9 @@ import { _Object } from './object.model';
 import { Item } from './item.model';
 import { RequestUtils } from '../../utils/request.util';
 import { RequestDifference } from '../object/request.model';
+import { Card } from './card.model';
+import { Deck } from './deck.model';
+import { Pack } from './pack.model';
 
 @DefaultScope(() => ({
   attributes: {
@@ -23,7 +26,10 @@ import { RequestDifference } from '../object/request.model';
       model: Inventory,
       include: [{
         model: _Object,
-        include: [Item]
+        include: [{
+          model: Item,
+          include: [Card, Deck, Pack]
+        }]
       }]
     }],
   },
@@ -98,7 +104,7 @@ export class User extends Model<User> {
     return {
       accepted: this.friendAccepted,
       invites: this.friendInvites,
-      requsts: this.friendRequests
+      requests: this.friendRequests
     };
   }
 

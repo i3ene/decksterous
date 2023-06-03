@@ -6,7 +6,7 @@ import { User } from "../models/data/user.model";
 
 export const UserRoutes = Router();
 
-UserRoutes.get(["/all", "/all/:page"], [middleware.findAll({ model: User, page: { size: 100, key: "page" } })], controller.result(User));
+UserRoutes.get(["/all", "/all/:page"], [middleware.findAll({ model: User, scopes: ["inventory"], page: { size: 100, key: "page" } })], controller.result(User));
 
 UserRoutes.post("/", [auth.isAdmin, middleware.add({ model: User })], controller.result(User));
 

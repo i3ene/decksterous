@@ -50,7 +50,7 @@ export const ObjectHashSubInventoryObjectRoutes = Router();
 ObjectHashSubInventoryRoutes.use("/object", ObjectHashSubInventoryObjectRoutes);
 
 ObjectHashSubInventoryObjectRoutes.get("/", [
-  middleware.getAssociation({ model: SubInventory, data: { key: [_Object, "subInventory"] }, association: { name: "objects" } })
+  middleware.getAssociation({ model: SubInventory, data: { key: [_Object, "subInventory"] }, association: { name: "objects" }, scopes: ["item"] })
 ], controller.result([_Object, "subInventory", "objects"]));
 
 ObjectHashSubInventoryObjectRoutes.post("/", [

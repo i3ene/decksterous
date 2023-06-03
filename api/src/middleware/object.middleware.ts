@@ -13,7 +13,7 @@ export namespace ObjectMiddleware {
       const result = await data.$get("inventory", {scope: "user"});
       if (result == undefined) return res.status(500).send('No inventory available!');
       if (result.user == undefined) return res.status(500).send('No user available!');
-      if ((result.user.id == req.user?.id) != equal) return res.status(401).send({message: `${equal ? 'Is' : 'Not'} own object!`});
+      if ((result.user.id == req.user?.id) != equal) return res.status(401).send({message: `${data.hash} ${equal ? 'not' : 'is'} own object!`});
 
       next();
     }

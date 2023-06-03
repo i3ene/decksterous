@@ -21,4 +21,4 @@ InventoryIdRoutes.put("/", [auth.isAdmin, middleware.edit({ model: Inventory })]
 
 InventoryIdRoutes.delete("/", [auth.isAdmin, middleware.remove({ model: Inventory })], controller.message("last"));
 
-InventoryIdRoutes.get("/object", [middleware.getAssociation({ model: Inventory, association: { name: "objects" } })], controller.result([Inventory, "objects"]));
+InventoryIdRoutes.get("/object", [middleware.getAssociation({ model: Inventory, scopes: ["item"], association: { name: "objects" } })], controller.result([Inventory, "objects"]));

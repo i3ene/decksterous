@@ -14,6 +14,10 @@ import {QueryUtil} from '../../utils/query.util';
 import {User} from './user.model';
 import {_Object} from './object.model';
 import {Marketplace} from './marketplace.model';
+import { Item } from './item.model';
+import { Card } from './card.model';
+import { Deck } from './deck.model';
+import { Pack } from './pack.model';
 
 @Scopes(() => ({
   query: QueryUtil.query(['id', 'userId']),
@@ -26,11 +30,17 @@ import {Marketplace} from './marketplace.model';
       include: [{
         model: Marketplace,
         required: true
-      }]
+      }, Item]
     }]
   },
   objects: {
-    include: [_Object]
+    include: [{
+      model: _Object,
+      include: [{
+        model: Item,
+        include: [Card, Deck, Pack]
+      }]
+    }]
   }
 }))
 @Table

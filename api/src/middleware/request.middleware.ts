@@ -204,9 +204,6 @@ export namespace RequestMiddleware {
       const data = RequestUtils.byAttribute(req.data, key);
       if (data == undefined) return res.status(500).send('No ' + key + ' data available!');
       const association = RequestUtils.byAttribute(req.data, options.data?.name ?? options.model.name);
-      console.log(options.association?.data.name);
-      console.log(options.association?.name);
-      console.log(await data.$has("marketplace", data));
       association[options.association?.key ?? options.association?.name!] = await data.$has(options.association?.name, RequestUtils.byAttribute(req.data, options.association?.data));
 
       next();
@@ -232,6 +229,15 @@ export namespace RequestMiddleware {
       const key = options.data?.key;
       const data = RequestUtils.byAttribute(req.data, key);
       if ((value == data) == equal) return res.status(400).send({message: message});
+
+      next();
+    }
+  }
+
+  export function map(keyAcces: any, keySave: any) {
+    return (req: Request, res: Response, next: NextFunction) => {
+      const data = RequestUtils.byAttribute(req.data, keyAcces);
+      RequestUtils.toAttribute(req.data, keySave, data);      
 
       next();
     }

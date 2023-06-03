@@ -16,6 +16,21 @@ export namespace RequestUtils {
     return data;
   }
 
+  export function toAttribute(data: any, key: string | any[] | any, payload: any) {
+    if (key == undefined) return;
+    if (typeof key == 'string') return data[key] = payload;
+    if (!Array.isArray(key)) return data[key.name] = payload;
+    for (const attr of key) {
+      if (data == undefined) break;
+      if (typeof attr == 'string') {
+        data = data[attr];
+      } else {
+        data = data[attr.name];
+      }
+    }
+    return data = payload;
+  }
+
   export function difference(type: RequestDifference, arr1: any[], arr2: any[], on?: any | any[]) {
     switch(type) {
       case 'intersection':

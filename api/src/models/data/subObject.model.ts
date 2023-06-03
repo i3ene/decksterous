@@ -2,6 +2,10 @@ import { BelongsTo, Column, DataType, ForeignKey, Model, Scopes, Table } from "s
 import { SubInventory } from "./subInventory.model";
 import { _Object } from "./object.model";
 import { QueryUtil } from "../../utils/query.util";
+import { Item } from "./item.model";
+import { Card } from "./card.model";
+import { Deck } from "./deck.model";
+import { Pack } from "./pack.model";
 
 @Scopes(() => ({
   query: QueryUtil.query(['subInventoryId', 'objectHash']),
@@ -10,6 +14,15 @@ import { QueryUtil } from "../../utils/query.util";
   },
   subInventory: {
     include: [SubInventory]
+  },
+  item: {
+    include: [{
+      model: _Object,
+      include: [{
+        model: Item,
+        include: [Card, Deck, Pack]
+      }]
+    }]
   }
 }))
 @Table

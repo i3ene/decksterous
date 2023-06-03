@@ -2,6 +2,10 @@ import { AutoIncrement, BelongsTo, BelongsToMany, Column, DataType, ForeignKey, 
 import { _Object } from "./object.model";
 import { QueryUtil } from "../../utils/query.util";
 import { SubObject } from "./subObject.model";
+import { Item } from "./item.model";
+import { Card } from "./card.model";
+import { Deck } from "./deck.model";
+import { Pack } from "./pack.model";
 
 @Scopes(() => ({
   query: QueryUtil.query(['id', 'objectHash']),
@@ -15,6 +19,13 @@ import { SubObject } from "./subObject.model";
     include: [{
       model: SubObject,
       as: 'objects'
+    }]
+  },
+  fullObjects: {
+    include: [{
+      model: SubObject,
+      as: 'objects',
+
     }]
   }
 }))

@@ -1,8 +1,9 @@
-import {AllowNull, AutoIncrement, Column, DataType, HasOne, Model, PrimaryKey, Scopes, Table} from "sequelize-typescript";
+import {AllowNull, AutoIncrement, Column, DataType, HasMany, HasOne, Model, PrimaryKey, Scopes, Table} from "sequelize-typescript";
 import {QueryUtil} from "../../utils/query.util";
 import {Card} from "./card.model";
 import {Deck} from "./deck.model";
 import {Pack} from "./pack.model";
+import { _Object } from "./object.model";
 
 @Scopes(() => ({
   query: QueryUtil.query(['id', 'name', 'description']),
@@ -28,14 +29,6 @@ export class Item extends Model<Item> {
 
   @Column(DataType.STRING(255))
   description?: string;
-  @HasOne(() => Card)
-  card?: Card;
-  @HasOne(() => Deck)
-  deck?: Deck;
-
-  /* Relations */
-  @HasOne(() => Pack)
-  pack?: Pack;
 
   @AllowNull
   @Column(DataType.BLOB('long'))
@@ -47,4 +40,18 @@ export class Item extends Model<Item> {
   set image(value: any) {
     this.setDataValue('image', value);
   }
+
+  /* Relations */
+
+  @HasOne(() => Card)
+  card?: Card;
+
+  @HasOne(() => Deck)
+  deck?: Deck;
+
+  @HasOne(() => Pack)
+  pack?: Pack;
+
+  @HasMany(() => _Object)
+  objects?: _Object[];
 }
