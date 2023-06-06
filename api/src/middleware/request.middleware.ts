@@ -115,6 +115,19 @@ export namespace RequestMiddleware {
     };
   }
 
+  export function addOrFind(options: RequestOptionsModel & RequestOptionsData & RequestOptionsBody) {
+    return async (req: Request, res: Response, next: NextFunction) => {
+      const key = options.data?.key ?? options.model.name;
+      const payload = RequestUtils.byAttribute(req.body, options.body?.key);
+      const [data, created] = await options.model.findOrCreate({ where: QueryUtil.attributes(payload, options.model) });
+      if (data == undefined) return res.status(500).send('Something went wrong');
+      else if (created) req.data.addMessage(key + ' successfully added!', 200, data);
+      req.data[key] = data;
+
+      next();
+    };
+  }
+
   export function edit(options: RequestOptionsModel & RequestOptionsData & RequestOptionsBody) {
     return async (req: Request, res: Response, next: NextFunction) => {
       const key = options.data?.key ?? options.model.name;

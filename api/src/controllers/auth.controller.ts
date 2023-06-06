@@ -50,43 +50,28 @@ export namespace AuthController {
     res.status(200).send({message: `Registration send to ${register.mail}! Please also check your Spam folder.`})
   }
 
-  export async function signupToken(io: Server, socket: Socket) {
-    const token = FunctionUtil.randomToken();
-    const register = await Validation.create({token: token} as any);
-    if (register == null) return socket.emit('error', {message: 'Registration failed!'});
+  export async function validationToken(io: Server, socket: Socket, type: string) {
+    // Create validation object to generate token
+    const validation = await Validation.create({ type: type } as any);
+    if (validation == null) return socket.emit('error', {message: 'Validation failed!'});
 
-    MailController.signup.subscribe(async (x) => {
-      if (x.subject != register.token) return;
-      await register.update({mail: x.address});
-      (socket.user ?? {} as any).mail = register.mail;
-      socket.emit('auth-mail', register.mail);
+    // Listen to inbox for incoming mail
+    const subscription = MailController.inbox.subscribe(async (x) => {
+      // Check if subject token is euqal to validation
+      if (x.subject != validation.token) return;
+      // Find existing validation and destroy
+      const existing = await Validation.findOne({ where: { mail: x.address } });
+      if (existing) existing.destroy();
+      // Update validation to mail address
+      await validation.update({mail: x.address});
+      // Emit validation object to socket
+      socket.emit('auth-validation', validation);
+      // Stop listening for inbox
+      subscription.unsubscribe();
     });
 
-    return socket.emit('auth-token', register.token);
-  }
-
-  export async function registerSocket(io: Server, socket: Socket, credentials: any) {
-    if (!socket.user || !socket.user.mail) return socket.emit('error', {message: 'No mail set!'});
-    if (!credentials.user || !credentials.password) return socket.emit('error', {message: 'Credentials incomplete!'});
-
-    // TODO: Check Mail and Username for duplicates
-
-    const register = await Validation.findOne({mail: socket.user.mail} as any);
-    if (!register) return socket.emit('error', {message: `No registration found for mail ${socket.user.mail}!`});
-
-    const user: User = await User.create({
-      name: credentials.name,
-      mail: register.mail!,
-      password: credentials.password
-    } as any);
-    if (!user) return socket.emit('error', {message: `Registration (user) failed!`});
-
-    const inventory: Inventory = await Inventory.create();
-    if (!inventory) return socket.emit('error', {message: `Registration (inventory) failed!`});
-    await inventory.$set('user', user);
-
-    await register.destroy();
-    socket.emit('auth-register', {message: `Registration for user ${user.name} successfull!`});
+    // Return token to socket
+    return socket.emit('auth-token', validation.token);
   }
 
   export async function verifyToken(io: Server, socket: Socket): Promise<any> {
