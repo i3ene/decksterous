@@ -1,9 +1,13 @@
-import { createTransport } from "nodemailer";
+import {createTransport} from "nodemailer";
 import IMAP from 'imap';
+import {Config} from "../config";
+import {Validation} from "../models/data/validation.model";
+import {Subject} from 'rxjs';
+import {RequestUtils} from "../utils/request.util";
+import {Request, Response} from "express";
+import {ValidationType} from "../models/object/validation.object";
+import {RequestOptionsData} from "../models/object/request.model";
 import { simpleParser } from "mailparser";
-import { Config } from "../config";
-import { Register } from "../models/data/register.model";
-import { Subject } from 'rxjs';
 
 export namespace MailController {
   /**
@@ -97,14 +101,14 @@ export namespace MailController {
 
   /**
    * Function to send registration mails
-   * @param register Registration object containing `mail` and `token`
+   * @param validation Validation object containing `mail` and `token`
    * @returns On success `true`
    */
-  export async function sendRegister(register: Register) {
-    const link = `https://game.decksterous.digital/auth/register?token=${register.token}`;
+  export async function sendRegister(validation: Validation) {
+    const link = `https://game.decksterous.digital/auth/register?token=${validation.token}`;
     const info = await sender.sendMail({
       from: `"Decksterous" <${Config.Mail.ADDRESS}>`,
-      to: register.mail,
+      to: validation.mail,
       subject: "Signup",
       text: `Finish signup here: ${link}`,
       html: `Finish signup <a href="${link}">here</a>!`

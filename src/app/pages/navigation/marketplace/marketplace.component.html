@@ -1,31 +1,37 @@
 <div class="container">
-  <mat-card>
-    <div class="header">
-      <mat-form-field>
-        <mat-label>Search</mat-label>
-        <input matInput type="text" />
-        <button mat-icon-button matPrefix>
-          <mat-icon>search</mat-icon>
-        </button>
-        <button mat-icon-button matSuffix>
-          <mat-icon>close</mat-icon>
-        </button>
-      </mat-form-field>
-    </div>
-    <div class="content">
-      <div class="section">
-        <h2>Shop</h2>
-        <div class="display">
-          Items
-        </div>
-      </div>
-      <mat-divider></mat-divider>
-      <div class="section">
-        <h2>Community</h2>
-        <div class="display">
-          <app-marketplace-item *ngFor="let item of items" [marketplace]="item" class="item"></app-marketplace-item>
-        </div>
-      </div>
-    </div>
+  <mat-card class="header">
+    <mat-form-field>
+      <mat-label>Search</mat-label>
+      <input matInput type="text" />
+      <button mat-icon-button matPrefix>
+        <mat-icon>search</mat-icon>
+      </button>
+      <button mat-icon-button matSuffix>
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-form-field>
   </mat-card>
+  <div class="content">
+    <div class="section">
+      <h2>Shop</h2>
+      <div class="display">
+        <app-default></app-default>
+      </div>
+    </div>
+    <mat-divider></mat-divider>
+    <div class="section">
+      <div class="row">
+        <h2>Community</h2>
+        <span class="spacer"></span>
+        <mat-button-toggle-group [(ngModel)]="ownItems">
+          <mat-button-toggle [value]="false">Buy</mat-button-toggle>
+          <mat-button-toggle [value]="true">Sell</mat-button-toggle>
+        </mat-button-toggle-group>
+      </div>
+      <div class="display">
+        <app-marketplace-item *ngFor="let item of items" [object]="item" [isSelf]="ownItems" class="item" (action)="handleAction(item, $event)"></app-marketplace-item>
+        <p *ngIf="!items.length" class="alt-text">No Items...</p>
+      </div>
+    </div>
+  </div>
 </div>

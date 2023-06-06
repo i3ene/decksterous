@@ -1,11 +1,18 @@
-import { NextFunction, Request, Response } from 'express';
-import { Op } from 'sequelize';
-import { Config } from '../config';
-import { User } from '../models/data/user.model';
-import { Data } from '../models/object/data.express';
-import { RequestOptions } from '../models/object/request.model';
-import { QueryUtil } from '../utils/query.util';
-import { RequestUtils } from '../utils/request.util';
+import {NextFunction, Request, Response} from 'express';
+import {Op} from 'sequelize';
+import {Config} from '../config';
+import {Data} from '../models/object/data.express';
+import {
+  RequestDifference,
+  RequestOptionsAssociation,
+  RequestOptionsBody,
+  RequestOptionsData,
+  RequestOptionsList,
+  RequestOptionsModel,
+  RequestOptionsPage
+} from '../models/object/request.model';
+import {QueryUtil} from '../utils/query.util';
+import {RequestUtils} from '../utils/request.util';
 
 export namespace RequestMiddleware {
   export function handler(req: Request, res: Response, next: NextFunction) {
@@ -18,11 +25,11 @@ export namespace RequestMiddleware {
     next();
   }
 
-  export function find(options: RequestOptions) {
+  export function find(options: RequestOptionsModel & RequestOptionsData) {
     return async (req: Request, res: Response, next: NextFunction) => {
       const key = options.data?.key ?? options.model.name;
       const query = QueryUtil.isEmpty(req.body) ? req.query : req.body;
-      const data = await options.model.scope(['defaultScope', { method: ['query', query, Op.and] }].concat(options.scopes ?? [])).findOne();
+      const data = await options.model.scope(['defaultScope', {method: ['query', query, Op.and]}].concat(options.scopes ?? [])).findOne();
       if (data == null) req.data.addMessage('No ' + key + ' found!', 404);
       req.data[key] = data;
 
@@ -30,11 +37,20 @@ export namespace RequestMiddleware {
     };
   }
 
-  export function findAll(options: RequestOptions) {
+  export function findAll(options: RequestOptionsModel & RequestOptionsData & RequestOptionsPage) {
     return async (req: Request, res: Response, next: NextFunction) => {
       const key = options.data?.key ?? options.model.name;
       const query = QueryUtil.isEmpty(req.body) ? req.query : req.body;
-      const data = await options.model.scope(['defaultScope', { method: ['query', query, Op.or, true] }].concat(options.scopes ?? [])).findAll();
+      let page: { offset: number, limit: number } = {} as any;
+      if (options.page) {
+        page.limit = options.page.size;
+        page.offset = Number(RequestUtils.byAttribute(req.params, options.page.key));
+        if (!QueryUtil.isZeroOrGreater(page.offset)) page.offset = Number(RequestUtils.byAttribute(req.body, options.page.key));
+        if (!QueryUtil.isZeroOrGreater(page.offset)) page.offset = Number(RequestUtils.byAttribute(req.query, options.page.key));
+        if (!QueryUtil.isZeroOrGreater(page.offset)) page.offset = 0;
+        page.offset *= page.limit;
+      }
+      const data = await options.model.scope(['defaultScope', {method: ['query', query, Op.or, true]}].concat(options.scopes ?? [])).findAll(page);
       if (data == null) req.data.addMessage('No ' + key + ' found!', 404);
       req.data[key] = data;
 
@@ -42,16 +58,18 @@ export namespace RequestMiddleware {
     };
   }
 
-  export function get(options: RequestOptions) {
+  export function get(options: RequestOptionsModel & RequestOptionsData & RequestOptionsBody) {
     return async (req: Request, res: Response, next: NextFunction) => {
       const key = options.data?.key ?? options.model.name;
-      let id = 0;
+      let id: number | string = 0;
       if (options.body?.key) {
-        id = RequestUtils.byAttribute(req.body, options.body?.key);
-        if (QueryUtil.isEmptyOrZero(id)) id = RequestUtils.byAttribute(req.query, options.body?.key);
+        id = RequestUtils.byAttribute(req.params, options.body.key);
+        if (QueryUtil.isEmptyOrZero(id)) id = RequestUtils.byAttribute(req.body, options.body.key);
+        if (QueryUtil.isEmptyOrZero(id)) id = RequestUtils.byAttribute(req.query, options.body.key);
       }
       if (QueryUtil.isEmptyOrZero(id)) {
-        id = req.body.id;
+        id = req.params.id;
+        if (QueryUtil.isEmptyOrZero(id)) id = req.body.id;
         if (QueryUtil.isEmptyOrZero(id)) id = req.query.id as any;
       }
       const data = await options.model.scope(['defaultScope'].concat(options.scopes ?? [])).findByPk(id);
@@ -62,12 +80,21 @@ export namespace RequestMiddleware {
     };
   }
 
-  export function getAll(options: RequestOptions) {
+  export function getAll(options: RequestOptionsModel & RequestOptionsData & RequestOptionsList & RequestOptionsPage) {
     return async (req: Request, res: Response, next: NextFunction) => {
       const key = options.data?.key ?? options.model.name;
       let value: any = RequestUtils.byAttribute(req.body, options.list?.key);
       let ids: any[] = value ? value.map((x: any) => RequestUtils.byAttribute(x, options.list?.id)) : [];
-      const data = await options.model.scope(['defaultScope'].concat(options.scopes ?? [])).findAll(QueryUtil.ids(options.model, ids));
+      let page: { offset: number, limit: number } = {} as any;
+      if (options.page) {
+        page.limit = options.page.size;
+        page.offset = Number(RequestUtils.byAttribute(req.params, options.page.key));
+        if (!QueryUtil.isZeroOrGreater(page.offset)) page.offset = Number(RequestUtils.byAttribute(req.body, options.page.key));
+        if (!QueryUtil.isZeroOrGreater(page.offset)) page.offset = Number(RequestUtils.byAttribute(req.query, options.page.key));
+        if (!QueryUtil.isZeroOrGreater(page.offset)) page.offset = 0;
+        page.offset *= page.limit;
+      }
+      const data = await options.model.scope(['defaultScope'].concat(options.scopes ?? [])).findAll(Object.assign(page, QueryUtil.ids(options.model, ids)));
       if (data == null) req.data.addMessage('No ' + key + ' found!', 404);
       req.data[key] = data;
 
@@ -75,7 +102,7 @@ export namespace RequestMiddleware {
     };
   }
 
-  export function add(options: RequestOptions) {
+  export function add(options: RequestOptionsModel & RequestOptionsData & RequestOptionsBody) {
     return async (req: Request, res: Response, next: NextFunction) => {
       const key = options.data?.key ?? options.model.name;
       const payload = RequestUtils.byAttribute(req.body, options.body?.key);
@@ -88,7 +115,7 @@ export namespace RequestMiddleware {
     };
   }
 
-  export function edit(options: RequestOptions) {
+  export function edit(options: RequestOptionsModel & RequestOptionsData & RequestOptionsBody) {
     return async (req: Request, res: Response, next: NextFunction) => {
       const key = options.data?.key ?? options.model.name;
       const data = RequestUtils.byAttribute(req.data, key);
@@ -101,7 +128,7 @@ export namespace RequestMiddleware {
     };
   }
 
-  export function remove(options: RequestOptions) {
+  export function remove(options: RequestOptionsModel & RequestOptionsData) {
     return async (req: Request, res: Response, next: NextFunction) => {
       const key = options.data?.key ?? options.model.name;
       const data = RequestUtils.byAttribute(req.data, key);
@@ -113,67 +140,77 @@ export namespace RequestMiddleware {
     };
   }
 
-  export function getAssociation(options: RequestOptions) {
+  export function getAssociation(options: RequestOptionsModel & RequestOptionsData & RequestOptionsAssociation & RequestOptionsPage) {
     return async (req: Request, res: Response, next: NextFunction) => {
       const key = options.data?.key ?? options.model.name;
+      let page: { offset: number, limit: number } = {} as any;
+      if (options.page) {
+        page.limit = options.page.size;
+        page.offset = Number(RequestUtils.byAttribute(req.params, options.page.key));
+        if (!QueryUtil.isZeroOrGreater(page.offset)) page.offset = Number(RequestUtils.byAttribute(req.body, options.page.key));
+        if (!QueryUtil.isZeroOrGreater(page.offset)) page.offset = Number(RequestUtils.byAttribute(req.query, options.page.key));
+        if (!QueryUtil.isZeroOrGreater(page.offset)) page.offset = 0;
+        page.offset *= page.limit;
+      }
       const data = RequestUtils.byAttribute(req.data, key);
       if (data == undefined) return res.status(500).send('No ' + key + ' data available!');
-      const association = RequestUtils.byAttribute(req.data, options.data?.name ?? options.model.name);
-      association[options.association?.key ?? options.association?.name!] = await data.$get(options.association?.name);
+      const scope = {scope: (options.scopes ?? [])[0]};
+      const association = RequestUtils.byAttribute(req.data, key);
+      association[options.association?.key ?? options.association?.name!] = await data.$get(options.association?.name, Object.assign(scope, page));
 
       next();
     };
   }
 
-  export function setAssociation(options: RequestOptions) {
+  export function setAssociation(options: RequestOptionsModel & RequestOptionsData & RequestOptionsAssociation) {
     return async (req: Request, res: Response, next: NextFunction) => {
       const key = options.data?.key ?? options.model.name;
       const data = RequestUtils.byAttribute(req.data, key);
       if (data == undefined) return res.status(500).send('No ' + key + ' data available!');
-      await data.$set(options.association?.name,  RequestUtils.byAttribute(req.data, options.association?.data));
+      await data.$set(options.association?.name, RequestUtils.byAttribute(req.data, options.association?.data));
       req.data.addMessage(options.association?.name + ' successfully set for ' + key + '!', 200);
 
       next();
     };
   }
 
-  export function addAssociation(options: RequestOptions) {
+  export function addAssociation(options: RequestOptionsModel & RequestOptionsData & RequestOptionsAssociation) {
     return async (req: Request, res: Response, next: NextFunction) => {
       const key = options.data?.key ?? options.model.name;
       const data = RequestUtils.byAttribute(req.data, key);
       if (data == undefined) return res.status(500).send('No ' + key + ' data available!');
-      await data.$add(options.association?.name,  RequestUtils.byAttribute(req.data, options.association?.data));
+      await data.$add(options.association?.name, RequestUtils.byAttribute(req.data, options.association?.data));
       req.data.addMessage(options.association?.name + ' successfully added for ' + key + '!', 200);
 
       next();
     };
   }
 
-  export function removeAssociation(options: RequestOptions) {
+  export function removeAssociation(options: RequestOptionsModel & RequestOptionsData & RequestOptionsAssociation) {
     return async (req: Request, res: Response, next: NextFunction) => {
       const key = options.data?.key ?? options.model.name;
       const data = RequestUtils.byAttribute(req.data, key);
       if (data == undefined) return res.status(500).send('No ' + key + ' data available!');
-      await data.$remove(options.association?.name,  RequestUtils.byAttribute(req.data, options.association?.data));
+      await data.$remove(options.association?.name, RequestUtils.byAttribute(req.data, options.association?.data));
       req.data.addMessage(options.association?.name + ' successfully removed for ' + key + '!', 200);
 
       next();
     };
   }
 
-  export function hasAssociation(options: RequestOptions) {
+  export function hasAssociation(options: RequestOptionsModel & RequestOptionsData & RequestOptionsAssociation) {
     return async (req: Request, res: Response, next: NextFunction) => {
       const key = options.data?.key ?? options.model.name;
       const data = RequestUtils.byAttribute(req.data, key);
       if (data == undefined) return res.status(500).send('No ' + key + ' data available!');
       const association = RequestUtils.byAttribute(req.data, options.data?.name ?? options.model.name);
-      association[options.association?.key ?? options.association?.name!] = await data.$has(options.association?.name,  RequestUtils.byAttribute(req.data, options.association?.data));
+      association[options.association?.key ?? options.association?.name!] = await data.$has(options.association?.name, RequestUtils.byAttribute(req.data, options.association?.data));
 
       next();
     };
   }
 
-  export function difference(type: 'left' | 'right' | 'intersection' | 'symmetric' , key1: any[] | any, key2: any[] | any, alias: string, on?: any[] | any) {
+  export function difference(type: RequestDifference, key1: any[] | any, key2: any[] | any, alias: string, on?: any[] | any) {
     return (req: Request, res: Response, next: NextFunction) => {
       let data1 = RequestUtils.byAttribute(req.data, key1);
       let data2 = RequestUtils.byAttribute(req.data, key2);
@@ -185,5 +222,24 @@ export namespace RequestMiddleware {
 
       next();
     };
+  }
+
+  export function check(value: any, equal: boolean, message: string, options: RequestOptionsData) {
+    return (req: Request, res: Response, next: NextFunction) => {
+      const key = options.data?.key;
+      const data = RequestUtils.byAttribute(req.data, key);
+      if ((value == data) == equal) return res.status(400).send({message: message});
+
+      next();
+    }
+  }
+
+  export function map(keyAcces: any, keySave: any) {
+    return (req: Request, res: Response, next: NextFunction) => {
+      const data = RequestUtils.byAttribute(req.data, keyAcces);
+      RequestUtils.toAttribute(req.data, keySave, data);      
+
+      next();
+    }
   }
 }

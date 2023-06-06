@@ -3,7 +3,7 @@ import { SocketService } from './request/socket.service';
 import { Observable, Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { Player, PlayerCollection } from '../models/data/player.model';
-import { Card } from '../models/data/card.model';
+import { Card } from '../models/data/item.model';
 
 @Injectable({
   providedIn: 'root'
@@ -103,12 +103,11 @@ export class GameService {
     this.listeners.push(...[drawCard, placeCard]);
   }
 
-  selectDeck(id: number | string) {
-    id = typeof id == 'string' ? Number(id) : id;
+  selectDeck(objectHash: string) {
     this.socket.emitEvent(this.signal, {
       action: "select_deck",
       args: {
-        deckId: id
+        deckId: objectHash
       }
     });
   }

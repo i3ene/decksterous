@@ -14,11 +14,11 @@ export class RequestService {
     return firstValueFrom(this.http.get(this.config.url + url, options)).then(res => { this.display(res); return res });
   }
 
-  post(url: string, body: any, options: any = { responseType: 'json' }): Promise<any> {
+  post(url: string, body: any = {}, options: any = { responseType: 'json' }): Promise<any> {
     return firstValueFrom(this.http.post(this.config.url + url, body, options)).then(res => { this.display(res); return res });
   }
 
-  put(url: string, body: any, options: any = { responseType: 'json' }): Promise<any> {
+  put(url: string, body: any = {}, options: any = { responseType: 'json' }): Promise<any> {
     return firstValueFrom(this.http.put(this.config.url + url, body, options)).then(res => { this.display(res); return res });
   }
 

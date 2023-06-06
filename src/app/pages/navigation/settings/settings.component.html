@@ -1,28 +1,51 @@
 <div class="container">
-  <div *ngFor="let key of keys">
-    <ng-container [ngSwitch]="getType($any(Settings)[key].value)">
-      <mat-form-field *ngSwitchCase="'string'">
-        <mat-label>{{ key }}</mat-label>
-        <input matInput [value]="$any(settings)[key]" (change)="$any(settings)[key] = $any($event.target).value" type="text"/>
-      </mat-form-field>
-      <mat-form-field *ngSwitchCase="'number'">
-        <mat-label>{{ key }}</mat-label>
-        <input matInput [value]="$any(settings)[key]" (change)="$any(settings)[key] = +($any($event.target).value)" type="number"/>
-      </mat-form-field>
-      <mat-form-field *ngSwitchCase="'array'">
-        <mat-label>{{ key }}</mat-label>
-        <mat-select [value]="$any(settings)[key]" (valueChange)="$any(settings)[key] = $event" [multiple]="$any(Settings)[key].options?.multi ?? false">
-          <mat-option *ngFor="let option of $any(Settings)[key].options?.selection ?? []" [value]="option">
-            {{ option }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-      <mat-slide-toggle *ngSwitchCase="'boolean'" [checked]="$any(settings)[key]" (change)="$any(settings)[key] = $event.checked">
-        {{ key }}
-      </mat-slide-toggle>
-      <div *ngSwitchDefault>
-        {{ $any(settings)[key] | json }}
-      </div>
-    </ng-container>
-  </div>
+  <mat-card>
+    <h2>Settings</h2>
+    <table>
+      <tr *ngFor="let key of keys">
+        <td>{{ labelText(key) }}:</td>
+        <td [ngSwitch]="getType($any(Settings[$any(key)]))" class="row center">
+          <!-- Text Input -->
+          <mat-form-field *ngSwitchCase="'string'">
+            <input matInput [value]="$any(settings)[key]" (change)="$any(settings)[key] = $any($event.target).value" type="text"/>
+          </mat-form-field>
+          <!-- Number Input -->
+          <mat-form-field *ngSwitchCase="'number'">
+            <input matInput [value]="$any(settings)[key]" (change)="$any(settings)[key] = +($any($event.target).value)" type="number"/>
+          </mat-form-field>
+          <!-- Number Slide -->
+          <mat-slider *ngSwitchCase="'slide'" [(value)]="$any(settings)[key]" [max]="$any(Settings[$any(key)]).options?.max" [min]="$any(Settings[$any(key)]).options?.min" thumbLabel [displayWith]="sliderLabel">
+            <input matSliderThumb />
+          </mat-slider>
+          <!-- Number Range -->
+          <!-- TODO: Update Material -->
+          <mat-slider *ngSwitchCase="'range'" [max]="$any(Settings[$any(key)]).options?.max" [min]="$any(Settings[$any(key)]).options?.min" thumbLabel [displayWith]="sliderLabel">
+            <input matSliderStartThumb [value]="$any(settings)[key][0]"/>
+            <input matSliderEndThumb [value]="$any(settings)[key][1]"/>
+          </mat-slider>
+          <!-- Selection Input -->
+          <mat-form-field *ngSwitchCase="'array'">
+            <mat-select [value]="$any(settings)[key]" (valueChange)="$any(settings)[key] = $event" [multiple]="$any(Settings)[key].options?.multi ?? false">
+              <mat-option *ngFor="let option of $any(Settings)[key].options?.selection ?? []" [value]="option">
+                {{ option }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <!-- Toggle Input -->
+          <mat-slide-toggle *ngSwitchCase="'boolean'" [checked]="$any(settings)[key]" (change)="$any(settings)[key] = $event.checked"></mat-slide-toggle>
+          <!-- Check Box -->
+          <mat-checkbox *ngSwitchCase="'check'" [checked]="$any(settings)[key]" [indeterminate]="$any(settings)[key] == undefined" (change)="$any(settings)[key] = ($any(settings)[key] ? undefined : ($any(settings)[key] == undefined ? false : true))"></mat-checkbox>
+          <!-- Plain Text -->
+          <div *ngSwitchDefault>
+            {{ $any(settings)[key] | json }}
+          </div>
+        </td>
+        <td>
+          <mat-icon>
+            {{ getIcon(key) }}
+          </mat-icon>
+        </td>
+      </tr>
+    </table>
+  </mat-card>
 </div>

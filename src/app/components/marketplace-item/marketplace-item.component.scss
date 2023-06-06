@@ -7,10 +7,10 @@
   padding: 4px 0px;
 }
 
-::ng-deep.mat-form-field-wrapper {
+:host ::ng-deep.mat-form-field-wrapper {
   margin-bottom: -1.25em;
 }
 
 mat-form-field ::ng-deep.mat-form-field-infix {
-  width: 30px;
+  width: 50px;
 }

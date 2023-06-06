@@ -1,7 +1,7 @@
 import { Group } from "three";
 import { CardThree } from "./card.three";
 import * as THREE from "three";
-import { Card } from "../data/card.model";
+import { Card } from "../data/item.model";
 
 export class HandThree extends Group {
 

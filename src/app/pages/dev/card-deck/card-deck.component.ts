@@ -1,6 +1,5 @@
 import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
-import { CardDeck } from 'src/app/models/data/card.model';
-import { Item } from 'src/app/models/data/item.model';
+import { Deck, Item } from 'src/app/models/data/item.model';
 import { ColumnAction, IColumn, ITableActionEvent } from 'src/app/models/object/table.model';
 import { RequestService } from 'src/app/services/request/request.service';
 import { FormTableTemplate } from 'src/app/templates/form-table/form-table.component';
@@ -15,10 +14,11 @@ export class DevCardDeckComponent implements OnInit {
   @ViewChild('formTable') table!: FormTableTemplate;
   @Output() selectedEvent: EventEmitter<any> = new EventEmitter<any>();
 
-  data!: CardDeck[];
+  data!: Deck[];
   items: Item[] = [new Item({name: '- None -'})];
   columns: IColumn[] = [
     { key: 'id', name: 'ID' },
+    { key: 'maxCards', name: 'Card Limit', type: 'number' },
     { key: 'itemId', name: 'Item ID', type: 'select', select: {
       multiple: false,
       options: this.items,
@@ -42,8 +42,8 @@ export class DevCardDeckComponent implements OnInit {
   }
 
   async loadCardDecks(): Promise<void> {
-    const payload = await this.request.get("/item/card/deck/all");
-    this.data = payload.map((x: any) => new CardDeck(x));
+    const payload = await this.request.get("/deck/all");
+    this.data = payload.map((x: any) => new Deck(x));
   }
 
   async loadItems(): Promise<void> {
@@ -61,12 +61,12 @@ export class DevCardDeckComponent implements OnInit {
         break;
       case 'save':
         var payload = this.table.saveSelect();
-        var response = payload.id ? await this.request.put("/item/card/deck", payload) : await this.request.post("/item/card/deck", payload);
-        if (response.payload) Object.assign(payload, response.payload);
+        var response = payload.id ? await this.request.put(`/deck/${payload.id}`, payload) : await this.request.post("/deck", payload);
+        if (response) Object.assign(payload, response);
         break;
       case 'delete':
         var payload = event.row;
-        await this.request.delete("/item/card/deck", payload);
+        await this.request.delete(`/deck/${payload.id}`);
         this.table.deleteSelect(payload);
         break;
       case 'select':

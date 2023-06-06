@@ -1,8 +1,8 @@
 import { Group } from "three"
 import { CardThree } from "./card.three";
 import * as THREE from "three";
-import { Card } from "../data/card.model";
 import { InteractionThree } from "./interaction.three";
+import { Card } from "../data/item.model";
 
 export class DeckThree extends Group {
 

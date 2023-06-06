@@ -1,6 +1,6 @@
 import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
-import { Card, CardAbility, CardType } from 'src/app/models/data/card.model';
-import { Item } from 'src/app/models/data/item.model';
+import { Ability, Type } from 'src/app/models/data/card.model';
+import { Card, Item } from 'src/app/models/data/item.model';
 import { ColumnAction, IColumn, ITableActionEvent } from 'src/app/models/object/table.model';
 import { RequestService } from 'src/app/services/request/request.service';
 import { FormTableTemplate } from 'src/app/templates/form-table/form-table.component';
@@ -16,8 +16,8 @@ export class DevCardComponent implements OnInit {
 
   data!: Card[];
   items: Item[] = [new Item({name: '- None -'})];
-  types: CardType[] = [new CardType({type: '- None -'})];
-  abilities: CardAbility[] = [];
+  types: Type[] = [new Type({type: '- None -'})];
+  abilities: Ability[] = [];
   columns: IColumn[] = [
     { key: 'id', name: 'ID' },
     { key: 'health', name: 'Health', type: 'number' },
@@ -59,13 +59,13 @@ export class DevCardComponent implements OnInit {
   }
 
   async loadCardAbilities(): Promise<void> {
-    const payload = await this.request.get("/item/card/ability/all");
-    this.abilities.push(...payload.map((x: any) => new CardAbility(x)));
+    const payload = await this.request.get("/ability/all");
+    this.abilities.push(...payload.map((x: any) => new Ability(x)));
   }
 
   async loadCardTypes(): Promise<void> {
-    const payload = await this.request.get("/item/card/type/all");
-    this.types.push(...payload.map((x: any) => new CardType(x)));
+    const payload = await this.request.get("/type/all");
+    this.types.push(...payload.map((x: any) => new Type(x)));
   }
 
   async loadItems(): Promise<void> {
@@ -74,7 +74,7 @@ export class DevCardComponent implements OnInit {
   }
 
   async loadCards(): Promise<void> {
-    const payload = await this.request.get("/item/card/all");
+    const payload = await this.request.get("/card/all");
     this.data = payload.map((x: any) => new Card(x));
   }
 
@@ -88,12 +88,12 @@ export class DevCardComponent implements OnInit {
         break;
       case 'save':
         var payload = this.table.saveSelect();
-        var response = payload.id ? await this.request.put("/item/card", payload) : await this.request.post("/item/card", payload);
-        if (response.payload) Object.assign(payload, response.payload);
+        var response = payload.id ? await this.request.put(`/card/${payload.id}`, payload) : await this.request.post("/card", payload);
+        if (response) Object.assign(payload, response);
         break;
       case 'delete':
         var payload = event.row;
-        await this.request.delete("/item/card", payload);
+        await this.request.delete(`/card/${payload.id}`);
         this.table.deleteSelect(payload);
         break;
       case 'select':

@@ -13,16 +13,18 @@ export namespace AuthSocket {
   }
 
   export function listener(io: Server) {
-    io.sockets.adapter.on('auth-signup', async (id) => {
+    // TODO: Generate token and link it to type
+    io.sockets.adapter.on('auth-token', async (type, id) => {
       const socket = io.sockets.sockets.get(id);
       if (!socket) return;
       AuthController.signupToken(io, socket);
     });
 
-    io.sockets.adapter.on('auth-register', async (credentials, id) => {
+    // TODO: Receive data and process based on type of validation
+    io.sockets.adapter.on('auth-validation', async (data, id) => {
       const socket = io.sockets.sockets.get(id);
       if (!socket) return;
-      AuthController.registerSocket(io, socket, credentials);
+      AuthController.registerSocket(io, socket, data);
     });
   }
 }

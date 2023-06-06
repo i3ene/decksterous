@@ -22,6 +22,7 @@ export class SettingsService extends SettingsProperties {
 
     const setting = Settings[prop as any] as unknown as Setting<unknown>;
     if (
+      !(['undefined', 'boolean'].includes(typeof setting.value) && setting.options?.multi) &&
       (typeof setting.value != typeof newValue) ||
       (
         (Array.isArray(setting.value) && Array.isArray(newValue)) &&
@@ -30,14 +31,20 @@ export class SettingsService extends SettingsProperties {
       )
     ) return false;
     if (setting.options) {
-      if (setting.options.max) newValue = Math.min(setting.options.max as any, newValue);
-      if (setting.options.min) newValue = Math.max(setting.options.min as any, newValue);
-      if (setting.options.selection) {
-        newValue = (newValue as any[]).filter(x => ((setting.options as any).selection as any[]).includes(x));
-        newValue = setting.options.multi ? newValue : [newValue[0]];
+      if (typeof setting.value == 'number') {
+        if (setting.options.max) newValue = Math.min(setting.options.max as any, newValue);
+        if (setting.options.min) newValue = Math.max(setting.options.min as any, newValue);
+        if (setting.options.selection) {
+          newValue = (newValue as any[]).filter(x => ((setting.options as any).selection as any[]).includes(x));
+          newValue = setting.options.multi ? newValue : [newValue[0]];
+        }
+      } else if (typeof setting.value == 'string') {
+        if (setting.options.max) newValue = (newValue as string).substring(0, setting.options.max);
+        if (setting.options.min) newValue = (newValue as string).padEnd(setting.options.min, '*');
       }
     }
-    localStorage[prop] = JSON.stringify(newValue);
+    if (newValue == undefined) delete localStorage[prop];
+    else localStorage[prop] = JSON.stringify(newValue);
     return true;
   }
 

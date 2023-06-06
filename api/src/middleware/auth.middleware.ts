@@ -3,6 +3,10 @@ import { User } from '../models/data/user.model';
 import * as bcrypt from 'bcryptjs';
 import * as jwt from 'jsonwebtoken';
 import { Config } from '../config';
+import { Validation } from '../models/data/validation.model';
+import { ValidationType } from '../models/object/validation.object';
+import { RequestUtils } from '../utils/request.util';
+import { RequestOptionsData } from '../models/object/request.model';
 
 export namespace AuthMiddleware {
   export async function verifyUser(req: Request, res: Response, next: NextFunction): Promise<any> {
@@ -56,7 +60,7 @@ export namespace AuthMiddleware {
   }
 
   export async function checkDuplicateMail(req: Request, res: Response, next: NextFunction): Promise<any> {
-    if (!req.body.mail) next();
+    if (!req.body.mail) return res.status(400).send({ message: 'No mail specified!' });
 
     const user: User | null = await User.findOne({
       where: {
@@ -64,6 +68,19 @@ export namespace AuthMiddleware {
       },
     } as any);
     if (user != undefined) return res.status(404).send({ message: 'Mail already exists!' });
+
+    const validation: Validation | null = await Validation.findOne({
+      where: {
+        mail: req.body.mail,
+      },
+    } as any);
+    if (validation != undefined) return res.status(404).send({ message: 'Mail already registered!' });
+
+    next();
+  }
+
+  export function checkPassword(req: Request, res: Response, next: NextFunction): any {
+    if (!req.body.password) return res.status(400).send({ message: 'No password set!' });
 
     next();
   }
@@ -75,14 +92,35 @@ export namespace AuthMiddleware {
     next();
   }
 
-  export function getSelf(key: string, scopes: any[] = []) {
+  export function getSelf(key: string | any, scopes: any[] = []) {
     return async (req: Request, res: Response, next: NextFunction) => {
       if (req.user == null) return res.status(500).send({ message: 'User object is null!' });
       const user: User | null = await User.scope(['defaultScope'].concat(scopes)).findByPk(req.user.id);
       if (user == undefined) return res.status(500).send({ message: 'No User found for Token ID!' });
+      if (typeof key != "string") key = key.name;
       req.data[key] = user;
 
       next();
     };
+  }
+}
+
+export namespace AuthMiddleware {
+  export function setValidation(type: ValidationType) {
+    return async (req: Request, res: Response, next: NextFunction) => {
+      req.body.type = type;
+
+      next();
+    }
+  }
+
+  export function checkValidation(options: RequestOptionsData) {
+    return async (req: Request, res: Response, next: NextFunction) => {
+      const key = options.data?.key;
+      const data = RequestUtils.byAttribute(req.data, key) as Validation;
+      req.body.mail = data.mail;
+
+      next();
+    } 
   }
 }

@@ -7,6 +7,14 @@ import { RequestMiddleware } from '../middleware/request.middleware';
 import { ItemRoutes } from '../routes/item.routes';
 import { SelfRoutes } from '../routes/self.routes';
 import { MarketplaceRoutes } from '../routes/marketplace.routes';
+import { ObjectRoutes } from '../routes/object.routes';
+import { SubInventoryRoutes } from '../routes/subInventory.routes';
+import { DeckRoutes } from '../routes/deck.routes';
+import { PackRoutes } from '../routes/pack.routes';
+import { GameRoutes } from '../routes/game.routes';
+import { AbilityRoutes } from '../routes/ability.routes';
+import { TypeRoutes } from '../routes/type.routes';
+import { CardRoutes } from '../routes/card.routes';
 
 export const app = express();
 
@@ -23,3 +31,11 @@ app.use('/user', UserRoutes);
 app.use('/item', ItemRoutes);
 app.use('/inventory', InventoryRoutes);
 app.use('/marketplace', MarketplaceRoutes);
+app.use('/object', ObjectRoutes);
+app.use('/subinventory', SubInventoryRoutes);
+app.use('/deck', DeckRoutes);
+app.use('/card', CardRoutes);
+app.use('/pack', PackRoutes);
+app.use('/game', GameRoutes);
+app.use('/ability', AbilityRoutes);
+app.use('/type', TypeRoutes);

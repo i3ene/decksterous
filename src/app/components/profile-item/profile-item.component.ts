@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { User } from 'src/app/models/data/user.model';
+import { DataService } from 'src/app/services/data.service';
 import { RequestService } from 'src/app/services/request/request.service';
 import { StatsService } from 'src/app/services/stats.service';
 
@@ -17,10 +18,10 @@ export class ProfileItemComponent {
 
   user: User = new User({ name: 'Name' });
 
-  constructor(private request: RequestService, public stats: StatsService) {}
+  constructor(private request: RequestService, public stats: StatsService, private data: DataService) {}
 
   async loadUser(id: number) {
-    const payload = await this.request.get(`/user?id=${id}`);
+    const payload = await this.data.getUser(id);
     this.user = new User(payload);
   }
 

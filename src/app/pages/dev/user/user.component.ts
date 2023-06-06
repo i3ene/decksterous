@@ -19,7 +19,9 @@ export class DevUserComponent implements OnInit {
     { key: 'id', name: 'ID' },
     { key: 'avatar', name: 'Avatar', type: 'image' },
     { key: 'name', name: 'Name', type: 'text' },
+    { key: 'password', name: 'Password', type: 'text' },
     { key: 'mail', name: 'Mail', type: 'text' },
+    { key: 'coins', name: 'Coins', type: 'number' },
     { key: 'xp', name: 'XP', type: 'number' },
     new ColumnAction("Action", [
       { name: 'edit', icon: 'edit' },
@@ -51,12 +53,14 @@ export class DevUserComponent implements OnInit {
         break;
       case 'save':
         var payload = this.table.saveSelect();
-        var response = payload.id ? await this.request.put("/user", payload) : await this.request.post("/user", payload);
-        if (response.payload) Object.assign(payload, response.payload);
+        if (!payload.password) delete payload.password;
+        var response = payload.id ? await this.request.put(`/user/${payload.id}`, payload) : await this.request.post("/user", payload);
+        delete response.password;
+        if (response) Object.assign(payload, response);
         break;
       case 'delete':
         var payload = event.row;
-        await this.request.delete("/user", payload);
+        await this.request.delete(`/user/${payload.id}`);
         this.table.deleteSelect(payload);
         break;
       case 'select':

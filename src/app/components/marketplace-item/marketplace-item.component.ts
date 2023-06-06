@@ -1,7 +1,6 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { Marketplace } from 'src/app/models/data/marktplace.model';
-import { TokenService } from 'src/app/services/auth/token.service';
-import { RequestService } from 'src/app/services/request/request.service';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ItemAny } from 'src/app/models/data/item.model';
+import { Marketplace, _Object } from 'src/app/models/data/object.model';
 
 @Component({
   selector: 'app-marketplace-item',
@@ -10,45 +9,41 @@ import { RequestService } from 'src/app/services/request/request.service';
 })
 export class MarketplaceItemComponent {
 
-  isSelf: boolean = false;
+  @Input() isSelf: boolean = false;
+  
   editing: boolean = false;
 
-  _marketplace!: Marketplace;
-  @Input() set marketplace(value: Marketplace) {
-    this._marketplace = value;
-    this.checkSelf();
+  _object!: _Object<ItemAny>;
+  @Input() set object(value: _Object<ItemAny>) {
+    this._object = value;
   }
-  get marketplace(): Marketplace {
-    return this._marketplace;
+  get object(): _Object<ItemAny> {
+    return this._object;
   }
 
-  constructor(private token: TokenService, private request: RequestService) { }
+  @Output() action: EventEmitter<'buy' | 'remove' | 'update'> = new EventEmitter();
 
-  checkSelf() {
-    const data = this.token.getTokenData();
-    this.isSelf = this.marketplace.inventoryItem?.inventory?.user?.id == data.id;
-  }
+  constructor() { }
 
   edit() {
     this.editing = true;
   }
 
   buy() {
-    // TODO
+    this.action.emit('buy');
   }
 
-  remove() {
-    // TODO
+  async remove() {
+    this.action.emit('remove');
   }
 
-  update(value: any) {
-    // TODO
-    console.log(value);
+  async update(value: any) {
+    (this._object.marketplace ??= {} as Marketplace).price = value;
+    this.action.emit('update');
     this.editing = false;
   }
 
   reset() {
-    // TODO
     this.editing = false;
   }
 }
