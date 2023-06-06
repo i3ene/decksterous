@@ -7,6 +7,7 @@ import {QueryUtil} from "../../utils/query.util";
 import { Pack } from "./pack.model";
 import { Deck } from "./deck.model";
 import { Card } from "./card.model";
+import { User } from "./user.model";
 
 @Scopes(() => ({
   query: QueryUtil.query(['hash', 'itemId', 'inventoryId']),
@@ -24,6 +25,12 @@ import { Card } from "./card.model";
   },
   marketplace: {
     include: [Marketplace]
+  },
+  user: {
+    include: [{
+      model: Inventory,
+      include: [User]
+    }]
   }
 }))
 @Table({tableName: "Object", timestamps: true})
