@@ -1,12 +1,16 @@
 <div>
-  <div class="header gap row">
+  <div *ngIf="!isSelf" class="header gap row">
     <app-profile-avatar [src]="object.inventory?.user?.avatar" [size]="24" [border]="false"></app-profile-avatar>
     <div>{{ object.inventory?.user?.name }}</div>
   </div>
   <app-item [object]="object"></app-item>
   <div class="footer row gap">
     <ng-container *ngIf="isSelf && editing; else actions">
-      <button mat-raised-button color="warn" (click)="remove()">Remove</button>
+      <button mat-raised-button color="warn" (click)="remove()">
+        <mat-icon>
+          delete
+        </mat-icon>
+      </button>
       <span class="spacer"></span>
       <mat-form-field>
         <mat-label>Price</mat-label>
@@ -21,10 +25,18 @@
     </ng-container>
     <ng-template #actions>
       <ng-container *ngIf="isSelf; else buyAction">
-        <button mat-raised-button color="accent" (click)="edit()">Edit</button>
+        <button mat-raised-button color="accent" (click)="edit()">
+          <mat-icon>
+            edit
+          </mat-icon>
+        </button>
       </ng-container>
       <ng-template #buyAction>
-        <button mat-raised-button color="primary" (click)="buy()">Buy</button>
+        <button mat-raised-button color="primary" (click)="buy()">
+          <mat-icon>
+            shopping_cart
+          </mat-icon>
+        </button>
       </ng-template>
       <span class="spacer"></span>
       <div>
