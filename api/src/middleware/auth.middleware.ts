@@ -69,13 +69,6 @@ export namespace AuthMiddleware {
     } as any);
     if (user != undefined) return res.status(404).send({ message: 'Mail already exists!' });
 
-    const validation: Validation | null = await Validation.findOne({
-      where: {
-        mail: req.body.mail,
-      },
-    } as any);
-    if (validation != undefined) return res.status(404).send({ message: 'Mail already registered!' });
-
     next();
   }
 
@@ -119,6 +112,20 @@ export namespace AuthMiddleware {
       const key = options.data?.key;
       const data = RequestUtils.byAttribute(req.data, key) as Validation;
       req.body.mail = data.mail;
+
+      next();
+    } 
+  }
+
+  export function updatePassword(options: RequestOptionsData) {
+    return async (req: Request, res: Response, next: NextFunction) => {
+      const key = options.data?.key;
+      const data = RequestUtils.byAttribute(req.data, key) as Validation;
+
+      const user = await User.findOne({ where: { mail: data.mail } });
+      if (!user) return res.status(500).send({ message: `No User found to mail ${data.mail}!` });
+      await user.update({ password: req.body.password });
+      req.data.addMessage("Password updated!", 200)
 
       next();
     } 

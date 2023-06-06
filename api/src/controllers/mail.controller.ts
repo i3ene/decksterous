@@ -116,6 +116,44 @@ export namespace MailController {
 
     return info.accepted.length > 0;
   }
+
+  /**
+   * Function to send password reset mails
+   * @param validation Validation object containing `mail` and `token`
+   * @returns On success `true`
+   */
+  export async function sendPasswordReset(validation: Validation) {
+    const link = `https://game.decksterous.digital/auth/reset?token=${validation.token}`;
+    const info = await sender.sendMail({
+      from: `"Decksterous" <${Config.Mail.ADDRESS}>`,
+      to: validation.mail,
+      subject: "Signup",
+      text: `Reset password here: ${link}`,
+      html: `Reset password <a href="${link}">here</a>!`
+    });
+
+    return info.accepted.length > 0;
+  }
+
+  export function sendMail(options: RequestOptionsData) {
+    return async (req: Request, res: Response) => {
+      const key = options.data?.key;
+      const data = RequestUtils.byAttribute(req.data, key) as Validation;
+      
+      var success = false;
+      switch(data.type) {
+        case "registration":
+          success = await sendRegister(data);
+          break;
+        case "registration":
+          success = await sendRegister(data);
+          break;
+      }
+      
+      if (success) if (success) return res.status(200).send({ message: `Mail send to ${data.mail}! Please also check your Spam folder.` });
+      else res.status(500).send({ message: "Something went wrong!" });
+    }
+  }
 }
 
 MailController.listenInbox();

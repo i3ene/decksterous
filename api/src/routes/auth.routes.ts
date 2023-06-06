@@ -13,10 +13,10 @@ export const AuthRoutes = Router();
 AuthRoutes.post("/signup", [
   authMiddleware.checkDuplicateMail,
   authMiddleware.setValidation("registration"),
-  middleware.add({ model: Validation })
+  middleware.addOrFind({ model: Validation })
 ], MailController.sendMail({ data: { key: Validation } }));
 
-AuthRoutes.post("/register", [
+AuthRoutes.post("/register/:token", [
   middleware.get({ model: Validation, body: { key: "token" } }),
   authMiddleware.checkValidation({ data: { key: Validation } }),
   authMiddleware.checkDuplicateName,
@@ -27,8 +27,17 @@ AuthRoutes.post("/register", [
   middleware.remove({ model: Validation })
 ], controller.result(User));
 
-AuthRoutes.post("/reset", [authMiddleware.setValidation("password")], /* TODO: Add validation, send mail with link */);
+AuthRoutes.post("/reset", [
+  authMiddleware.checkDuplicateMail,
+  authMiddleware.setValidation("password"),
+  middleware.addOrFind({ model: Validation })
+], MailController.sendMail({ data: { key: Validation } }));
 
-AuthRoutes.post("/password", /* TODO: Get validation, update password */)
+AuthRoutes.post("/password/:token", [
+  middleware.get({ model: Validation, body: { key: "token" } }),
+  authMiddleware.checkValidation({ data: { key: Validation } }),
+  authMiddleware.checkPassword,
+  authMiddleware.updatePassword
+], controller.message("last"));
 
 AuthRoutes.post("/signin", [authMiddleware.verifyUser, authMiddleware.verifyPassword], auth.generateToken);
