@@ -8,6 +8,9 @@
       <mat-checkbox *ngIf="selectable" [(ngModel)]="selected" (click)="$event.stopPropagation()"></mat-checkbox>
     </span>
     <img #image class="center" [src]="object.item.image" [alt]="object.item.image" [width]="150" [height]="150" (error)="image.src = defaultSrc"/>
-    <p>{{ object.item.description }}</p>
+    <p *ngIf="object.item.description; else defaultDescription">{{ object.item.description }}</p>
+    <ng-template #defaultDescription>
+      <p class="alt-text">No description</p>
+    </ng-template>
   </ng-container>
 </div>
