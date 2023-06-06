@@ -43,7 +43,7 @@ export namespace AuthController {
       mail: req.body.mail
     } as any)
     if (register == null) return res.status(500).send({ message: "Registration failed!" });
-    
+
     const mail = await MailController.sendRegister(register);
     if (!mail) return res.status(500).send({ message: "Mail sending failed!" });
 
@@ -55,7 +55,7 @@ export namespace AuthController {
     const register = await Register.create({ token: token } as any);
     if (register == null) return socket.emit('error', { message: 'Registration failed!' });
 
-    MailController.signup.subscribe(async (x) => {
+    MailController.inbox.subscribe(async (x) => {
       if (x.subject != register.token) return;
       await register.update({ mail: x.address });
       (socket.user ?? {} as any).mail = register.mail;
