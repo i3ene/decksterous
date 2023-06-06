@@ -1,19 +1,23 @@
 <template-form-card [title]="title" [navigation]="['/auth/login']">
-  <ng-template #content>
-    <mat-form-field appearance="fill">
-      <mat-label>Email</mat-label>
-      <input type="email" matInput [formControl]="emailFormControl" placeholder="Ex. pat@example.com">
-      <mat-error *ngIf="emailFormControl.hasError('email') && !emailFormControl.hasError('required')">
-        Please enter a valid email address
-      </mat-error>
-      <mat-error *ngIf="emailFormControl.hasError('required')">
-        Email is <strong>required</strong>
-      </mat-error>
-    </mat-form-field>
-    <a class="fallback-button" (click)="useFallback = true">I did not receive a mail</a>
-    <app-fallback-form *ngIf="useFallback" [type]="type"></app-fallback-form>
+  <ng-template #content [ngSwitch]="process">
+    <ng-container *ngIf="process == 'mail'">
+      <mat-form-field appearance="fill">
+        <mat-label>Email</mat-label>
+        <input type="email" matInput [formControl]="emailFormControl" placeholder="Ex. pat@example.com">
+        <mat-error *ngIf="emailFormControl.hasError('email') && !emailFormControl.hasError('required')">
+          Please enter a valid email address
+        </mat-error>
+        <mat-error *ngIf="emailFormControl.hasError('required')">
+          Email is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
+      <a class="fallback-button" (click)="process = 'fallback'">I did not receive a mail</a>
+    </ng-container>
+    <ng-container *ngIf="process == 'fallback'">
+      <app-fallback-form *ngIf="process == 'fallback'" [type]="type"></app-fallback-form>
+    </ng-container>
   </ng-template>
-  <ng-template #footer>
-    <button mat-raised-button [disabled]="!emailFormControl.valid" (click)="buttonClicked()" color="primary">OK</button>
+  <ng-template #footer *ngIf="process == 'mail'">
+    <button mat-raised-button [disabled]="!emailFormControl.valid" (click)="sendClicked()" color="primary">OK</button>
   </ng-template>
 </template-form-card>
