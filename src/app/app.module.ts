@@ -62,6 +62,7 @@ import { EmailForm } from './pages/auth/forms/email-form/email-form.component';
 import { FallbackForm } from './pages/auth/forms/fallback-form/fallback-form.component';
 import { DevSubInventoryComponent } from './pages/dev/sub-inventory/sub-inventory.component';
 import { DevSubObjectInventoryComponent } from './pages/dev/sub-object-inventory/sub-object-inventory.component';
+import { SellItemDialogue } from './dialogues/sell-item/sell-item.component';
 
 @NgModule({
   declarations: [
@@ -115,7 +116,8 @@ import { DevSubObjectInventoryComponent } from './pages/dev/sub-object-inventory
     EmailForm,
     FallbackForm,
     DevSubInventoryComponent,
-    DevSubObjectInventoryComponent
+    DevSubObjectInventoryComponent,
+    SellItemDialogue
   ],
   imports: [
     BrowserModule,
