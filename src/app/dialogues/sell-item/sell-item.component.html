@@ -1,0 +1,20 @@
+<h2 mat-dialog-title>Sell Item</h2>
+<mat-dialog-content>
+
+  <h3>Item</h3>
+  <app-item [object]="data"></app-item>
+
+  <br/>
+  <mat-divider></mat-divider>
+
+  <h3>Price</h3>
+  <mat-form-field>
+    <mat-label>Price</mat-label>
+    <input matInput type="number" [(ngModel)]="data.marketplace!.price" />
+  </mat-form-field>
+
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button [mat-dialog-close]="'Sell'">Sell</button>
+  <button mat-button mat-dialog-close cdkFocusInitial>Cancel</button>
+</mat-dialog-actions>

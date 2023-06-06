@@ -1,7 +1,6 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ItemAny } from 'src/app/models/data/item.model';
-import { _Object } from 'src/app/models/data/object.model';
-import { RequestService } from 'src/app/services/request/request.service';
+import { Marketplace, _Object } from 'src/app/models/data/object.model';
 
 @Component({
   selector: 'app-marketplace-item',
@@ -22,28 +21,29 @@ export class MarketplaceItemComponent {
     return this._object;
   }
 
-  constructor(private request: RequestService) { }
+  @Output() action: EventEmitter<'buy' | 'remove' | 'update'> = new EventEmitter();
+
+  constructor() { }
 
   edit() {
     this.editing = true;
   }
 
   buy() {
-    // TODO
+    this.action.emit('buy');
   }
 
-  remove() {
-    // TODO
+  async remove() {
+    this.action.emit('remove');
   }
 
-  update(value: any) {
-    // TODO
-    console.log(value);
+  async update(value: any) {
+    (this._object.marketplace ??= {} as Marketplace).price = value;
+    this.action.emit('update');
     this.editing = false;
   }
 
   reset() {
-    // TODO
     this.editing = false;
   }
 }

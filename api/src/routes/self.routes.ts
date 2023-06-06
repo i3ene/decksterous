@@ -151,12 +151,20 @@ SelfMarketplaceRoutes.get("/other", [
 export const SelfMarketplaceHashRoutes = Router();
 
 SelfMarketplaceRoutes.use("/:hash", [
-  middleware.get({ model: Marketplace, scopes: ["object"], body: { key: 'hash' } }),
-  objectMiddleware.isOwn(true, { data: { key: [Marketplace, 'object'] } })
+  middleware.get({ model: Marketplace, scopes: ["object"], body: { key: 'hash' } })
 ], SelfMarketplaceHashRoutes);
 
-SelfMarketplaceHashRoutes.get("/", controller.result(Marketplace));
+SelfMarketplaceHashRoutes.get("/", [
+  objectMiddleware.isOwn(false, { data: { key: [Marketplace, 'object'] } }),
+  objectMiddleware.buy({ data: { key: Marketplace } })
+], controller.result(Marketplace));
 
-SelfMarketplaceHashRoutes.put("/", [middleware.edit({ model: Marketplace })], controller.result(Marketplace));
+SelfMarketplaceHashRoutes.put("/", [
+  objectMiddleware.isOwn(true, { data: { key: [Marketplace, 'object'] } }),
+  middleware.edit({ model: Marketplace })
+], controller.result(Marketplace));
 
-SelfMarketplaceHashRoutes.delete("/", [middleware.remove({ model: Marketplace })], controller.message("last"));
+SelfMarketplaceHashRoutes.delete("/", [
+  objectMiddleware.isOwn(true, { data: { key: [Marketplace, 'object'] } }),
+  middleware.remove({ model: Marketplace })
+], controller.message("last"));

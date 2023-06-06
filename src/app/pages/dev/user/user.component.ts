@@ -21,6 +21,7 @@ export class DevUserComponent implements OnInit {
     { key: 'name', name: 'Name', type: 'text' },
     { key: 'password', name: 'Password', type: 'text' },
     { key: 'mail', name: 'Mail', type: 'text' },
+    { key: 'coins', name: 'Coins', type: 'number' },
     { key: 'xp', name: 'XP', type: 'number' },
     new ColumnAction("Action", [
       { name: 'edit', icon: 'edit' },

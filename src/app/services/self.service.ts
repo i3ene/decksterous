@@ -140,8 +140,8 @@ export class SelfService {
   }
 
   public async updateMarketplaceObject(marketplace: IMarketplace) {
-    const result = await this.request.put(`/self/marketplace/${marketplace.objectHash}`, marketplace);
-    console.log(result);
+    const payload = await this.request.put(`/self/marketplace/${marketplace.objectHash}`, marketplace);
+    return new Marketplace(payload);
   }
 
   public async removeMarketplaceObject(objectHash: string) {

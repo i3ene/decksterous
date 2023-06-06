@@ -2,8 +2,9 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { InventoryComponent } from 'src/app/components/inventory/inventory.component';
 import { EditCardDeckDialogue } from 'src/app/dialogues/edit-card-deck/edit-card-deck.component';
+import { SellItemDialogue } from 'src/app/dialogues/sell-item/sell-item.component';
 import { DeckItem, Item, ItemAny, ItemType } from 'src/app/models/data/item.model';
-import { SubInventory, _Object } from 'src/app/models/data/object.model';
+import { IMarketplace, SubInventory, _Object } from 'src/app/models/data/object.model';
 import { TokenService } from 'src/app/services/auth/token.service';
 import { DataService } from 'src/app/services/data.service';
 import { RequestService } from 'src/app/services/request/request.service';
@@ -30,15 +31,11 @@ export class UserInventoryPage implements OnInit {
 
   clicked(object: _Object<ItemAny>): void {
     switch(object.item.type) {
-      case ItemType.CARD:
-        // TODO: Card Dialogue
-        break;
       case ItemType.DECK:
-        // TODO: Deck Dialogue
         this.editDeck(object as _Object<DeckItem>);
         break;
-      case ItemType.ITEM:
-        // TODO: Item Dialogue
+      default:
+        this.sellItem(object);
         break;
     }
   }
@@ -68,5 +65,17 @@ export class UserInventoryPage implements OnInit {
 
   addDeck() {
     this.data.self.addDeck(1);
+  }
+
+  sellItem(object: _Object<ItemAny>) {
+    const dialog = this.dialog.open(SellItemDialogue, {
+      data: object
+    });
+    dialog.afterClosed().subscribe(async (x) => {
+      if (x == 'Sell') {
+        const payload: IMarketplace = { objectHash: object.hash, price: object.marketplace?.price ?? 0 };
+        await this.data.self.sellMarketplaceObject(payload);
+      }
+    });
   }
 }
