@@ -40,10 +40,10 @@ export class UserInventoryPage implements OnInit {
     }
   }
 
-  editDeck(deck: _Object<DeckItem>): void {
+  editDeck(data: _Object<DeckItem>): void {
     const dialog = this.dialog.open(EditCardDeckDialogue, {
       data: {
-        deck: deck,
+        deck: data,
         objects: this.inventory.objects
       },
     });
@@ -51,20 +51,24 @@ export class UserInventoryPage implements OnInit {
       switch(x) {
         case 'Save':
           var deck = dialog.componentInstance.deck;
-          //await this.request.put('/self/deck', deck);
-          this.loadInventory();
+          const toAdd = (deck.subInventory?.subObjects ?? []).filter(x => !(data.subInventory?.subObjects ?? []).some(y => x.hash == y.hash));
+          const toRemove = (data.subInventory?.subObjects ?? []).filter(x => !(deck.subInventory?.subObjects ?? []).some(y => x.hash == y.hash));
+          toAdd.forEach(x => this.data.self.addCardToDeck(deck.hash, x.hash));
+          toRemove.forEach(x => this.data.self.removeCardFromDeck(deck.hash, x.hash));
           break;
         case 'Delete':
           var deck = dialog.componentInstance.deck;
-          await this.data.self.deleteObject(deck.hash);
-          this.loadInventory();
+          this.deleteItem(deck.hash);
           break;
       }
     });
   }
 
-  addDeck() {
-    this.data.self.addDeck(1);
+  async addDeck() {
+    const subInv = await this.data.self.addDeck(1);
+    const obj = await this.data.getObject(subInv.objectHash);
+    (await this.data.self.inventory).objects?.push(obj);
+    this.editDeck(obj as _Object<DeckItem>);
   }
 
   sellItem(object: _Object<ItemAny>) {
@@ -77,5 +81,12 @@ export class UserInventoryPage implements OnInit {
         await this.data.self.sellMarketplaceObject(payload);
       }
     });
+  }
+
+  async deleteItem(hash: string) {
+    await this.data.self.deleteObject(hash);
+    var inventory = (await this.data.self.inventory);
+    if (inventory.objects) inventory.objects = inventory.objects.filter(x => x.hash != hash);
+    this.loadInventory();
   }
 }

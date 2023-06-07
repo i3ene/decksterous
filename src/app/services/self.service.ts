@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Friends, Inventory, User } from '../models/data/user.model';
 import { RequestService } from './request/request.service';
-import { IMarketplace, Marketplace, _Object } from '../models/data/object.model';
+import { IMarketplace, Marketplace, SubInventory, _Object } from '../models/data/object.model';
 import { ModelUtils } from '../utils/model.util';
 import { Deck, Item } from '../models/data/item.model';
 
@@ -104,8 +104,8 @@ export class SelfService {
 
   public async addDeck(deckId: number | Deck) {
     if(typeof deckId == "object") deckId = deckId.id;
-    const result = await this.request.post(`/self/deck/${deckId}`);
-    console.log(result);
+    const payload = await this.request.post(`/self/deck/${deckId}`);
+    return new SubInventory(payload);
   }
 
   public async addCardToDeck(deckHash: string | _Object<Item>, cardHash: string | _Object<Item>) {
