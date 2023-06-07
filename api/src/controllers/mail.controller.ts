@@ -1,13 +1,13 @@
 import {createTransport} from "nodemailer";
 import IMAP from 'imap';
 import {Config} from "../config";
-import {Validation} from "../models/data/validation.model";
 import {Subject} from 'rxjs';
 import {RequestUtils} from "../utils/request.util";
 import {Request, Response} from "express";
-import {ValidationType} from "../models/object/validation.object";
 import {RequestOptionsData} from "../models/object/request.model";
 import { simpleParser } from "mailparser";
+import { Validation } from "../models/data/validation.model";
+import { ValidationType } from "../models/object/validation.object";
 
 export namespace MailController {
   /**
@@ -105,7 +105,7 @@ export namespace MailController {
    * @returns On success `true`
    */
   export async function sendRegister(validation: Validation) {
-    const link = `https://game.decksterous.digital/auth/register?token=${validation.token}`;
+    const link = `https://game.decksterous.digital/auth/registration?token=${validation.token}`;
     const info = await sender.sendMail({
       from: `"Decksterous" <${Config.Mail.ADDRESS}>`,
       to: validation.mail,
@@ -123,7 +123,7 @@ export namespace MailController {
    * @returns On success `true`
    */
   export async function sendPasswordReset(validation: Validation) {
-    const link = `https://game.decksterous.digital/auth/reset?token=${validation.token}`;
+    const link = `https://game.decksterous.digital/auth/password?token=${validation.token}`;
     const info = await sender.sendMail({
       from: `"Decksterous" <${Config.Mail.ADDRESS}>`,
       to: validation.mail,
@@ -141,12 +141,12 @@ export namespace MailController {
       const data = RequestUtils.byAttribute(req.data, key) as Validation;
       
       var success = false;
-      switch(data.type) {
+      switch(data.type as ValidationType) {
         case "registration":
           success = await sendRegister(data);
           break;
-        case "registration":
-          success = await sendRegister(data);
+        case "password":
+          success = await sendPasswordReset(data);
           break;
       }
       
