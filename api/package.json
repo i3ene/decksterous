@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "node": "npx ts-node --files src/index.ts",
     "build": "npx tsc",
-    "bundle": "esbuild src/index.ts --platform=node --external:pg-hstore --bundle --outfile=bundle/index.js"
+    "bundle": "esbuild src/index.ts --platform=node --external:pg-hstore --bundle --outfile=bundle/server.js"
   },
   "author": "",
   "license": "ISC",
