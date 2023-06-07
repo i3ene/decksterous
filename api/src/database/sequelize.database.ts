@@ -11,7 +11,6 @@ export const SequelizeDatabase = new Sequelize(
     host: Config.Database.HOST,
     dialect: Config.Database.dialect as Dialect,
     operatorsAliases: 0 as unknown as OperatorsAliases,
-    dialectModule: require("mariadb"),
     pool: {
       max: Config.Database.pool.max,
       min: Config.Database.pool.min,
