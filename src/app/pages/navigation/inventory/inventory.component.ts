@@ -40,10 +40,10 @@ export class UserInventoryPage implements OnInit {
     }
   }
 
-  editDeck(data: _Object<DeckItem>): void {
+  editDeck(deck: _Object<DeckItem>): void {
     const dialog = this.dialog.open(EditCardDeckDialogue, {
       data: {
-        deck: data,
+        deck: deck,
         objects: this.inventory.objects
       },
     });
@@ -51,6 +51,7 @@ export class UserInventoryPage implements OnInit {
       switch(x) {
         case 'Save':
           var deck = dialog.componentInstance.deck;
+          var data = dialog.componentInstance.data.deck;
           const toAdd = (deck.subInventory?.subObjects ?? []).filter(x => !(data.subInventory?.subObjects ?? []).some(y => x.hash == y.hash));
           const toRemove = (data.subInventory?.subObjects ?? []).filter(x => !(deck.subInventory?.subObjects ?? []).some(y => x.hash == y.hash));
           toAdd.forEach(x => this.data.self.addCardToDeck(deck.hash, x.hash));
@@ -88,5 +89,11 @@ export class UserInventoryPage implements OnInit {
     var inventory = (await this.data.self.inventory);
     if (inventory.objects) inventory.objects = inventory.objects.filter(x => x.hash != hash);
     this.loadInventory();
+  }
+
+  deleteSelected() {
+    for(const element of this.inventory.selectedObjects) {
+      this.deleteItem(element.object.hash);
+    }
   }
 }
