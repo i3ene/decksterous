@@ -1,6 +1,8 @@
 <div class="header">
   <app-profile-avatar [src]="user.avatar"></app-profile-avatar>
   <span>{{user.name}}</span>
+  <span class="spacer"></span>
+  <span class="money">{{user.coins}}c</span>
 </div>
 <mat-progress-bar [value]="stats.user(user.xp).progress * 100"></mat-progress-bar>
 <div class="content">

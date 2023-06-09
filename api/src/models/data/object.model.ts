@@ -56,9 +56,9 @@ export class _Object extends Model<_Object> {
   @BelongsTo(() => Inventory)
   inventory?: Inventory;
 
-  @HasOne(() => SubInventory)
+  @HasOne(() => SubInventory, { onDelete: 'CASCADE', hooks: true })
   subInventory?: SubInventory;
 
-  @HasOne(() => Marketplace)
+  @HasOne(() => Marketplace, { onDelete: 'CASCADE', hooks: true })
   marketplace?: Marketplace;
 }

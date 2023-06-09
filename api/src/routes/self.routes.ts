@@ -78,7 +78,7 @@ SelfDeckIdRoutes.post("/", [
   middleware.getAssociation({ model: User, association: { name: "inventory" } }),
   middleware.addAssociation({ model: Inventory, data: { key: [User, "inventory"] }, association: { name: "objects", data: "object" } }),
   itemMiddleware.createObjectSubInventory({ data: { key: "object", name: "subinventory" } })
-], controller.message("last"));
+], controller.result("subinventory"));
 
 
 export const SelfInventoryRoutes = Router();

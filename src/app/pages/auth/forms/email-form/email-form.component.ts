@@ -1,10 +1,11 @@
 import { AfterViewInit, Component } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { DataService } from 'src/app/services/data.service';
 
-export enum EmailFormType {
+export enum ValidationType {
   PASSWORD = 'password',
-  REGISTER = 'register'
+  REGISTER = 'registration'
 }
 
 
@@ -14,36 +15,39 @@ export enum EmailFormType {
 })
 export class EmailForm implements AfterViewInit {
 
-  type: EmailFormType = EmailFormType.REGISTER;
+  type: ValidationType = ValidationType.REGISTER;
   emailFormControl: FormControl = new FormControl('', [Validators.required, Validators.email]);
-  useFallback: boolean = false;
+  process: 'mail' | 'fallback' | 'validation' = 'mail';
 
   get title() {
     switch(this.type) {
-      case EmailFormType.REGISTER: return 'Signup';
-      case EmailFormType.PASSWORD: return 'Reset Password';
+      case ValidationType.REGISTER: return 'Signup';
+      case ValidationType.PASSWORD: return 'Reset Password';
       default: return 'Form';
     }
   }
 
-  constructor(private route: ActivatedRoute) { }
+  constructor(private route: ActivatedRoute, private data: DataService, private router: Router) { }
 
   ngAfterViewInit(): void {
-    this.type = this.route.snapshot.data['type'] as EmailFormType;
+    this.type = this.route.snapshot.data['type'] as ValidationType;
   }
 
   signup() {
-    // TODO
+    this.data.signup(this.emailFormControl.value);
+    this.router.navigate(["/auth/login"]);
   }
 
   reset() {
-    // TODO
+    this.data.reset(this.emailFormControl.value);
+    this.router.navigate(["/auth/login"]);
   }
 
-  buttonClicked() {
+  sendClicked() {
+    console.log(this.type);
     switch(this.type) {
-      case EmailFormType.REGISTER: return this.signup();
-      case EmailFormType.PASSWORD: return this.reset();
+      case ValidationType.REGISTER: return this.signup();
+      case ValidationType.PASSWORD: return this.reset();
     }
   }
 
