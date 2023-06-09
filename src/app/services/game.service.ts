@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { SocketService } from './request/socket.service';
 import { Observable, Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { Player, PlayerCollection } from '../models/data/player.model';
 import { Card } from '../models/data/item.model';
+import { RoomService } from './room.service';
 
 @Injectable({
   providedIn: 'root'
@@ -20,11 +20,11 @@ export class GameService {
 
   listeners: Subscription[] = [];
 
-  constructor(public socket: SocketService, private router: Router) {
+  constructor(public room: RoomService, private router: Router) {
     // Socket observables
-    this.player = this.socket.socket.fromEvent<any>('frontend_player');
-    this.all = this.socket.socket.fromEvent<any>('frontend_all');
-    this.event = this.socket.socket.fromEvent<any>('frontend_event');
+    this.player = this.room.socket.fromEvent<any>('frontend_player');
+    this.all = this.room.socket.fromEvent<any>('frontend_all');
+    this.event = this.room.socket.fromEvent<any>('frontend_event');
     // Socket subscriptions
     this.player.subscribe(x => this.handler(x, true));
     this.all.subscribe(this.handler.bind(this));
@@ -104,16 +104,16 @@ export class GameService {
   }
 
   selectDeck(objectHash: string) {
-    this.socket.emitEvent(this.signal, {
+    this.room.emit(this.signal, {
       action: "select_deck",
       args: {
-        deckId: objectHash
+        deckHash: objectHash
       }
     });
   }
 
   setReady(state: boolean) {
-    this.socket.emitEvent(this.signal, {
+    this.room.emit(this.signal, {
       action: "set_ready",
       args: {
         state: state
@@ -122,7 +122,7 @@ export class GameService {
   }
 
   drawCard(amount: number) {
-    this.socket.emitEvent(this.signal, {
+    this.room.emit(this.signal, {
       action: "draw_card",
       args: {
         amount: amount
@@ -131,7 +131,7 @@ export class GameService {
   }
 
   placeCard(cardIndex: number, fieldIndex: number) {
-    this.socket.emitEvent(this.signal, {
+    this.room.emit(this.signal, {
       action: "place_card",
       args: {
         cardIndex: cardIndex,
@@ -141,7 +141,7 @@ export class GameService {
   }
 
   endTurn() {
-    this.socket.emitEvent(this.signal, {
+    this.room.emit(this.signal, {
       action: "end_turn",
       args: {}
     });

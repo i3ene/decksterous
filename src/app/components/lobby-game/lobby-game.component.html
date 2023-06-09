@@ -7,7 +7,7 @@
   </div>
   <div class="row gap">
     <div class="col grow">
-      <app-inventory [objects]="[]" (itemClicked)="game.selectDeck($event.hash); selectedObject = $event" [filter]="[ItemType.DECK]"></app-inventory>
+      <app-inventory [objects]="decks" (itemClicked)="game.selectDeck($event.hash); selectedObject = $event" [filter]="[ItemType.DECK]"></app-inventory>
     </div>
     <mat-divider [vertical]="true"></mat-divider>
     <div class="col grow gap">
