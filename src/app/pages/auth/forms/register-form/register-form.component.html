@@ -5,12 +5,6 @@
       <input matInput required [(ngModel)]="credentials.name" />
     </mat-form-field>
     <div class="row">
-      <!--
-      <mat-form-field appearance="fill">
-        <mat-label>Email</mat-label>
-        <input matInput required [(ngModel)]="credentials.mail" />
-      </mat-form-field>
-      -->
       <mat-form-field appearance="fill">
         <mat-label>Password</mat-label>
         <input #passwordInput matInput type="password" required [(ngModel)]="credentials.password" />
@@ -18,12 +12,6 @@
       </mat-form-field>
     </div>
     <div class="row">
-      <!--
-      <mat-form-field appearance="fill">
-        <mat-label>(Repeat) Email</mat-label>
-        <input matInput />
-      </mat-form-field>
-      -->
       <mat-form-field appearance="fill">
         <mat-label>(Repeat) Password</mat-label>
         <input #passwordRepeatInput matInput type="password" />
@@ -32,6 +20,6 @@
     </div>
   </ng-template>
   <ng-template #footer>
-    <button mat-raised-button [disabled]="!(credentials.password && credentials.name && credentials.mail)" (click)="register()">Register</button>
+    <button mat-raised-button [disabled]="!(credentials.password && credentials.name)" (click)="register()">Register</button>
   </ng-template>
 </template-form-card>

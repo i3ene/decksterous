@@ -8,16 +8,13 @@ export namespace AuthSocket {
    * @param socket Socket connection
    */
   export async function register(io: Server, socket: Socket) {
-    await AuthController.verifyToken(io, socket);
-    await AuthController.getSelf(io, socket);
-  }
-
-  export function listener(io: Server) {
     // Generate token and link it to type
-    io.sockets.adapter.on('auth-token', async (type, id) => {
-      const socket = io.sockets.sockets.get(id);
-      if (!socket) return;
+    socket.on('auth-token', async (type) => {
+      console.log(type);
       AuthController.validationToken(io, socket, type);
     });
+
+    await AuthController.verifyToken(io, socket);
+    await AuthController.getSelf(io, socket);
   }
 }

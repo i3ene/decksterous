@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { RequestService } from './request/request.service';
-import { Inventory, User } from '../models/data/user.model';
+import { ICredentials, Inventory, User } from '../models/data/user.model';
 import { SelfService } from './self.service';
 import { ModelUtils } from '../utils/model.util';
 import { SubInventory, _Object } from '../models/data/object.model';
@@ -41,5 +41,25 @@ export class DataService {
   async getSubInventoryObjects(objectHash: string) {
     const payload = await this.request.get(`/object/${objectHash}/subinventory/object`);
     return ModelUtils.parseArray(_Object, payload);
+  }
+
+  async signup(mail: string) {
+    const result = await this.request.post('/auth/signup', { mail: mail });
+    console.log(result);
+  }
+
+  async register(token: string, data: ICredentials) {
+    const result = await this.request.post(`/auth/register/${token}`, data);
+    console.log(result);
+  }
+
+  async reset(mail: string) {
+    const result = await this.request.post('/auth/reset', { mail: mail });
+    console.log(result);
+  }
+
+  async password(token: string, newPassword: string) {
+    const result = await this.request.post(`/auth/password/${token}`, { password: newPassword });
+    console.log(result);
   }
 }

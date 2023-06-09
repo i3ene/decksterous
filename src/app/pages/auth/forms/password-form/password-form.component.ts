@@ -1,6 +1,7 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { User } from 'src/app/models/data/user.model';
+import { DataService } from 'src/app/services/data.service';
 import { RequestService } from 'src/app/services/request/request.service';
 
 @Component({
@@ -10,13 +11,17 @@ import { RequestService } from 'src/app/services/request/request.service';
 })
 export class PasswordForm {
 
-  credentials: User = new User();
+  token?: string;
+  password: string = '';
 
-  constructor(private request: RequestService, private router: Router) {}
+  constructor(private router: Router, private route: ActivatedRoute, private data: DataService) {
+    this.route.queryParams.subscribe(params => this.token = params['token']);
+  }
 
-  async reset() {
-    const response = await this.request.post("/auth/passwordreset", this.credentials);
-    this.router.navigate(["/auth"]);
+  async send() {
+    if (!this.token) return;
+    await this.data.password(this.token, this.password);
+    this.router.navigate(["/auth/login"]);
   }
 
 }

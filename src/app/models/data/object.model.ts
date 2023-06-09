@@ -45,7 +45,7 @@ export abstract class ASubInventory implements ISubInventory {
 export abstract class AMarketplace implements IMarketplace {
   objectHash: string;
   price: number;
-  
+
   constructor(obj?: any) {
     this.objectHash = obj?.objectHash ?? '';
     this.price = Number(obj?.price ?? 0);
@@ -98,7 +98,7 @@ export class ObjectFactory<T extends Item> {
   }
 
   parse(obj?: any) {
-    return new _Object(this.type, obj);
+    return new _Object<T>(obj, this.type);
   }
 }
 

@@ -16,7 +16,7 @@ import { LobbyPage } from './pages/navigation/lobby/lobby.component';
 import { DefaultComponent } from './components/default/default.component';
 import { MarketplacePage } from './pages/navigation/marketplace/marketplace.component';
 import { SettingsComponent } from './pages/navigation/settings/settings.component';
-import { EmailForm, EmailFormType } from './pages/auth/forms/email-form/email-form.component';
+import { EmailForm, ValidationType } from './pages/auth/forms/email-form/email-form.component';
 
 const routes: Routes = [
   { path: 'dev', component: DevComponent },
@@ -26,10 +26,10 @@ const routes: Routes = [
     component: AuthPage,
     children: [
       { path: 'login', component: LoginForm, data: { animation: 'left' } },
-      { path: 'signup', component: EmailForm, data: { animation: 'right', type: EmailFormType.REGISTER } },
-      { path: 'reset', component: EmailForm, data: { animation: 'right', type: EmailFormType.PASSWORD } },
-      { path: EmailFormType.PASSWORD, component: PasswordForm, data: { animation: 'right' } },
-      { path: EmailFormType.REGISTER, component: RegisterForm, data: { animation: 'right' } },
+      { path: 'signup', component: EmailForm, data: { animation: 'right', type: ValidationType.REGISTER } },
+      { path: 'reset', component: EmailForm, data: { animation: 'right', type: ValidationType.PASSWORD } },
+      { path: ValidationType.PASSWORD, component: PasswordForm, data: { animation: 'right' } },
+      { path: ValidationType.REGISTER, component: RegisterForm, data: { animation: 'right' } },
       { path: '**', redirectTo: 'login' },
     ]
   },

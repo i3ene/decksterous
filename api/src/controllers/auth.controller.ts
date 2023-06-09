@@ -59,7 +59,7 @@ export namespace AuthController {
     const subscription = MailController.inbox.subscribe(async (x) => {
       // Check if subject token is euqal to validation
       if (x.subject != validation.token) return;
-      // Find existing validation and destroy
+      // Find existing validation and destroy if it exists
       const existing = await Validation.findOne({ where: { mail: x.address } });
       if (existing) existing.destroy();
       // Update validation to mail address
@@ -70,8 +70,8 @@ export namespace AuthController {
       subscription.unsubscribe();
     });
 
-    // Return token to socket
-    return socket.emit('auth-token', validation.token);
+    // Return validation to socket
+    return socket.emit('auth-validation', validation);
   }
 
   export async function verifyToken(io: Server, socket: Socket): Promise<any> {
@@ -81,10 +81,10 @@ export namespace AuthController {
       if (err == null) return;
       if (err instanceof jwt.TokenExpiredError) {
         socket.emit('error', {message: 'Token expired!'});
-        socket.disconnect(true);
+        //socket.disconnect(true);
       } else {
         socket.emit('error', {message: 'Token invalid!'});
-        socket.disconnect(true);
+        //socket.disconnect(true);
       }
     });
   }
@@ -92,12 +92,12 @@ export namespace AuthController {
   export async function getSelf(io: Server, socket: Socket): Promise<any> {
     if (socket.user == null) {
       socket.emit('error', {message: 'User object is null!'});
-      return socket.disconnect(true);
+      return //socket.disconnect(true);
     }
     const user: User | null = await User.scope([]).findByPk(socket.user.id);
     if (user == undefined) {
       socket.emit('error', {message: 'No User found for Token ID!'});
-      return socket.disconnect(true);
+      return //socket.disconnect(true);
     }
     socket.user = user;
   }
