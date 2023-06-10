@@ -33,6 +33,9 @@ export class RoomService {
     this.socket.fromEvent<any>('room_list').subscribe((collection: any) => this.roomsHandler(collection));
   }
 
+  getSockets(key: SocketKey) {
+    return this.rooms.get(this.names.get(key) ?? '') ?? [];
+  }
 
   joinHandler(key: SocketKey, event: RoomSocketEvent) {
     const sub = this.subscriptions.get(key);
