@@ -17,6 +17,7 @@ import { DefaultComponent } from './components/default/default.component';
 import { MarketplacePage } from './pages/navigation/marketplace/marketplace.component';
 import { SettingsComponent } from './pages/navigation/settings/settings.component';
 import { EmailForm, ValidationType } from './pages/auth/forms/email-form/email-form.component';
+import { LeaderboardComponent } from './pages/navigation/leaderboard/leaderboard.component';
 
 const routes: Routes = [
   { path: 'dev', component: DevComponent },
@@ -44,7 +45,7 @@ const routes: Routes = [
       { path: 'profile', component: ProfileComponent, data: { animation: 'top' } },
       { path: 'solo', component: DefaultComponent },
       { path: 'marketplace', component: MarketplacePage, data: { animation: 'left' } },
-      { path: 'leaderboard', component: DefaultComponent },
+      { path: 'leaderboard', component: LeaderboardComponent },
       { path: 'settings', component: SettingsComponent },
       { path: '**', redirectTo: 'home' },
     ],
