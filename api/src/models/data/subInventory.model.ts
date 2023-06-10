@@ -25,7 +25,7 @@ import { Type } from "./type.model";
   },
   cardObjects: {
     include: [{
-      model: SubObject,
+      model: _Object,
       as: 'objects',
       required: true,
       include: [{

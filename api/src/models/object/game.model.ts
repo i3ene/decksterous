@@ -94,6 +94,11 @@ export class GamePlayer {
   user: User;
 
   /**
+   * Player health
+   */
+  health: number = 20;
+
+  /**
    * Selected deck of user;
    */
   deck: Card[];
@@ -180,7 +185,7 @@ export class GamePlayer {
    * @param deckHash Deck object hash
    * @returns `true` if deck was successfully loaded.
    */
-  async selectDeck(deckHash: number): Promise<boolean> {
+  async selectDeck(deckHash: string): Promise<boolean> {
     if (this.isReady) {
       this.emit(BackendAction.ERROR, {message: `Deck cannot not be changed when ready!`});
       return false;
@@ -266,7 +271,11 @@ export class GamePlayer {
     // Get card from field at fieldIndex
     const card = this.field.get(fieldIndex);
     // Check for empty card
-    if (!card) return;
+    if (!card) {
+      // Attack player
+      this.playerHealth(amount);
+      return;
+    };
     // Add up amount to health
     card.health += amount;
     // Emit change of health
@@ -276,12 +285,18 @@ export class GamePlayer {
     if (card.health <= 0) this.removeCard(fieldIndex);
   }
 
+  playerHealth(amount: number): void {
+    this.health += amount;
+    const event = { health: this.health };
+    this.emit(BackendAction.CARD_HEALTH_CHANGED, event, event);
+  }
+
   /**
    * Attack a card on field.
    * @param attacker Attacker card
    * @param fieldIndex Index of field
    */
-  attackCard(attacker: Card | undefined, fieldIndex: number, attackerIndex?: number): void {
+  attackField(attacker: Card | undefined, fieldIndex: number, attackerIndex?: number): void {
     // Check for attacker card
     if (!attacker) return;
     // Emit attack of card
@@ -301,7 +316,8 @@ export class GamePlayer {
       currentIndex: this.game?.players.index,
       cards: this.cards,
       field: Array(this.fieldLength),
-      deck: Array(this.deck.length)
+      deck: Array(this.deck.length),
+      health: this.health
     };
     this.emit(BackendAction.SYNC, event, Object.assign(event, {cards: Array(event.cards.length)}));
     return event;
@@ -511,7 +527,7 @@ export class GamePlayerCollection {
    */
   attack(attacker: GamePlayer, target: GamePlayer): void {
     for (const [index, card] of attacker.field) {
-      target.attackCard(card, target.fieldLength - index - 1);
+      target.attackField(card, target.fieldLength - index - 1);
     }
   }
 
