@@ -29,7 +29,9 @@ export class LobbyGameComponent {
     return this._selectedObject;
   }
 
-  constructor(public game: GameService, public socket: RoomService, public data: DataService) { }
+  constructor(public game: GameService, public socket: RoomService, public data: DataService) {
+    this.loadDecks();
+  }
 
   async loadDecks() {
     this.decks = (await this.data.self.inventory).objects?.filter(x => ItemType.DECK == x.item.type) as _Object<DeckItem>[] ?? [];
