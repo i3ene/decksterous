@@ -1,7 +1,11 @@
 <div class="container">
   <mat-card class="header">
     <p>Items selected: {{ inventory.selectedObjects.length }}</p>
-    <button mat-flat-button color="primary" (click)="addDeck()">Add Deck</button>
+    <span class="spacer"></span>
+    <button mat-flat-button color="warn" (click)="deleteSelected()" [disabled]="!inventory.selectedObjects.length">
+      Delete Item{{ inventory.selectedObjects.length > 1 ? 's' : '' }}
+    </button>
+    <button mat-flat-button color="primary" (click)="addDeck()">Create Deck</button>
   </mat-card>
   <app-inventory [selectable]="true" (itemClicked)="clicked($event)"></app-inventory>
 </div>
