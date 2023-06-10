@@ -1,0 +1,15 @@
+<div class="container row gap">
+  <div *ngFor="let object of objects" class="grayed">
+    <app-item [object]="object"></app-item>
+    <div class="row gap footer">
+      <button mat-flat-button color="primary">
+        <mat-icon>shopping_cart</mat-icon>
+      </button>
+      <span class="spacer"></span>
+      <span>100c</span>
+    </div>
+  </div>
+  <div class="banner col center">
+    <div class="row center">Coming Soon!</div>
+  </div>
+</div>
