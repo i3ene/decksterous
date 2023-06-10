@@ -5,9 +5,25 @@
     <input matInput type="text" [(ngModel)]="name"/>
   </mat-form-field>
 
-  <p>More options...</p>
+  <mat-divider></mat-divider>
+  <br>
+  <div>
+    <h3>Options:</h3>
+    <div class="options">
+      <mat-form-field>
+        <mat-label>Players</mat-label>
+        <input matInput type="number" [value]="2" [disabled]="true"/>
+      </mat-form-field>
+      <div class="col">
+        <mat-checkbox [checked]="true" [disabled]="true">Allow Viewers</mat-checkbox>
+        <mat-checkbox [checked]="false" [disabled]="true">Only Friends can Join</mat-checkbox>
+      </div>
+      <mat-slide-toggle [disabled]="true">Game Chat</mat-slide-toggle>
+    </div>
+  </div>
+  <br>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
   <button mat-button mat-dialog-close>Cancel</button>
-  <button mat-button [mat-dialog-close]="'Create'" [disabled]="!isValid()" cdkFocusInitial>Create</button>
+  <button mat-flat-button [mat-dialog-close]="'Create'" [disabled]="!isValid()" cdkFocusInitial color="primary">Create</button>
 </mat-dialog-actions>
