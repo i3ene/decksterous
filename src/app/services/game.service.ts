@@ -58,6 +58,7 @@ export class GameService {
         break;
       case 'card_drawn':
         const deckCard = player.deck.draw(1);
+        console.log(event.args.card);
         const deckData = new Card(event.args.card);
         deckCard[0]?.loadData(deckData);
         player.hand.addCards(deckCard);
@@ -84,6 +85,10 @@ export class GameService {
   handleEvent(event: any) {
     if (event.event == 'start' && event.state == 'after') {
       this.router.navigate(['game']); 
+    }
+
+    if (event.event == 'end' && event.state == 'at') {
+      this.router.navigate(['navigation']);
     }
   }
 
