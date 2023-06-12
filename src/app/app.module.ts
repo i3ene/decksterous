@@ -63,6 +63,10 @@ import { FallbackForm } from './pages/auth/forms/fallback-form/fallback-form.com
 import { DevSubInventoryComponent } from './pages/dev/sub-inventory/sub-inventory.component';
 import { DevSubObjectInventoryComponent } from './pages/dev/sub-object-inventory/sub-object-inventory.component';
 import { SellItemDialogue } from './dialogues/sell-item/sell-item.component';
+import { LeaderboardComponent } from './pages/navigation/leaderboard/leaderboard.component';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { ShopComponent } from './components/shop/shop.component';
+
 
 @NgModule({
   declarations: [
@@ -117,7 +121,9 @@ import { SellItemDialogue } from './dialogues/sell-item/sell-item.component';
     FallbackForm,
     DevSubInventoryComponent,
     DevSubObjectInventoryComponent,
-    SellItemDialogue
+    SellItemDialogue,
+    LeaderboardComponent,
+    ShopComponent
   ],
   imports: [
     BrowserModule,
@@ -127,7 +133,8 @@ import { SellItemDialogue } from './dialogues/sell-item/sell-item.component';
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
-    SocketIoModule
+    SocketIoModule,
+    NgxChartsModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },

@@ -92,7 +92,7 @@ export class Game {
       // Handle basic events
       switch (event.action) {
         case FrontendAction.SELECT_DECK:
-          event.player.selectDeck(event.args.deckId);
+          event.player.selectDeck(event.args.deckHash);
           break;
         case FrontendAction.SET_READY:
           event.player.setReady(event.args.state);

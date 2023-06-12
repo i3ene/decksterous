@@ -1,0 +1,22 @@
+.container {
+  position: relative;
+  width: 100%;
+}
+
+.grayed {
+  opacity: 0.5;
+}
+
+.footer {
+  margin-top: 8px;
+}
+
+.banner {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  font-size: 72px;
+  font-weight: bold;
+}
