@@ -5,15 +5,26 @@
     </button>
     <h3>Game Lobby</h3>
   </div>
+  <mat-card class="row">
+    <h3>Select your Deck</h3>
+  </mat-card>
+  <br>
   <div class="row gap">
-    <div class="col grow">
-      <app-inventory [objects]="[]" (itemClicked)="game.selectDeck($event.hash); selectedObject = $event" [filter]="[ItemType.DECK]"></app-inventory>
+    <div class="col grow gap">
+      <mat-card class="row">
+        <h4>Available Decks:</h4>
+      </mat-card>
+      <app-inventory [objects]="decks" (itemClicked)="game.selectDeck($event.hash); selectedObject = $event" [filter]="[ItemType.DECK]"></app-inventory>
     </div>
     <mat-divider [vertical]="true"></mat-divider>
     <div class="col grow gap">
+      <mat-card class="row">
+        <h4>Selected Deck:</h4>
+      </mat-card>
       <div class="row center">
         <app-item *ngIf="selectedObject" [object]="selectedObject"></app-item>
       </div>
+      <mat-divider></mat-divider>
       <div class="col" *ngIf="selectedObject">
         <app-inventory #deckInventory></app-inventory>
       </div>

@@ -5,6 +5,8 @@ import {Deck} from '../data/deck.model';
 import {User} from '../data/user.model';
 import {Game} from './game.object';
 import {BackendAction, FrontendAction, SocketAction} from './socket.model';
+import { _Object } from '../data/object.model';
+import { SubInventory } from '../data/subInventory.model';
 
 export enum GameEvent {
   START = 'start',
@@ -175,22 +177,22 @@ export class GamePlayer {
   /**
    * Select a deck.
    * If deck does not exist or player is ready, it will not change deck.
-   * @param deckId Deck id
+   * @param deckHash Deck object hash
    * @returns `true` if deck was successfully loaded.
    */
-  async selectDeck(deckId: number): Promise<boolean> {
+  async selectDeck(deckHash: number): Promise<boolean> {
     if (this.isReady) {
       this.emit(BackendAction.ERROR, {message: `Deck cannot not be changed when ready!`});
       return false;
     }
-    const deck: Deck | null = await Deck.scope(['gameDeck']).findByPk(deckId);
+    const deck: SubInventory | null = await SubInventory.scope("cardObjects").findOne({ where: { objectHash: deckHash } });
     if (!deck || !deck.objects || !deck.objects.length) {
-      this.emit(BackendAction.ERROR, {message: `Deck ${deckId} could not be selected or was empty!`});
+      this.emit(BackendAction.ERROR, {message: `Deck ${deckHash} could not be selected or was empty!`});
       return false;
     }
     this.deck = deck.objects.map((x) => x.item?.card!);
     // Emit selection of deck
-    const event = {deckId: deckId};
+    const event = {deckHash: deckHash};
     this.emit(BackendAction.DECK_SELECTED, event);
     return true;
   }

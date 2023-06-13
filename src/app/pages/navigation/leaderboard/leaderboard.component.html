@@ -1,0 +1,74 @@
+<div class="container">
+  <h1>Ranking</h1>
+  <div class="row gap grayed">
+    <mat-card class="spacer">
+      <h2>Top Players</h2>
+      <table class="ranking">
+        <tr>
+          <th></th>
+          <th>Name</th>
+          <th>XP</th>
+          <th>Games Won</th>
+        </tr>
+        <tr *ngFor="let player of players">
+          <td><app-profile-avatar></app-profile-avatar></td>
+          <td>{{player.name}}</td>
+          <td>{{player.xp}}</td>
+          <td>{{player.won}}</td>
+        </tr>
+      </table>
+    </mat-card>
+    <div class="col spacer">
+      <mat-card>
+        <h2>Highlights</h2>
+        <p>Total Games played - <b>621</b></p>
+        <p>Concurrent Players - <b>46</b></p>
+      </mat-card>
+    </div>
+  </div>
+  <br>
+  <div class="row gap grayed">
+    <mat-card class="spacer">
+      <h2>Your Statistics</h2>
+      <div class="col gap spacer">
+        <div class="row gap spacer">
+          <div class="info spacer">
+            <h3>This Week</h3>
+            <ul>
+              <li>Games played - 18</li>
+              <li>Games lost - 12</li>
+              <li>XP gained - 340</li>
+            </ul>
+          </div>
+          <div class="spacer center row">
+            <ngx-charts-line-chart
+              [view]="view"
+              [scheme]="colorScheme"
+              [results]="multi2">
+            </ngx-charts-line-chart>
+          </div>
+        </div>
+        <div class="row gap spacer">
+          <div class="spacer center row">
+            <ngx-charts-pie-chart
+              [view]="view"
+              [scheme]="colorScheme"
+              [results]="single"
+              [doughnut]="true">
+            </ngx-charts-pie-chart>
+          </div>
+          <div class="spacer center row">
+            <ngx-charts-bar-vertical-stacked
+              [view]="view"
+              [scheme]="colorScheme"
+              [results]="multi">
+            </ngx-charts-bar-vertical-stacked>
+          </div>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+  <div class="banner col center">
+    <div class="row center">Coming Soon!</div>
+  </div>
+</div>

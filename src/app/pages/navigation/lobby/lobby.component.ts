@@ -38,7 +38,7 @@ export class LobbyPage implements OnInit, OnDestroy {
         this.error(event.args.message);
         break;
       case 'deck_selected':
-        this.message(`Deck ${event.args.deckId} selected.`);
+        this.message(`Deck ${event.args.deckHash} selected.`);
         break;
     }
   }

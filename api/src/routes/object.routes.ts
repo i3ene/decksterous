@@ -20,7 +20,7 @@ ObjectRoutes.post("/", [
 export const ObjectHashRoutes = Router();
 
 ObjectRoutes.use("/:hash", [
-  middleware.get({ model: _Object, body: { key: 'hash' } })
+  middleware.get({ model: _Object, scopes: ["item"], body: { key: 'hash' } })
 ], ObjectHashRoutes);
 
 ObjectHashRoutes.get("/", controller.result(_Object));

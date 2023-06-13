@@ -12,13 +12,28 @@ export class TextThree extends THREE.Group {
   mesh!: Mesh;
   geometry!: TextGeometry;
 
+  lineLength: number = 12;
+
   _text: string = "";
   set text(value: string) {
+    const words: string[] = value.split(" ");
+    value = "";
+    let size = 0;
+    for(const word of words) {
+      size += word.length;
+      if (size > this.lineLength) {
+        size = 0;
+        value += '\n';
+        size += word.length;
+      }
+      value += " " + word;
+    }
+
     this._text = value;
     this.setText(this.text);
   }
   get text(): string {
-    return this._text;
+    return this._text.replace("\n", "");
   }
   textChanged: EventEmitter<Mesh> = new EventEmitter<Mesh>();
 
@@ -46,7 +61,7 @@ export class TextThree extends THREE.Group {
     this.geometry = new TextGeometry(text, {
       font: TextThree.font,
       size: 1,
-      height: 1,
+      height: 0.1,
       curveSegments: 2,
       bevelEnabled: true,
       bevelThickness: 0,

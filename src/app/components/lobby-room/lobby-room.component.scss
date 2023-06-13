@@ -7,3 +7,19 @@
   display: flex;
   flex-direction: row;
 }
+
+table {
+  width: 100%;
+}
+
+th, td {
+  padding: 2px 8px;
+}
+
+.options {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 8px;
+}

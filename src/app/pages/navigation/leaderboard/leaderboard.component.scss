@@ -1,0 +1,27 @@
+.container {
+  padding: 8px;
+  position: relative;
+}
+
+.grayed {
+  opacity: 0.5;
+}
+
+.ranking td {
+  padding: 8px 16px;
+}
+
+.info {
+  padding-left: 16px;
+}
+
+
+.banner {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  font-size: 72px;
+  font-weight: bold;
+}

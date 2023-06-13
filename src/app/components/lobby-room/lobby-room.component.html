@@ -1,20 +1,146 @@
 <div class="container">
   <div class="header">
-    <button mat-icon-button (click)="socket.leave(SocketKey.ROOM)">
+    <button mat-icon-button (click)="room.leave(SocketKey.ROOM)">
       <mat-icon>arrow_back</mat-icon>
     </button>
-    <h3>{{ name }}</h3>
+    <h3>Lobby: {{ name }}</h3>
   </div>
   <div>
-    <p>Players/Viewers...</p>
+    <mat-card class="row">
+      <h3>Players:</h3>
+    </mat-card>
+    <table>
+      <tr>
+        <th>Player</th>
+        <th>Actions</th>
+      </tr>
+      <tr *ngFor="let player of room.getSockets(SocketKey.GAME)">
+        <td>{{player}}</td>
+        <td>
+          <button mat-flat-button color="warn">Kick</button>
+        </td>
+      </tr>
+      <tr *ngIf="!room.getSockets(SocketKey.GAME).length" class="row center">No players in game...</tr>
+    </table>
+    <br>
+
+    <mat-card class="row">
+      <h3>Viewers:</h3>
+    </mat-card>
+    <table>
+      <tr>
+        <th>Player</th>
+        <th>Actions</th>
+      </tr>
+      <tr *ngFor="let player of room.getSockets(SocketKey.ROOM)">
+        <td>{{player}}</td>
+        <td>
+          <div class="row gap center">
+            <button mat-stroked-button color="warn">Block</button>
+            <button mat-flat-button color="warn">Kick</button>
+          </div>
+        </td>
+      </tr>
+      <tr *ngIf="!room.getSockets(SocketKey.ROOM).length" class="row center">No players in watching...</tr>
+    </table>
+    <br>
+
     <mat-divider></mat-divider>
-    <p>Options...</p>
+    <br>
+    <div>
+      <h3>Options:</h3>
+      <div class="options">
+        <mat-form-field>
+          <mat-label>Players</mat-label>
+          <input matInput type="number" [value]="2" [disabled]="true"/>
+        </mat-form-field>
+        <mat-checkbox [checked]="true" [disabled]="true">Allow Viewers</mat-checkbox>
+        <mat-slide-toggle [disabled]="true">Game Chat</mat-slide-toggle>
+      </div>
+      <div class="options">
+        <mat-form-field>
+          <mat-label>Game Mode</mat-label>
+          <mat-select [disabled]="true" value="1">
+            <mat-option value="1" selected>Round Turn</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Game Time (in Minutes)</mat-label>
+          <input matInput type="number" [value]="60" [disabled]="true"/>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Minutes per Turn</mat-label>
+          <input matInput type="number" [value]="2" [disabled]="true"/>
+        </mat-form-field>
+      </div>
+      <div class="options">
+        <mat-form-field>
+          <mat-label>Drawable Cards per Turn</mat-label>
+          <input matInput type="number" [value]="5" [disabled]="true"/>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Placable Cards per Turn</mat-label>
+          <input matInput type="number" [value]="5" [disabled]="true"/>
+        </mat-form-field>
+        <div class="col">
+          <mat-checkbox [checked]="true" [disabled]="true">Type Effects</mat-checkbox>
+          <mat-checkbox [checked]="true" [disabled]="true">Abilities</mat-checkbox>
+        </div>
+        <div class="col">
+          <mat-checkbox [checked]="false" [disabled]="true">Sacrifice Cards</mat-checkbox>
+          <mat-checkbox [checked]="false" [disabled]="true">Graveyard</mat-checkbox>
+        </div>
+        <mat-checkbox [checked]="false" [disabled]="true">Random Events</mat-checkbox>
+      </div>
+      <div class="options">
+        <mat-form-field>
+          <mat-label>Player Health</mat-label>
+          <input matInput type="number" [value]="20" [disabled]="true"/>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Max Deck Size</mat-label>
+          <input matInput type="number" [value]="32" [disabled]="true"/>
+        </mat-form-field>
+      </div>
+      <div class="options">
+        <mat-form-field>
+          <mat-label>Field Size</mat-label>
+          <input matInput type="number" [value]="5" [disabled]="true"/>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Field Rows</mat-label>
+          <input matInput type="number" [value]="1" [disabled]="true"/>
+        </mat-form-field>
+      </div>
+      <div class="options">
+        <mat-form-field>
+          <mat-label>Banned Types</mat-label>
+          <mat-select [disabled]="true" [value]="[1]" [multiple]="true">
+            <mat-option [value]="1" selected>Demon</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Banned Abilties</mat-label>
+          <mat-select [disabled]="true" [value]="[1,2,3]" [multiple]="true">
+            <mat-option [value]="1" selected>Fire Cracker</mat-option>
+            <mat-option [value]="2" selected>Healing Fountain</mat-option>
+            <mat-option [value]="3" selected>Extinguisher</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+    <br>
+
     <mat-divider></mat-divider>
-    <p>Information...</p>
+    <div>
+
+    </div>
+    <br>
+
   </div>
   <div class="actions">
     <span class="spacer"></span>
-    <button mat-flat-button color="primary" (click)="socket.join(SocketKey.GAME, name)">
+    <button mat-flat-button color="primary" (click)="room.join(SocketKey.GAME, name)">
       Join Game
     </button>
   </div>

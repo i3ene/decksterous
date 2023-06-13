@@ -6,6 +6,8 @@ import { Item } from "./item.model";
 import { Card } from "./card.model";
 import { Deck } from "./deck.model";
 import { Pack } from "./pack.model";
+import { Ability } from "./ability.model";
+import { Type } from "./type.model";
 
 @Scopes(() => ({
   query: QueryUtil.query(['id', 'objectHash']),
@@ -21,11 +23,20 @@ import { Pack } from "./pack.model";
       as: 'objects'
     }]
   },
-  fullObjects: {
+  cardObjects: {
     include: [{
       model: SubObject,
       as: 'objects',
-
+      required: true,
+      include: [{
+        model: Item,
+        required: true,
+        include: [{
+          model: Card,
+          required: true,
+          include: [Ability, Type, Item]
+        }]
+      }]
     }]
   }
 }))

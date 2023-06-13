@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { SocketKey } from 'src/app/models/object/service.model';
-import { SocketService } from 'src/app/services/request/socket.service';
+import { RoomService } from 'src/app/services/room.service';
 
 @Component({
   selector: 'app-lobby-list',
@@ -9,7 +9,7 @@ import { SocketService } from 'src/app/services/request/socket.service';
 })
 export class LobbyListComponent {
 
-  constructor(public socket: SocketService) { }
+  constructor(public socket: RoomService) { }
 
   get SocketKey() {
     return SocketKey;
