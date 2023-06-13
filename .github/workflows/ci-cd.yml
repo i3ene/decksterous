@@ -48,15 +48,13 @@ jobs:
 
       - name: Bundle
         run: npm run bundle
+
+      - name: ZIP files
+        run: zip -r ${{ github.ref_name }}.zip dist/decksterous api/bundle
       
-      - name: Create release
-        uses: Roang-zero1/github-create-release-action@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      
-      - name: Upload release artifacts
-        uses: Roang-zero1/github-upload-release-artifacts-action@v2
+      - name: Release files
+        uses: softprops/action-gh-release@v1
         with:
-          args: "dist/decksterous/ api/bundle/"
+          files: ${{ github.ref_name }}.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
