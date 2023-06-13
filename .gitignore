@@ -1,7 +1,7 @@
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
 # Secrets
-secret.json
+**/config/secret.json
 
 # Compiled output
 /dist
@@ -10,7 +10,7 @@ secret.json
 /bazel-out
 
 # Node
-/node_modules
+**/node_modules
 npm-debug.log
 yarn-error.log
 
@@ -39,6 +39,7 @@ yarn-error.log
 /libpeerconnection.log
 testem.log
 /typings
+**/bundle
 
 # System files
 .DS_Store

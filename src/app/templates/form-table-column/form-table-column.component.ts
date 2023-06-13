@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter } from '@angular/core';
-import { MatSelect } from '@angular/material/select';
+import { MatLegacySelect as MatSelect } from '@angular/material/legacy-select';
 import { InputServiceEvent } from 'src/app/models/object/service.model';
 import { IColumn, ITableActionEvent } from 'src/app/models/object/table.model';
 import { ImageService } from 'src/app/services/image.service';

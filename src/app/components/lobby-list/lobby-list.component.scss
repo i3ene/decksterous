@@ -1,3 +1,7 @@
+.container {
+  width: 100%;
+}
+
 .row {
   display: flex;
   flex-direction: row;
@@ -13,4 +17,12 @@
   align-items: center;
   flex-direction: row;
   gap: 4px;
+}
+
+td:nth-child(1), th:nth-child(1) {
+  width: 100%;
+}
+
+td, th {
+  padding: 2px 8px;
 }

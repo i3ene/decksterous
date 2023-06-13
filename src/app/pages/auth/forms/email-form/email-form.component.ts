@@ -1,5 +1,5 @@
 import { AfterViewInit, Component } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
+import { UntypedFormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DataService } from 'src/app/services/data.service';
 
@@ -16,7 +16,7 @@ export enum ValidationType {
 export class EmailForm implements AfterViewInit {
 
   type: ValidationType = ValidationType.REGISTER;
-  emailFormControl: FormControl = new FormControl('', [Validators.required, Validators.email]);
+  emailFormControl: UntypedFormControl = new UntypedFormControl('', [Validators.required, Validators.email]);
   process: 'mail' | 'fallback' | 'validation' = 'mail';
 
   get title() {

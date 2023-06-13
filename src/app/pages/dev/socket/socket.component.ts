@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
-import { Subscription } from 'rxjs';
 import { SocketKey } from 'src/app/models/object/service.model';
-import { SocketConnection } from 'src/app/services/request/socket.connection';
 import { SocketService } from 'src/app/services/request/socket.service';
+import { RoomService } from 'src/app/services/room.service';
 
 @Component({
   selector: 'dev-socket',
@@ -10,7 +9,7 @@ import { SocketService } from 'src/app/services/request/socket.service';
   styleUrls: ['./socket.component.scss'],
 })
 export class DevSocketComponent {
-  constructor(public socket: SocketService) { }
+  constructor(public room: RoomService, public socket: SocketService) { }
 
   get SocketKey() {
     return SocketKey;

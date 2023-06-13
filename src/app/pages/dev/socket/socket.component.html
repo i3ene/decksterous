@@ -2,22 +2,22 @@
   <div>
     <h2>Rooms</h2>
 
-    <ng-container *ngIf="!socket.subscriptions.get(SocketKey.ROOM); else gameInput">
+    <ng-container *ngIf="!room.subscriptions.get(SocketKey.ROOM); else gameInput">
       <mat-form-field>
         <mat-label>Room Name</mat-label>
         <input matInput #roomNameInput />
       </mat-form-field>
       <br />
-      <button mat-stroked-button (click)="socket.join(SocketKey.ROOM, roomNameInput.value)">Join</button>
+      <button mat-stroked-button (click)="room.join(SocketKey.ROOM, roomNameInput.value)">Join</button>
     </ng-container>
     <ng-template #gameInput>
-      <button mat-stroked-button (click)="socket.leave(SocketKey.ROOM)">Leave</button>
+      <button mat-stroked-button (click)="room.leave(SocketKey.ROOM)">Leave</button>
 
-      <ng-container *ngIf="!socket.subscriptions.get(SocketKey.GAME); else gameInputLeave">
-        <button mat-stroked-button (click)="socket.join(SocketKey.GAME)">Join Game</button>
+      <ng-container *ngIf="!room.subscriptions.get(SocketKey.GAME); else gameInputLeave">
+        <button mat-stroked-button (click)="room.join(SocketKey.GAME)">Join Game</button>
       </ng-container>
       <ng-template #gameInputLeave>
-        <button mat-stroked-button (click)="socket.leave(SocketKey.GAME)">Leave Game</button>
+        <button mat-stroked-button (click)="room.leave(SocketKey.GAME)">Leave Game</button>
       </ng-template>
     </ng-template>
   </div>
@@ -36,7 +36,7 @@
       <textarea matInput #eventData [placeholder]="'{\n\t&quot;key&quot;: &quot;value&quot;\n}'"></textarea>
     </mat-form-field>
     <br />
-    <button mat-stroked-button (click)="socket.emitEvent(eventName.value, eventData.value)">Emit</button>
+    <button mat-stroked-button (click)="room.emit(eventName.value, eventData.value)">Emit</button>
   </div>
 
   <mat-divider vertical></mat-divider>
@@ -57,7 +57,7 @@
     <mat-tab label="Rooms">
       <div class="tab-content">
         <table>
-          <tr *ngFor="let room of socket.rooms | keyvalue">
+          <tr *ngFor="let room of room.rooms | keyvalue">
             <td>{{ room.key }}</td>
             <td>{{ room.value }}</td>
           </tr>

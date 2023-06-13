@@ -1,14 +1,29 @@
-<mat-card *ngFor="let room of socket.rooms | keyvalue" class="row">
-  <span>{{ room.key }}</span>
-  <span class="center">
-    <mat-icon>visibility</mat-icon>
-    <div>{{ room.value.length }}</div>
-  </span>
-  <span class="spacer"></span>
-  <button mat-stroked-button (click)="socket.join(SocketKey.ROOM, room.key)">Join</button>
-</mat-card>
-<div *ngIf="!socket.rooms.size" class="row">
-  <span class="spacer"></span>
-  <span>No lobbies available...</span>
-  <span class="spacer"></span>
-</div>
+<table class="container">
+  <tr>
+    <th>Lobby</th>
+    <th>Viewers</th>
+    <th>Actions</th>
+  </tr>
+  <tr *ngFor="let room of socket.rooms | keyvalue">
+    <td>
+      <p>{{ room.key }}</p>
+    </td>
+    <td>
+      <div class="row">
+        <mat-icon>visibility</mat-icon>
+        <div>{{ room.value.length }}</div>
+      </div>
+    </td>
+    <td>
+      <div class="row">
+        <button mat-stroked-button (click)="socket.join(SocketKey.ROOM, room.key)">View</button>
+        <button mat-flat-button color="primary">Play</button>
+      </div>
+    </td>
+  </tr>
+  <tr *ngIf="!socket.rooms.size" class="row">
+    <span class="spacer"></span>
+    <span>No lobbies available...</span>
+    <span class="spacer"></span>
+  </tr>
+</table>

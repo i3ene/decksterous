@@ -10,6 +10,7 @@ export const SequelizeDatabase = new Sequelize(
     logging: Config.Database.LOGGING,
     host: Config.Database.HOST,
     dialect: Config.Database.dialect as Dialect,
+    dialectModule: require('mariadb'),
     operatorsAliases: 0 as unknown as OperatorsAliases,
     pool: {
       max: Config.Database.pool.max,

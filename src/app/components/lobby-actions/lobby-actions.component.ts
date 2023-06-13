@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { NewLobbyDialogue } from 'src/app/dialogues/new-lobby/new-lobby.component';
 import { SocketKey } from 'src/app/models/object/service.model';
-import { SocketService } from 'src/app/services/request/socket.service';
+import { RoomService } from 'src/app/services/room.service';
 
 @Component({
   selector: 'app-lobby-actions',
@@ -11,14 +11,14 @@ import { SocketService } from 'src/app/services/request/socket.service';
 })
 export class LobbyActionsComponent {
 
-  constructor(public socket: SocketService, private dialog: MatDialog) { }
+  constructor(public room: RoomService, private dialog: MatDialog) { }
 
   createLobby() {
     const dialog = this.dialog.open(NewLobbyDialogue);
     dialog.afterClosed().subscribe(event => {
       if (event != 'Create') return;
       const room = dialog.componentInstance.name;
-      this.socket.join(SocketKey.ROOM, room);
+      this.room.join(SocketKey.ROOM, room);
     });
   }
 
