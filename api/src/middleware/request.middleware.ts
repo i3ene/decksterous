@@ -13,6 +13,7 @@ import {
 } from '../models/object/request.model';
 import {QueryUtil} from '../utils/query.util';
 import {RequestUtils} from '../utils/request.util';
+import { Handler } from '../utils/handler.util';
 
 export namespace RequestMiddleware {
   export function handler(req: Request, res: Response, next: NextFunction) {
@@ -26,7 +27,7 @@ export namespace RequestMiddleware {
   }
 
   export function find(options: RequestOptionsModel & RequestOptionsData) {
-    return async (req: Request, res: Response, next: NextFunction) => {
+    return Handler.Async(async (req: Request, res: Response, next: NextFunction) => {
       const key = options.data?.key ?? options.model.name;
       const query = QueryUtil.isEmpty(req.body) ? req.query : req.body;
       const data = await options.model.scope(['defaultScope', {method: ['query', query, Op.and]}].concat(options.scopes ?? [])).findOne();
@@ -34,11 +35,11 @@ export namespace RequestMiddleware {
       req.data[key] = data;
 
       next();
-    };
+    });
   }
 
   export function findAll(options: RequestOptionsModel & RequestOptionsData & RequestOptionsPage) {
-    return async (req: Request, res: Response, next: NextFunction) => {
+    return Handler.Async(async (req: Request, res: Response, next: NextFunction) => {
       const key = options.data?.key ?? options.model.name;
       const query = QueryUtil.isEmpty(req.body) ? req.query : req.body;
       let page: { offset: number, limit: number } = {} as any;
@@ -55,11 +56,11 @@ export namespace RequestMiddleware {
       req.data[key] = data;
 
       next();
-    };
+    });
   }
 
   export function get(options: RequestOptionsModel & RequestOptionsData & RequestOptionsBody) {
-    return async (req: Request, res: Response, next: NextFunction) => {
+    return Handler.Async(async (req: Request, res: Response, next: NextFunction) => {
       const key = options.data?.key ?? options.model.name;
       let id: number | string = 0;
       if (options.body?.key) {
@@ -77,11 +78,11 @@ export namespace RequestMiddleware {
       req.data[key] = data;
 
       next();
-    };
+    });
   }
 
   export function getAll(options: RequestOptionsModel & RequestOptionsData & RequestOptionsList & RequestOptionsPage) {
-    return async (req: Request, res: Response, next: NextFunction) => {
+    return Handler.Async(async (req: Request, res: Response, next: NextFunction) => {
       const key = options.data?.key ?? options.model.name;
       let value: any = RequestUtils.byAttribute(req.body, options.list?.key);
       let ids: any[] = value ? value.map((x: any) => RequestUtils.byAttribute(x, options.list?.id)) : [];
@@ -99,11 +100,11 @@ export namespace RequestMiddleware {
       req.data[key] = data;
 
       next();
-    };
+    });
   }
 
   export function add(options: RequestOptionsModel & RequestOptionsData & RequestOptionsBody) {
-    return async (req: Request, res: Response, next: NextFunction) => {
+    return Handler.Async(async (req: Request, res: Response, next: NextFunction) => {
       const key = options.data?.key ?? options.model.name;
       const payload = RequestUtils.byAttribute(req.body, options.body?.key);
       const data = await options.model.create(QueryUtil.attributes(payload, options.model));
@@ -112,11 +113,11 @@ export namespace RequestMiddleware {
       req.data[key] = data;
 
       next();
-    };
+    });
   }
 
   export function addOrFind(options: RequestOptionsModel & RequestOptionsData & RequestOptionsBody) {
-    return async (req: Request, res: Response, next: NextFunction) => {
+    return Handler.Async(async (req: Request, res: Response, next: NextFunction) => {
       const key = options.data?.key ?? options.model.name;
       const payload = RequestUtils.byAttribute(req.body, options.body?.key);
       const [data, created] = await options.model.findOrCreate({ where: QueryUtil.attributes(payload, options.model) });
@@ -125,11 +126,11 @@ export namespace RequestMiddleware {
       req.data[key] = data;
 
       next();
-    };
+    });
   }
 
   export function edit(options: RequestOptionsModel & RequestOptionsData & RequestOptionsBody) {
-    return async (req: Request, res: Response, next: NextFunction) => {
+    return Handler.Async(async (req: Request, res: Response, next: NextFunction) => {
       const key = options.data?.key ?? options.model.name;
       const data = RequestUtils.byAttribute(req.data, key);
       const payload = RequestUtils.byAttribute(req.body, options.body?.key);
@@ -138,11 +139,11 @@ export namespace RequestMiddleware {
       req.data.addMessage(key + ' successfully edited!', 200, result);
 
       next();
-    };
+    });
   }
 
   export function remove(options: RequestOptionsModel & RequestOptionsData) {
-    return async (req: Request, res: Response, next: NextFunction) => {
+    return Handler.Async(async (req: Request, res: Response, next: NextFunction) => {
       const key = options.data?.key ?? options.model.name;
       const data = RequestUtils.byAttribute(req.data, key);
       if (data == undefined) return res.status(500).send('No ' + key + ' data available!');
@@ -150,11 +151,11 @@ export namespace RequestMiddleware {
       req.data.addMessage(key + ' successfully deleted!', 200);
 
       next();
-    };
+    });
   }
 
   export function getAssociation(options: RequestOptionsModel & RequestOptionsData & RequestOptionsAssociation & RequestOptionsPage) {
-    return async (req: Request, res: Response, next: NextFunction) => {
+    return Handler.Async(async (req: Request, res: Response, next: NextFunction) => {
       const key = options.data?.key ?? options.model.name;
       let page: { offset: number, limit: number } = {} as any;
       if (options.page) {
@@ -172,11 +173,11 @@ export namespace RequestMiddleware {
       association[options.association?.key ?? options.association?.name!] = await data.$get(options.association?.name, Object.assign(scope, page));
 
       next();
-    };
+    });
   }
 
   export function setAssociation(options: RequestOptionsModel & RequestOptionsData & RequestOptionsAssociation) {
-    return async (req: Request, res: Response, next: NextFunction) => {
+    return Handler.Async(async (req: Request, res: Response, next: NextFunction) => {
       const key = options.data?.key ?? options.model.name;
       const data = RequestUtils.byAttribute(req.data, key);
       if (data == undefined) return res.status(500).send('No ' + key + ' data available!');
@@ -184,11 +185,11 @@ export namespace RequestMiddleware {
       req.data.addMessage(options.association?.name + ' successfully set for ' + key + '!', 200);
 
       next();
-    };
+    });
   }
 
   export function addAssociation(options: RequestOptionsModel & RequestOptionsData & RequestOptionsAssociation) {
-    return async (req: Request, res: Response, next: NextFunction) => {
+    return Handler.Async(async (req: Request, res: Response, next: NextFunction) => {
       const key = options.data?.key ?? options.model.name;
       const data = RequestUtils.byAttribute(req.data, key);
       if (data == undefined) return res.status(500).send('No ' + key + ' data available!');
@@ -196,11 +197,11 @@ export namespace RequestMiddleware {
       req.data.addMessage(options.association?.name + ' successfully added for ' + key + '!', 200);
 
       next();
-    };
+    });
   }
 
   export function removeAssociation(options: RequestOptionsModel & RequestOptionsData & RequestOptionsAssociation) {
-    return async (req: Request, res: Response, next: NextFunction) => {
+    return Handler.Async(async (req: Request, res: Response, next: NextFunction) => {
       const key = options.data?.key ?? options.model.name;
       const data = RequestUtils.byAttribute(req.data, key);
       if (data == undefined) return res.status(500).send('No ' + key + ' data available!');
@@ -208,11 +209,11 @@ export namespace RequestMiddleware {
       req.data.addMessage(options.association?.name + ' successfully removed for ' + key + '!', 200);
 
       next();
-    };
+    });
   }
 
   export function hasAssociation(options: RequestOptionsModel & RequestOptionsData & RequestOptionsAssociation) {
-    return async (req: Request, res: Response, next: NextFunction) => {
+    return Handler.Async(async (req: Request, res: Response, next: NextFunction) => {
       const key = options.data?.key ?? options.model.name;
       const data = RequestUtils.byAttribute(req.data, key);
       if (data == undefined) return res.status(500).send('No ' + key + ' data available!');
@@ -220,7 +221,7 @@ export namespace RequestMiddleware {
       association[options.association?.key ?? options.association?.name!] = await data.$has(options.association?.name, RequestUtils.byAttribute(req.data, options.association?.data));
 
       next();
-    };
+    });
   }
 
   export function difference(type: RequestDifference, key1: any[] | any, key2: any[] | any, alias: string, on?: any[] | any) {

@@ -5,10 +5,11 @@ import { _Object } from "../models/data/object.model";
 import { RequestOptionsData } from "../models/object/request.model";
 import { Item } from "../models/data/item.model";
 import { SubInventory } from "../models/data/subInventory.model";
+import { Handler } from "../utils/handler.util";
 
 export namespace ItemMiddleware {
   export function createItemObject(options: RequestOptionsData) {
-    return async (req: Request, res: Response, next: NextFunction) => {
+    return Handler.Async(async (req: Request, res: Response, next: NextFunction) => {
       const key = options.data?.name;
       const data = RequestUtils.byAttribute(req.data, options.data?.key) as Item;
 
@@ -18,11 +19,11 @@ export namespace ItemMiddleware {
       RequestUtils.toAttribute(req.data, key, obj);
 
       next();
-    }
+    });
   }
 
   export function createObjectSubInventory(options: RequestOptionsData) {
-    return async (req: Request, res: Response, next: NextFunction) => {
+    return Handler.Async(async (req: Request, res: Response, next: NextFunction) => {
       const key = options.data?.name;
       const data = RequestUtils.byAttribute(req.data, options.data?.key) as _Object;
 
@@ -35,11 +36,11 @@ export namespace ItemMiddleware {
       RequestUtils.toAttribute(req.data, key, obj);
 
       next();
-    }
+    });
   }
 
   export function checkSameInventory(options: RequestOptionsData & { other: any }) {
-    return async (req: Request, res: Response, next: NextFunction) => {
+    return Handler.Async(async (req: Request, res: Response, next: NextFunction) => {
       const keySelf = options.data?.key;
       const dataSelf = RequestUtils.byAttribute(req.data, keySelf) as _Object;
       const keyOther = options.other;
@@ -48,6 +49,6 @@ export namespace ItemMiddleware {
       if (dataSelf.inventoryId != dataOther.inventoryId) return res.status(400).send({ message: "Objects do not belong to the same inventory!" });
 
       next();
-    }
+    });
   }
 }

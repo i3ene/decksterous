@@ -7,47 +7,54 @@ import {FunctionUtil} from '../utils/function.util';
 import {Validation} from '../models/data/validation.model';
 import {MailController} from './mail.controller';
 import {Inventory} from '../models/data/inventory.model';
+import { Handler } from '../utils/handler.util';
 
 export namespace AuthController {
-  export async function generateToken(req: Request, res: Response): Promise<any> {
-    if (req.user == null) return res.status(500).send({message: 'User object is null!'});
+  export function generateToken(req: Request, res: Response) {
+    return Handler.Async(async () => {
+      if (req.user == null) return res.status(500).send({message: 'User object is null!'});
 
-    var payload = {
-      id: req.user.id,
-      name: req.user.name,
-      mail: req.user.mail,
-    };
-    var token = jwt.sign(payload, Config.Auth.SECRET);
+      var payload = {
+        id: req.user.id,
+        name: req.user.name,
+        mail: req.user.mail,
+      };
+      var token = jwt.sign(payload, Config.Auth.SECRET);
 
-    console.log('User', req.user.name, 'logged in.');
-    res.status(200).send(JSON.stringify(token));
-  }
-
-  export async function resetPassword(req: Request, res: Response): Promise<any> {
-    if (req.user == null) return res.status(500).send({message: 'User object is null!'});
-
-    if (req.user.mail != req.body.mail) return res.status(401).send({message: 'Mail not matching for User!'});
-    await req.user.update({
-      password: req.body.password,
+      console.log('User', req.user.name, 'logged in.');
+      res.status(200).send(JSON.stringify(token));
     });
-
-    res.status(200).send({message: 'Password successfully reset!'});
   }
 
-  export async function signup(req: Request, res: Response): Promise<any> {
-    if (!req.body.mail) return res.status(400).send({message: "No mail provided!"});
+  export function resetPassword(req: Request, res: Response) {
+    return Handler.Async(async () => {
+      if (req.user == null) return res.status(500).send({message: 'User object is null!'});
 
-    const token = FunctionUtil.randomToken();
-    const register = await Validation.create({
-      token: token,
-      mail: req.body.mail
-    } as any)
-    if (register == null) return res.status(500).send({message: "Registration failed!"});
+      if (req.user.mail != req.body.mail) return res.status(401).send({message: 'Mail not matching for User!'});
+      await req.user.update({
+        password: req.body.password,
+      });
 
-    const mail = await MailController.sendRegister(register);
-    if (!mail) return res.status(500).send({message: "Mail sending failed!"});
+      res.status(200).send({message: 'Password successfully reset!'});
+    });
+  }
 
-    res.status(200).send({message: `Registration send to ${register.mail}! Please also check your Spam folder.`})
+  export function signup(req: Request, res: Response) {
+    return Handler.Async(async () => {
+      if (!req.body.mail) return res.status(400).send({message: "No mail provided!"});
+
+      const token = FunctionUtil.randomToken();
+      const register = await Validation.create({
+        token: token,
+        mail: req.body.mail
+      } as any)
+      if (register == null) return res.status(500).send({message: "Registration failed!"});
+
+      const mail = await MailController.sendRegister(register);
+      if (!mail) return res.status(500).send({message: "Mail sending failed!"});
+
+      res.status(200).send({message: `Registration send to ${register.mail}! Please also check your Spam folder.`})
+    });
   }
 
   export async function validationToken(io: Server, socket: Socket, type: string) {
