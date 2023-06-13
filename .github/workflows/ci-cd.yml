@@ -48,14 +48,10 @@ jobs:
 
       - name: Bundle
         run: npm run bundle
-
-      - name: Create Release
-        uses: "marvinpinto/action-automatic-releases@latest"
+      
+      - name: Upload release artifacts
+        uses: Roang-zero1/github-upload-release-artifacts-action@v2
         with:
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          automatic_release_tag: ${{ github.ref_name }}
-          prerelease: false
-          title: "Production Build"
-          files: |
-            dist/decksterous
-            api/bundle
+          args: "dist/decksterous/ api/bundle/"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
