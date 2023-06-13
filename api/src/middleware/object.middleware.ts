@@ -4,10 +4,11 @@ import {RequestUtils} from "../utils/request.util";
 import {_Object} from "../models/data/object.model";
 import {Marketplace} from "../models/data/marketplace.model";
 import { User } from "../models/data/user.model";
+import { Handler } from "../utils/handler.util";
 
 export namespace ObjectMiddleware {
   export function isOwn(equal: boolean, options: RequestOptionsData) {
-    return async (req: Request, res: Response, next: NextFunction) => {
+    return Handler.Async(async (req: Request, res: Response, next: NextFunction) => {
       const key = options.data?.key;
       const data = RequestUtils.byAttribute(req.data, key) as _Object;
       if (data == undefined) return res.status(500).send('No ' + key + ' data available!');
@@ -17,11 +18,11 @@ export namespace ObjectMiddleware {
       if ((result.user.id == req.user?.id) != equal) return res.status(401).send({message: `${data.hash} ${equal ? 'not' : 'is'} own object!`});
 
       next();
-    }
+    });
   }
 
   export function sell(options: RequestOptionsData) {
-    return async (req: Request, res: Response, next: NextFunction) => {
+    return Handler.Async(async (req: Request, res: Response, next: NextFunction) => {
       const key = options.data?.key;
       const data = RequestUtils.byAttribute(req.data, key) as _Object;
       const price = req.body.price ?? 0;
@@ -29,11 +30,11 @@ export namespace ObjectMiddleware {
       req.data.addMessage(key + ' successfully added!', 200, result);
 
       next();
-    }
+    });
   }
 
   export function buy(options: RequestOptionsData) {
-    return async (req: Request, res: Response, next: NextFunction) => {
+    return Handler.Async(async (req: Request, res: Response, next: NextFunction) => {
       const key = options.data?.key;
       const data = RequestUtils.byAttribute(req.data, key) as Marketplace;
 
@@ -50,6 +51,6 @@ export namespace ObjectMiddleware {
       await data.destroy();
 
       next();
-    }
+    });
   }
 }

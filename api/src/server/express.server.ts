@@ -15,6 +15,7 @@ import { GameRoutes } from '../routes/game.routes';
 import { AbilityRoutes } from '../routes/ability.routes';
 import { TypeRoutes } from '../routes/type.routes';
 import { CardRoutes } from '../routes/card.routes';
+import { Handler } from '../utils/handler.util';
 
 export const app = express();
 
@@ -39,3 +40,5 @@ app.use('/pack', PackRoutes);
 app.use('/game', GameRoutes);
 app.use('/ability', AbilityRoutes);
 app.use('/type', TypeRoutes);
+
+app.use(Handler.Sequence);

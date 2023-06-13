@@ -22,6 +22,7 @@ export enum BackendAction {
   ERROR = 'error',
   SYNC = 'sync',
   READY_CHANGED = 'ready_changed',
+  PLAYER_HEALTH_CHANGED = 'player_health_changed',
   CARD_HEALTH_CHANGED = 'card_health_changed',
   CARD_REMOVED = 'card_removed',
   CARD_ATTACKED = 'card_attacked',

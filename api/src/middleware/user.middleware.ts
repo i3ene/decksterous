@@ -8,10 +8,11 @@ import { Marketplace } from "../models/data/marketplace.model";
 import { _Object } from "../models/data/object.model";
 import { Item } from "../models/data/item.model";
 import { Inventory } from "../models/data/inventory.model";
+import { Handler } from "../utils/handler.util";
 
 export namespace UserMiddleware {
   export function checkFriend(type: "invites" | "requests", options: RequestOptionsData & { other: string | string[] | any | any[] }) {
-    return async (req: Request, res: Response, next: NextFunction) => {
+    return Handler.Async(async (req: Request, res: Response, next: NextFunction) => {
       const keySelf = options.data?.key;
       const dataSelf = RequestUtils.byAttribute(req.data, keySelf) as User;
       const keyOther = options.other;
@@ -19,11 +20,11 @@ export namespace UserMiddleware {
       if (dataSelf[type]?.some(x => x.id == dataOther.id)) return res.status(400).send({ message: `User already ${type == "invites" ? "invited" : "requested"}!` });
 
       next();
-    }
+    });
   }
 
   export function searchNewFriends(options: RequestOptionsData) {
-    return async (req: Request, res: Response, next: NextFunction) => {
+    return Handler.Async(async (req: Request, res: Response, next: NextFunction) => {
       const key = options.data?.name;
       const data = RequestUtils.byAttribute(req.data, options.data?.key) as User;
       const ids: number[] = [data.id];
@@ -43,11 +44,11 @@ export namespace UserMiddleware {
       RequestUtils.toAttribute(req.data, key, search);
 
       next();
-    }
+    });
   }
 
   export function getOtherMarketplaceObjects(options: RequestOptionsData) {
-    return async (req: Request, res: Response, next: NextFunction) => {
+    return Handler.Async(async (req: Request, res: Response, next: NextFunction) => {
       const key = options.data?.name ?? 'marketplace';
       const data = RequestUtils.byAttribute(req.data, options.data?.key) as User;
 
@@ -73,6 +74,6 @@ export namespace UserMiddleware {
       RequestUtils.toAttribute(req.data, key, objects);
 
       next();
-    }
+    });
   }
 }

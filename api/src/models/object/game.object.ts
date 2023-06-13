@@ -77,6 +77,12 @@ export class Game {
       case BackendAction.TURN_CHANGED:
         this.broadcast(event);
         this.events[GameEvent.TURN].emit(GameState.AFTER, null);
+        break;
+      case BackendAction.PLAYER_HEALTH_CHANGED:
+        this.broadcast(event);
+        if (event.args.health > 0) break;
+        this.events[GameEvent.END].emit(GameState.BEFORE, null);
+        break;
       default:
         this.broadcast(event);
         break;
@@ -158,14 +164,18 @@ export class Game {
   beforeEnd(event: any): void {
     console.log('BeforeEnd');
     this.active = false;
+    this.events[GameEvent.END].emit(GameState.AT, null);
   }
 
   atEnd(event: any): void {
     console.log('AtEnd');
+    this.room.emit(SocketAction.FRONTEND_EVENT, {event: GameEvent.END, state: GameState.AT});
+    this.events[GameEvent.END].emit(GameState.AFTER, null);
   }
 
   afterEnd(event: any): void {
     console.log('AfterEnd');
+    // TODO: Clean up!
   }
 
 }

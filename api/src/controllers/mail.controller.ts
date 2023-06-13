@@ -8,6 +8,7 @@ import {RequestOptionsData} from "../models/object/request.model";
 import { simpleParser } from "mailparser";
 import { Validation } from "../models/data/validation.model";
 import { ValidationType } from "../models/object/validation.object";
+import { Handler } from "../utils/handler.util";
 
 export namespace MailController {
   /**
@@ -136,7 +137,7 @@ export namespace MailController {
   }
 
   export function sendMail(options: RequestOptionsData) {
-    return async (req: Request, res: Response) => {
+    return Handler.Async(async (req: Request, res: Response) => {
       const key = options.data?.key;
       const data = RequestUtils.byAttribute(req.data, key) as Validation;
       
@@ -152,7 +153,7 @@ export namespace MailController {
       
       if (success) if (success) return res.status(200).send({ message: `Mail send to ${data.mail}! Please also check your Spam folder.` });
       else res.status(500).send({ message: "Something went wrong!" });
-    }
+    });
   }
 }
 
