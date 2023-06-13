@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatLegacyDialogRef as MatDialogRef, MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA } from '@angular/material/legacy-dialog';
 import { InventoryComponent } from 'src/app/components/inventory/inventory.component';
 import { CardItem, DeckItem, Item, ItemAny, ItemType } from 'src/app/models/data/item.model';
 import { ObjectFactory, SubInventory, _Object } from 'src/app/models/data/object.model';

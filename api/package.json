@@ -6,11 +6,15 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "node": "npx ts-node --files src/index.ts",
-    "build": "npx tsc"
+    "build": "npx tsc",
+    "bundle": "esbuild src/index.ts --platform=node --external:pg-hstore --bundle --outfile=bundle/server.js"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "esbuild": "^0.17.19"
+  },
+  "dependencies": {
     "@types/bcryptjs": "^2.4.2",
     "@types/jsonwebtoken": "^8.5.9"
   }

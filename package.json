@@ -8,21 +8,22 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "e2e": "ng e2e --port=4201"
+    "e2e": "ng e2e --port=4201",
+    "bundle": "npm run bundle --prefix ./api"
   },
   "private": true,
   "dependencies": {
     "@angular-builders/custom-webpack": "^15.0.0",
-    "@angular/animations": "~13.3.0",
-    "@angular/cdk": "^13.3.9",
-    "@angular/common": "~13.3.0",
-    "@angular/compiler": "~13.3.0",
-    "@angular/core": "~13.3.0",
-    "@angular/forms": "~13.3.0",
-    "@angular/material": "^13.3.9",
-    "@angular/platform-browser": "~13.3.0",
-    "@angular/platform-browser-dynamic": "~13.3.0",
-    "@angular/router": "~13.3.0",
+    "@angular/animations": "^15.2.9",
+    "@angular/cdk": "^15.2.9",
+    "@angular/common": "^15.2.9",
+    "@angular/compiler": "^15.2.9",
+    "@angular/core": "^15.2.9",
+    "@angular/forms": "^15.2.9",
+    "@angular/material": "^15.2.9",
+    "@angular/platform-browser": "^15.2.9",
+    "@angular/platform-browser-dynamic": "^15.2.9",
+    "@angular/router": "^15.2.9",
     "@auth0/angular-jwt": "^5.1.0",
     "@swimlane/ngx-charts": "^20.3.1",
     "@tsconfig/node16": "^1.0.3",
@@ -61,9 +62,9 @@
     "zone.js": "~0.11.4"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "~13.3.1",
-    "@angular/cli": "~13.3.1",
-    "@angular/compiler-cli": "~13.3.0",
+    "@angular-devkit/build-angular": "^15.2.8",
+    "@angular/cli": "^15.2.8",
+    "@angular/compiler-cli": "^15.2.9",
     "@cucumber/cucumber": "^7.3.2",
     "@types/bcryptjs": "^2.4.2",
     "@types/chai": "^4.3.3",
@@ -82,7 +83,7 @@
     "karma-jasmine-html-reporter": "~1.7.0",
     "protractor": "^7.0.0",
     "protractor-cucumber-framework": "^8.4.4",
-    "typescript": "~4.6.2"
+    "typescript": "~4.9.5"
   },
   "workspaces": [
     "api"

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { NewLobbyDialogue } from 'src/app/dialogues/new-lobby/new-lobby.component';
 import { SocketKey } from 'src/app/models/object/service.model';
 import { RoomService } from 'src/app/services/room.service';
