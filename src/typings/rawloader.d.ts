@@ -1,9 +1,4 @@
-declare module "*.shader.frag" {
-  const value: string;
-  export default value;
-}
-
-declare module "*.shader.vert" {
-  const value: string;
-  export default value;
+declare module '!!raw-loader!*' {
+  const contents: string;
+  export default contents;
 }

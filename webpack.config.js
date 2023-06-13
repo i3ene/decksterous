@@ -1,10 +1,10 @@
 module.exports = {
-  module: {
-    rules: [
-      {
-        test: /\.shader\.[a-zA-Z]+$/,
-        use: "raw-loader",
-      },
-    ],
-  },
+  // module: {
+  //   rules: [
+  //     {
+  //       test: /\!raw-loader\!.*$/,
+  //       use: "raw-loader",
+  //     },
+  //   ],
+  // },
 };

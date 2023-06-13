@@ -1,8 +1,8 @@
 import { Color, ShaderMaterial, Texture, Uniform, UniformsUtils, Vector3 } from "three";
-import fadeVert from 'raw-loader!./fade/fade.shader.vert';
-import fadeFrag from 'raw-loader!./fade/fade.shader.frag';
-import bloomVert from 'raw-loader!./bloom/bloom.shader.vert';
-import bloomFrag from 'raw-loader!./bloom/bloom.shader.frag';
+import fadeVert from '!!raw-loader!./fade/fade.shader.vert';
+import fadeFrag from '!!raw-loader!./fade/fade.shader.frag';
+import bloomVert from '!!raw-loader!./bloom/bloom.shader.vert';
+import bloomFrag from '!!raw-loader!./bloom/bloom.shader.frag';
 
 export namespace CustomShader {
   export const Fade = (color1: Color, color2: Color) => {
