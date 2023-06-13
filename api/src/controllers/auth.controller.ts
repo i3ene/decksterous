@@ -23,7 +23,7 @@ export namespace AuthController {
 
       console.log('User', req.user.name, 'logged in.');
       res.status(200).send(JSON.stringify(token));
-    });
+    })(req, res);
   }
 
   export function resetPassword(req: Request, res: Response) {
@@ -36,7 +36,7 @@ export namespace AuthController {
       });
 
       res.status(200).send({message: 'Password successfully reset!'});
-    });
+    })(req, res);
   }
 
   export function signup(req: Request, res: Response) {
@@ -54,7 +54,7 @@ export namespace AuthController {
       if (!mail) return res.status(500).send({message: "Mail sending failed!"});
 
       res.status(200).send({message: `Registration send to ${register.mail}! Please also check your Spam folder.`})
-    });
+    })(req, res);
   }
 
   export async function validationToken(io: Server, socket: Socket, type: string) {
