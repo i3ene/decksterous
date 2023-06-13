@@ -1,12 +1,10 @@
 import EventEmitter from 'events';
 import {Socket} from 'socket.io';
 import {Card} from '../data/card.model';
-import {Deck} from '../data/deck.model';
 import {User} from '../data/user.model';
 import {Game} from './game.object';
 import {BackendAction, FrontendAction, SocketAction} from './socket.model';
-import { _Object } from '../data/object.model';
-import { SubInventory } from '../data/subInventory.model';
+import {SubInventory} from '../data/subInventory.model';
 
 export enum GameEvent {
   START = 'start',
@@ -190,7 +188,7 @@ export class GamePlayer {
       this.emit(BackendAction.ERROR, {message: `Deck cannot not be changed when ready!`});
       return false;
     }
-    const deck: SubInventory | null = await SubInventory.scope("cardObjects").findOne({ where: { objectHash: deckHash } });
+    const deck: SubInventory | null = await SubInventory.scope("cardObjects").findOne({where: {objectHash: deckHash}});
     if (!deck || !deck.objects || !deck.objects.length) {
       this.emit(BackendAction.ERROR, {message: `Deck ${deckHash} could not be selected or was empty!`});
       return false;
@@ -216,7 +214,7 @@ export class GamePlayer {
       // Move it to the result set
       cards.push(card);
       // Emit drawn card
-      this.emit(BackendAction.CARD_DRAWN, { card: card }, {card: {}});
+      this.emit(BackendAction.CARD_DRAWN, {card: card}, {card: {}});
     }
     // Add cards to hand
     this.cards.push(...cards);
@@ -271,11 +269,12 @@ export class GamePlayer {
     // Get card from field at fieldIndex
     const card = this.field.get(fieldIndex);
     // Check for empty card
-    if (!card) {
+    if (!card || card.health <= 0) {
       // Attack player
       this.playerHealth(amount);
       return;
-    };
+    }
+    ;
     // Add up amount to health
     card.health += amount;
     // Emit change of health
@@ -287,8 +286,8 @@ export class GamePlayer {
 
   playerHealth(amount: number): void {
     this.health += amount;
-    const event = { health: this.health };
-    this.emit(BackendAction.CARD_HEALTH_CHANGED, event, event);
+    const event = {health: this.health};
+    this.emit(BackendAction.PLAYER_HEALTH_CHANGED, event, event);
   }
 
   /**
