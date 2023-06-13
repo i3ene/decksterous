@@ -49,14 +49,6 @@ jobs:
       - name: Bundle
         run: npm run bundle
 
-      - name: Create tag artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: ${{github.ref_name}}
-          path: |
-            ./dist/decksterous/*
-            ./api/bundle/*
-
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
@@ -69,4 +61,6 @@ jobs:
           prerelease: false
 
       - name: Upload Release files
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
         run: gh release upload ${{ github.ref }} ./dist/decksterous/* ./api/bundle/*
