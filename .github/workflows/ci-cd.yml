@@ -54,5 +54,5 @@ jobs:
         with:
           name: ${{github.ref_name}}
           path: |
-            ./dist/decksterous
-            ./api/bundle
+            ./dist/decksterous/*
+            ./api/bundle/*
