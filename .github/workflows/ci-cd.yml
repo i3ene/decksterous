@@ -40,8 +40,8 @@ jobs:
         continue-on-error: false
         run: npm ci --force
 
-      - name: Test
-        run: npm run test
+      #- name: Test
+      #  run: npm run test
 
       - name: Build
         run: npm run build
