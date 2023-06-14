@@ -15,6 +15,8 @@ export class FriendListComponent {
   searches: User[] = [];
   filter?: string;
 
+  loading: number = 0;
+
   get onlyFriends(): boolean {
     return !(this._requests?.length || this._invites?.length);
   }
@@ -49,10 +51,12 @@ export class FriendListComponent {
   constructor(private request: RequestService, public stats: StatsService, private data: DataService) { }
 
   async loadUsers(name: string) {
+    this.loading++;
     const payload = await this.data.self.searchFriends(name);
     if (!payload) this.searches = [];
     else this.searches = payload.map((x: any) => new User(x));
     this.filterList();
+    this.loading--;
   }
 
   filterList() {
