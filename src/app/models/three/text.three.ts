@@ -12,7 +12,7 @@ export class TextThree extends THREE.Group {
   mesh!: Mesh;
   geometry!: TextGeometry;
 
-  lineLength: number = 12;
+  lineLength: number = 10;
 
   _text: string = "";
   set text(value: string) {

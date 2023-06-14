@@ -20,4 +20,6 @@ canvas {
   bottom: 25vh;
   right: 8px;
   padding: 8px;
+  display: flex;
+  flex-direction: column;
 }
