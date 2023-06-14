@@ -66,6 +66,8 @@ import { SellItemDialogue } from './dialogues/sell-item/sell-item.component';
 import { LeaderboardComponent } from './pages/navigation/leaderboard/leaderboard.component';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { ShopComponent } from './components/shop/shop.component';
+import { SoloComponent } from './pages/navigation/solo/solo.component';
+import { ProfileStatisticsComponent } from './components/profile-statistics/profile-statistics.component';
 
 
 @NgModule({
@@ -123,7 +125,9 @@ import { ShopComponent } from './components/shop/shop.component';
     DevSubObjectInventoryComponent,
     SellItemDialogue,
     LeaderboardComponent,
-    ShopComponent
+    ShopComponent,
+    SoloComponent,
+    ProfileStatisticsComponent
   ],
   imports: [
     BrowserModule,

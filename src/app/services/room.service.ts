@@ -33,6 +33,11 @@ export class RoomService {
     this.socket.fromEvent<any>('room_list').subscribe((collection: any) => this.roomsHandler(collection));
   }
 
+  reset() {
+    this.leave(SocketKey.GAME);
+    this.leave(SocketKey.ROOM);
+  }
+
   getSockets(key: SocketKey) {
     return this.rooms.get(this.names.get(key) ?? '') ?? [];
   }

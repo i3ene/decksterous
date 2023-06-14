@@ -1,0 +1,25 @@
+.container {
+  position: absolute;
+  top: 8px;
+  bottom: 8px;
+  right: 8px;
+  left: 8px;
+}
+
+.col {
+  flex-basis: 50%;
+}
+
+.banner {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  font-size: 72px;
+  font-weight: bold;
+}
+
+.grayed {
+  opacity: 0.5;
+}

@@ -30,15 +30,19 @@ export class ProfileComponent {
 
   user: User = new User({ name: 'Loading...' });
 
+  friends: User[] = [];
+
   constructor(private route: ActivatedRoute, private token: TokenService, private request: RequestService, public stats: StatsService, private data: DataService) {
     this.route.queryParams.subscribe(params => this.userId = params['id'] ?? 0);
   }
 
   async loadSelf() {
     this.user = await this.data.self.user;
+    this.friends = (await this.data.self.friends).accepted ?? [];
   }
 
   async loadUser(id: number) {
     this.user = await this.data.getUser(id);
+    this.friends = await this.data.getFriends(id);
   }
 }

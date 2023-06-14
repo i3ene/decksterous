@@ -17,17 +17,35 @@
     <mat-sidenav position="end" mode="side" opened>
       <mat-list>
         <h3 mat-subheader>Achievements</h3>
-        <mat-list-item>...</mat-list-item>
+        <mat-list-item>
+          <div class="row gap">
+            <app-profile-avatar></app-profile-avatar>
+            <app-profile-avatar></app-profile-avatar>
+            <app-profile-avatar></app-profile-avatar>
+            ...
+          </div>
+        </mat-list-item>
         <mat-divider></mat-divider>
         <h3 mat-subheader>Friends</h3>
-        <app-friend-list></app-friend-list>
+        <app-friend-list [friends]="friends"></app-friend-list>
       </mat-list>
     </mat-sidenav>
     <mat-sidenav-content>
       <div class="content">
-        <p>Description...</p>
+        <div class="row gap">
+          <mat-card class="spacer">
+            <h3>Inventory</h3>
+            <p class="alt-text">Temporarily hidden</p>
+          </mat-card>
+          <mat-card class="spacer">
+            <h3>Description</h3>
+            <p class="alt-text">Coming soon!</p>
+          </mat-card>
+        </div>
+        <br>
         <mat-divider></mat-divider>
-        <p>More...</p>
+        <br>
+        <app-profile-statistics></app-profile-statistics>
       </div>
     </mat-sidenav-content>
   </mat-sidenav-container>
