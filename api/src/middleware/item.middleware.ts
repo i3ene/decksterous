@@ -6,6 +6,9 @@ import { RequestOptionsData } from "../models/object/request.model";
 import { Item } from "../models/data/item.model";
 import { SubInventory } from "../models/data/subInventory.model";
 import { Handler } from "../utils/handler.util";
+import { Inventory } from "../models/data/inventory.model";
+import { Op } from "sequelize";
+import { Config } from "../config";
 
 export namespace ItemMiddleware {
   export function createItemObject(options: RequestOptionsData) {
@@ -47,6 +50,18 @@ export namespace ItemMiddleware {
       const dataOther = RequestUtils.byAttribute(req.data, keyOther) as _Object;
 
       if (dataSelf.inventoryId != dataOther.inventoryId) return res.status(400).send({ message: "Objects do not belong to the same inventory!" });
+
+      next();
+    });
+  }
+
+  export function addDefaultItems(options: RequestOptionsData) {
+    return Handler.Async(async (req: Request, res: Response, next: NextFunction) => {
+      const key = options.data?.key;
+      const data = RequestUtils.byAttribute(req.data, key) as Inventory;
+      const objects = await _Object.bulkCreate(Config.User.DEFAULT_ITEMS.map(x => ({ itemId: x })) as any[]);
+
+      data.$add("objects", objects);
 
       next();
     });

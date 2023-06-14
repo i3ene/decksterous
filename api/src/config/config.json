@@ -1,0 +1,15 @@
+{
+  "auth": {
+    "header": "x-access-token",
+    "admin_id": 1
+  },
+  "database": {
+    "dialect": "mariadb"
+  },
+  "server": {
+    "port": 3030
+  },
+  "user": {
+    "default_items": [1,2,3]
+  }
+}

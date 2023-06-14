@@ -1,4 +1,5 @@
 import secret from "./secret.json";
+import config from "./config.json";
 
 export namespace DatabaseConfig {
   export const LOGGING: any = console.log;
@@ -6,7 +7,7 @@ export namespace DatabaseConfig {
   export const USER: string = secret.database.user;
   export const PASSWORD: string = secret.database.password;
   export const DB: string = secret.database.db;
-  export const dialect: string = 'mariadb';
+  export const dialect: string = config.database.dialect;
   export const pool: any = {
     max: 5,
     min: 0,

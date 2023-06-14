@@ -7,6 +7,7 @@ import { Validation } from "../models/data/validation.model";
 import { MailController } from "../controllers/mail.controller";
 import { User } from "../models/data/user.model";
 import { Inventory } from "../models/data/inventory.model";
+import { ItemMiddleware as itemMiddleware } from "../middleware/item.middleware";
 
 export const AuthRoutes = Router();
 
@@ -25,7 +26,8 @@ AuthRoutes.post("/register/:token", [
   middleware.add({ model: User }),
   middleware.add({ model: Inventory }),
   middleware.setAssociation({ model: User, association: { name: "inventory", data: Inventory } }),
-  middleware.remove({ model: Validation })
+  middleware.remove({ model: Validation }),
+  itemMiddleware.addDefaultItems({ data: { key: Inventory } })
 ], controller.result(User));
 
 AuthRoutes.post("/reset", [
