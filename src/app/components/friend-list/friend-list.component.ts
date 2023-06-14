@@ -29,7 +29,7 @@ export class FriendListComponent {
   }
 
   _friends: User[] = [];
-  set friends(value: User[]) {
+  @Input() set friends(value: User[]) {
     this._friends = value;
   }
   get friends(): User[] {
