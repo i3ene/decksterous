@@ -169,7 +169,13 @@ export class Game {
 
   atEnd(event: any): void {
     console.log('AtEnd');
-    this.room.emit(SocketAction.FRONTEND_EVENT, {event: GameEvent.END, state: GameState.AT});
+    const winner = [...this.players.map.values()].reduce((a, b) => a.health > b.health ? a : b);
+    winner.user.increment({coins: 100});
+    this.room.emit(SocketAction.FRONTEND_EVENT, {
+      event: GameEvent.END,
+      state: GameState.AT,
+      message: `Player ${winner.user.name} won! Congratulations👏`
+    });
     this.events[GameEvent.END].emit(GameState.AFTER, null);
   }
 

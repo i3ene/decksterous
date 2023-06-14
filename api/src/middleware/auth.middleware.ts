@@ -21,7 +21,7 @@ export namespace AuthMiddleware {
 
       req.user = user;
       next();
-    });
+    })(req, res, next);
   }
 
   export function verifyPassword(req: Request, res: Response, next: NextFunction) {
@@ -32,13 +32,12 @@ export namespace AuthMiddleware {
       if (!valid) return res.status(401).send({ message: 'Password is incorrect!' });
 
       next();
-    });
+    })(req, res, next);
   }
 
   export function verifyToken(req: Request, res: Response, next: NextFunction) {
     return Handler.Async(async () => {
       var token = req.headers[Config.Auth.HEADER] as string;
-      console.log(token);
       if (token == null) return res.status(401).send({ message: 'No token provided!' });
 
       jwt.verify(token, Config.Auth.SECRET, (err: any, decoded: any) => {
@@ -50,7 +49,7 @@ export namespace AuthMiddleware {
           return res.status(401).send({ message: 'Token invalid!' });
         }
       });
-    });
+    })(req, res, next);
   }
 
   export function checkDuplicateName(req: Request, res: Response, next: NextFunction) {
@@ -65,7 +64,7 @@ export namespace AuthMiddleware {
       if (user != undefined) return res.status(404).send({ message: 'Username already exists!' });
 
       next();
-    });
+    })(req, res, next);
   }
 
   export function checkDuplicateMail(req: Request, res: Response, next: NextFunction) {
@@ -80,7 +79,7 @@ export namespace AuthMiddleware {
       if (user != undefined) return res.status(404).send({ message: 'Mail already exists!' });
 
       next();
-    });
+    })(req, res, next);
   }
 
   export function checkPassword(req: Request, res: Response, next: NextFunction): any {
@@ -95,7 +94,7 @@ export namespace AuthMiddleware {
       if (req.user.id != Config.Auth.ADMIN_ID) return res.status(401).send({ message: 'Restricted to Admin!' });
 
       next();
-    });
+    })(req, res, next);
   }
 
   export function getSelf(key: string | any, scopes: any[] = []) {
