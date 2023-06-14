@@ -7,6 +7,12 @@ export namespace GameController {
   export const games: Map<string, Game> = new Map();
 
   export async function join(io: Server, socket: Socket, room: string) {
+    const game = games.get(room);
+    if (game && game.players.map.size >= 2) {
+      // TODO: Emit error message
+      return;
+    }
+
     socket.join(room);
     socket.emit(SocketAction.GAME_SOCKET_JOIN, new RoomSocketEvent(socket.id, room, RoomAction.JOIN));
     io.to(room).emit(SocketAction.GAME_SOCKET, new RoomSocketEvent(socket.id, room, RoomAction.JOIN))
