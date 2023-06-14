@@ -19,6 +19,7 @@ export class LobbyActionsComponent {
       if (event != 'Create') return;
       const room = dialog.componentInstance.name;
       this.room.join(SocketKey.ROOM, room);
+      this.room.join(SocketKey.GAME, room);
     });
   }
 
