@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { Player, PlayerCollection } from '../models/data/player.model';
 import { Card } from '../models/data/item.model';
 import { RoomService } from './room.service';
+import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +21,7 @@ export class GameService {
 
   listeners: Subscription[] = [];
 
-  constructor(public room: RoomService, private router: Router) {
+  constructor(public room: RoomService, private router: Router, private snackBar: MatSnackBar) {
     // Socket observables
     this.player = this.room.socket.fromEvent<any>('frontend_player');
     this.all = this.room.socket.fromEvent<any>('frontend_all');
@@ -56,6 +57,9 @@ export class GameService {
         this.collection.set(player.playerIndex, player);
         this.collection.currentIndex = event.args.currentIndex;
         break;
+      case 'player_health_changed':
+        player.health = event.args.health;
+        break;
       case 'card_drawn':
         const deckCard = player.deck.draw(1);
         console.log(event.args.card);
@@ -88,6 +92,8 @@ export class GameService {
     }
 
     if (event.event == 'end' && event.state == 'at') {
+      this.snackBar.open(event.message, undefined, { duration: 2300 });
+      this.room.reset();
       this.router.navigate(['navigation']);
     }
   }

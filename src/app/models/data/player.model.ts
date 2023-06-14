@@ -2,10 +2,12 @@ import { EventEmitter } from "@angular/core";
 import { PlayerThree } from "../three/player.three";
 
 export class Player extends PlayerThree {
+  health: number;
   playerIndex: number = 0;
 
   constructor(obj: any) {
     super(obj);
+    this.health = obj.health ?? 0;
     this.playerIndex = obj.playerIndex ?? 0;
   }
 

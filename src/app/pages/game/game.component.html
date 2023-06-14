@@ -5,6 +5,9 @@
   </button>
 </div>
 <div class="actions">
+  <p>
+    Health: {{ game.collection.self()?.health ?? 0 }}
+  </p>
   <ng-container *ngIf="game.collection.atTurn; else actions">
     <button mat-flat-button color="primary" (click)="game.endTurn()">
       End Turn
