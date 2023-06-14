@@ -171,10 +171,15 @@ export class Game {
     console.log('AtEnd');
     const winner = [...this.players.map.values()].reduce((a, b) => a.health > b.health ? a : b);
     winner.user.increment({coins: 100});
-    this.room.emit(SocketAction.FRONTEND_EVENT, {
+    winner.socket.emit(SocketAction.FRONTEND_EVENT, {
       event: GameEvent.END,
       state: GameState.AT,
-      message: `Player ${winner.user.name} won! Congratulations👏`
+      message: `You won! Congratulations👏`
+    });
+    winner.socket.broadcast.to(this.roomName).emit(SocketAction.FRONTEND_EVENT, {
+      event: GameEvent.END,
+      state: GameState.AT,
+      message: `Player ${winner.user.name} won.`
     });
     this.events[GameEvent.END].emit(GameState.AFTER, null);
   }
