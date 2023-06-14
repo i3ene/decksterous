@@ -14,7 +14,7 @@
     <dev-profile #profile></dev-profile>
     <div class="table-columns">
       <dev-user (selectedEvent)="inventory.inventoryId = $event.inventory.id; profile.id = $event.id"></dev-user>
-      <dev-item (selectedEvent)="inventory.addItem($event.hash)"></dev-item>
+      <dev-item (selectedEvent)="inventory.addItem($event.id)"></dev-item>
     </div>
     <div class="table-columns">
       <dev-inventory (selectedEvent)="inventory.inventoryId = $event.id"></dev-inventory>

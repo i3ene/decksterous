@@ -32,13 +32,13 @@ export class DevUserInventoryComponent {
     this.ref.objects = objects;
   }
 
-  async addItem(objectHash: string) {
-    await this.request.post(`/inventory/${this.inventoryId}/${objectHash}`);
+  async addItem(itemId: number) {
+    await this.request.post(`/inventory/${this.inventoryId}/${itemId}`);
     this.loadInventory();
   }
 
   addItems(objects: _Object<ItemAny>[]) {
-    objects.forEach(x => this.addItem(x.hash));
+    //objects.forEach(x => this.addItem(x.hash));
   }
 
   async removeItem(objectHash: string) {
