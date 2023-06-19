@@ -72,6 +72,8 @@ export enum Settings {
   Dark_Theme = new Setting<boolean>(true, { icons: ['dark_mode', 'light_mode'] }),
   // @ts-ignore
   Game_Volume = new Setting<number>(75, { max: 100, icons: ['volume_mute', 'volume_down', 'volume_up'] }),
+  // @ts-ignore
+  Game_Quality = new Setting<number>(3, { min: 1, max: 3, icons: ['filter_1', 'filter_2', 'filter_3'] }),
 }
 
 export type SettingsProperty<T = typeof Settings> = {

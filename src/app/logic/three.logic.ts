@@ -10,6 +10,7 @@ import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer
 import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass';
 import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass';
 import { CustomShader } from '../models/three/shaders/shader.materials';
+import { SettingsService } from '../services/settings.service';
 
 export enum ThreeLayer {
   ALL,
@@ -104,7 +105,7 @@ export class ThreeLogic {
 
   /** Constructor **/
 
-  constructor(canvas: ElementRef | HTMLCanvasElement) {
+  constructor(canvas: ElementRef | HTMLCanvasElement, public settings: SettingsService) {
     this.canvas = canvas instanceof ElementRef ? canvas.nativeElement : canvas;
 
     document.addEventListener('pointermove', this.onPointerMove.bind(this));
@@ -169,7 +170,10 @@ export class ThreeLogic {
   public startRenderingLoop() {
     this.render.renderer = new WebGLRenderer({ canvas: this.canvas, antialias: false });
     this.render.renderer.shadowMap.enabled = true;
-    this.render.renderer.setPixelRatio(devicePixelRatio);
+
+    var renderQuality = 1;
+    if (this.settings.Game_Quality < 2) renderQuality /= 2; 
+    this.render.renderer.setPixelRatio(devicePixelRatio * renderQuality);
     this.render.renderer.setSize(this.canvas.clientWidth, this.canvas.clientHeight);
 
     this.render.pass = new RenderPass(this.scene, this.camera);
@@ -208,7 +212,7 @@ export class ThreeLogic {
       component.loadedScenes.forEach((sc) => Object.entries(sc.functions ?? {}).forEach((fn) => fn[1](component)));
 
       // render scene with bloom
-      component.renderBloom(true);
+      if (component.settings.Game_Quality >= 3) component.renderBloom(true);
       // render the entire scene, then render bloom scene on top
       component.render.final.composer.render();
 

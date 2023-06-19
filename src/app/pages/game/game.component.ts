@@ -4,6 +4,7 @@ import { TableScene } from 'src/app/logic/scenes/table.scene';
 import { TestScene } from 'src/app/logic/scenes/test.scene';
 import { ThreeLogic } from 'src/app/logic/three.logic';
 import { GameService } from 'src/app/services/game.service';
+import { SettingsService } from 'src/app/services/settings.service';
 
 @Component({
   templateUrl: './game.component.html',
@@ -14,10 +15,10 @@ export class GamePage implements AfterViewInit, OnDestroy {
 
   threeLogic!: ThreeLogic;
 
-  constructor(public game: GameService) {}
+  constructor(public game: GameService, private settings: SettingsService) {}
 
   ngAfterViewInit(): void {
-    this.threeLogic = new ThreeLogic(this.canvasRef);
+    this.threeLogic = new ThreeLogic(this.canvasRef, this.settings);
     this.threeLogic.loadScene(new TableScene());
     this.threeLogic.loadScene(new GameScene(this.game));
   }
