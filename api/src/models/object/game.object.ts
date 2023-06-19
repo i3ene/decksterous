@@ -163,6 +163,7 @@ export class Game {
 
   beforeEnd(event: any): void {
     console.log('BeforeEnd');
+    this.executing = true;
     this.active = false;
     this.events[GameEvent.END].emit(GameState.AT, null);
   }
