@@ -7,7 +7,7 @@ import { Color } from '@swimlane/ngx-charts';
   styleUrls: ['./profile-statistics.component.scss']
 })
 export class ProfileStatisticsComponent {
-  view: [number, number] = [700, 400];
+  view: [number, number] = [350, 200];
 
   colorScheme: Color = {
     domain: ['#4CAF50', '#F44336', '#FFC107', '#03A9F4', '#9C27B0', '#009688', '#E91E63', '#FF5722', '#2196F3', '#673AB7', '#8BC34A', '#FFEB3B', '#00BCD4', '#3F51B5', '#795548']
@@ -98,7 +98,7 @@ export class ProfileStatisticsComponent {
         }
       ]
     },
-  
+
     {
       "name": "Stat2",
       "series": [
@@ -120,7 +120,7 @@ export class ProfileStatisticsComponent {
         }
       ]
     },
-  
+
     {
       "name": "Stat3",
       "series": [
